@@ -74,6 +74,14 @@ Docs: <文档>
 Chore: <维护>
 ```
 
+当前 GitHub GraphQL API 支持创建和更新组织 Issue Types，但需要 `admin:org` token scope。现有自动化 token 只有 `repo`、`project`、`workflow`、`read:org` 等 scope，因此本项需要组织 owner 完成一次授权后再执行。授权命令：
+
+```bash
+gh auth refresh -h github.com -s admin:org
+```
+
+授权后应将默认 `Feature` 重命名为 `FR`，保留并规范化 `Task`、`Bug`，新增 `Initiative`、`Phase`、`Decision`、`Research`、`Docs`、`Chore`。
+
 ## Labels
 
 Labels 只表达横切属性，不表达层级。层级由 sub-issues 表达，类型由 Issue Type 或 title 前缀表达。
@@ -123,7 +131,7 @@ WebEnvoy Roadmap
 
 | 字段 | 类型 | 选项 |
 |---|---|---|
-| Status | Single select | Inbox, Triage, Ready, In Progress, Blocked, In Review, Done, Won't Do |
+| Status | Single select | Inbox, Triage, Ready, In Progress, Blocked, In Review, Done, Won’t Do |
 | Priority | Single select | P0, P1, P2, P3 |
 | Track | Single select | Foundation, Runtime, Capability, Product, Ecosystem, Research, Governance |
 | Target | Single select | P0, P1, P2, P3, Backlog |
@@ -146,6 +154,22 @@ GitHub Project 默认字段如 Repository、Labels、Milestone、Assignees、Lin
 | Decisions | Table | 待决策事项 |
 | Research | Table | 调研任务 |
 
+GitHub 当前可通过 API 读取 Project views，但未暴露创建或修改 view 的 GraphQL mutation；因此 views 需要在 GitHub UI 中创建和保存。配置路径：进入 `WebEnvoy Roadmap`，点击 `New view`，按上表创建视图并保存。
+
+## Auto-add workflow
+
+GitHub Project built-in auto-add workflow 需要在 Project UI 中配置。配置路径：进入 `WebEnvoy Roadmap`，打开右上角菜单，进入 `Workflows`，选择 `Auto-add to project`，设置 repository 和 filter 后启用。
+
+推荐 auto-add 过滤条件：
+
+```text
+is:issue is:open label:"status: needs-triage"
+```
+
+如果当前计划只允许 1 个 auto-add workflow，优先配置 `WebEnvoy/.github`。如果允许 5 个 workflow，则分别配置 `WebEnvoy/WebEnvoy`、`WebEnvoy/Harbor`、`WebEnvoy/Lode`、`WebEnvoy/.github`、`WebEnvoy/research`。
+
+当前 Project 已启用 GitHub 默认 workflows，包括 item added、item closed、pull request merged、pull request linked to issue 和 auto-add sub-issues。它们不替代跨仓 repository auto-add。
+
 ## 生命周期
 
 1. 创建 issue：默认 `status: needs-triage`；
@@ -155,7 +179,7 @@ GitHub Project 默认字段如 Repository、Labels、Milestone、Assignees、Lin
 5. 阻塞：添加 `status: blocked`，说明 blocker；
 6. 决策：添加 `status: needs-decision`，创建或链接 Decision issue；
 7. 完成：PR merge 后关闭 issue，Project Status 设为 Done；
-8. 不做：关闭为 not planned，Project Status 设为 Won't Do，并说明原因。
+8. 不做：关闭为 not planned，Project Status 设为 Won’t Do，并说明原因。
 
 ## 示例
 
@@ -185,6 +209,7 @@ GitHub Project 默认字段如 Repository、Labels、Milestone、Assignees、Lin
 - 修改 label schema 后必须同步到所有仓库；
 - 修改 issue template 前必须确认引用的 label 已存在；
 - Project 字段变更必须先更新本文档；
+- GitHub UI 中的 Project views 和 built-in auto-add workflow 变更必须同步回本文档；
 - 跨仓 Initiative 优先放 `.github`；
 - 单仓 Phase / FR / Task 放实际负责仓库；
 - research 调研结论采纳后，应转化为 Decision 或 Task，不直接作为正式产品文档来源。

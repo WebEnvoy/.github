@@ -1,0 +1,153 @@
+# WebEnvoy organization label schema
+
+# status / triage
+- name: "status: needs-triage"
+  color: "ededed"
+  description: "Needs initial review and classification."
+
+- name: "status: accepted"
+  color: "c2e0c6"
+  description: "Accepted as valid work but not necessarily scheduled."
+
+- name: "status: blocked"
+  color: "d93f0b"
+  description: "Blocked by another task, decision, dependency, or external condition."
+
+- name: "status: needs-decision"
+  color: "fbca04"
+  description: "Requires a product, architecture, repository, or licensing decision."
+
+# priority
+- name: "priority: p0"
+  color: "b60205"
+  description: "Critical for the current foundation or release."
+
+- name: "priority: p1"
+  color: "d93f0b"
+  description: "Important and should be handled soon."
+
+- name: "priority: p2"
+  color: "fbca04"
+  description: "Useful but not blocking immediate progress."
+
+- name: "priority: p3"
+  color: "cfd3d7"
+  description: "Low priority or backlog."
+
+# track
+- name: "track: foundation"
+  color: "1d76db"
+  description: "Repository setup, contracts, governance, CI, release foundation."
+
+- name: "track: runtime"
+  color: "5319e7"
+  description: "Harbor runtime, browser session, profile, identity, drivers, evidence."
+
+- name: "track: capability"
+  color: "0e8a16"
+  description: "Lode capability assets, task packages, site packages, validation."
+
+- name: "track: product"
+  color: "0052cc"
+  description: "Console, CLI, UX, human-facing workflow, packaging."
+
+- name: "track: ecosystem"
+  color: "006b75"
+  description: "SDKs, contracts, integrations, public package ecosystem."
+
+- name: "track: research"
+  color: "7057ff"
+  description: "Research, external project analysis, comparison, decision candidates."
+
+- name: "track: governance"
+  color: "cfd3d7"
+  description: "Organization rules, repository map, licensing, contribution policy."
+
+# area: WebEnvoy
+- name: "area: core"
+  color: "bfdadc"
+  description: "WebEnvoy Core."
+
+- name: "area: api"
+  color: "bfdadc"
+  description: "API Server, API contracts, public and internal API."
+
+- name: "area: console"
+  color: "bfdadc"
+  description: "Console UI and operator workflow."
+
+- name: "area: cli"
+  color: "bfdadc"
+  description: "Command-line interface."
+
+- name: "area: mcp"
+  color: "bfdadc"
+  description: "MCP server and agent tool interface."
+
+# area: Harbor
+- name: "area: runtime"
+  color: "d4c5f9"
+  description: "Runtime server and runtime session lifecycle."
+
+- name: "area: profile"
+  color: "d4c5f9"
+  description: "Profile, fingerprint, account state, and execution identity."
+
+- name: "area: browser-driver"
+  color: "d4c5f9"
+  description: "Browser driver abstraction and provider integration."
+
+- name: "area: evidence"
+  color: "d4c5f9"
+  description: "Evidence store, screenshots, traces, run records, replay material."
+
+# area: Lode
+- name: "area: lode"
+  color: "c2e0c6"
+  description: "Lode repository and package asset management."
+
+- name: "area: capability"
+  color: "c2e0c6"
+  description: "Site capability, atomic actions, task packages."
+
+- name: "area: schema"
+  color: "c2e0c6"
+  description: "JSON Schema, contract schema, validation rules."
+
+# area: organization
+- name: "area: docs"
+  color: "0075ca"
+  description: "Documentation."
+
+- name: "area: infra"
+  color: "cfd3d7"
+  description: "CI, repository settings, automation, release tooling."
+
+- name: "area: governance"
+  color: "cfd3d7"
+  description: "Organization rules, repository map, licensing, contribution policy."
+
+- name: "area: research"
+  color: "7057ff"
+  description: "Research repository, external project analysis, comparisons."
+
+# impact
+- name: "impact: breaking"
+  color: "b60205"
+  description: "Breaking API, schema, package, contract, or workflow change."
+
+- name: "impact: public-api"
+  color: "d93f0b"
+  description: "Affects public API, SDK, CLI, MCP, or external integration."
+
+- name: "impact: security"
+  color: "b60205"
+  description: "Security-sensitive behavior, credentials, session state, or access boundary."
+
+- name: "impact: data-boundary"
+  color: "d93f0b"
+  description: "Affects user data, evidence, profile state, credentials, or privacy boundary."
+
+- name: "impact: licensing"
+  color: "fbca04"
+  description: "Affects license, repository visibility, dependency licensing, or public/private boundary."

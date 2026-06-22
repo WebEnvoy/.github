@@ -1,0 +1,48 @@
+name: Task
+description: Concrete implementation, validation, or setup task.
+title: "Task: "
+labels: ["status: needs-triage"]
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Parent FR or Phase
+      description: Link the parent FR or Phase issue if applicable.
+      placeholder: "https://github.com/WebEnvoy/<repo>/issues/..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be implemented or changed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Link relevant docs, decisions, research, schemas, or parent issues.
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What must be true before this task is done?
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: How should this be tested or reviewed?
+    validations:
+      required: false

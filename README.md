@@ -7,7 +7,9 @@
 - `profile/README.md`：GitHub 组织主页内容；
 - `docs/repository-map.md`：组织级仓库地图、跨仓关系和命名约定；
 - `docs/licensing.md`：组织级许可证边界；
-- `ISSUE_TEMPLATE/`：issue 模板；
+- `docs/issue-project-management.md`：组织级 issue、label、template 和 Project 管理规范；
+- `labels.yml`：统一 issue label schema；
+- `ISSUE_TEMPLATE/`：默认 issue templates；
 - `PULL_REQUEST_TEMPLATE.md`：PR 模板；
 - 后续可加入安全策略、贡献指南和社区健康文件。
 
@@ -15,6 +17,7 @@
 
 - [仓库地图](docs/repository-map.md)
 - [许可证边界](docs/licensing.md)
+- [Issue 与 Project 管理规范](docs/issue-project-management.md)
 
 ## 许可证
 

@@ -1,31 +1,49 @@
-name: Bug report
-description: Report a reproducible problem
-title: "[Bug]: "
-labels: ["bug"]
+name: Bug
+description: Report incorrect behavior.
+title: "Bug: "
+labels: ["status: needs-triage"]
 body:
   - type: textarea
-    id: summary
+    id: current
     attributes:
-      label: Summary
-      description: What went wrong?
+      label: Current behavior
+      description: What happened?
     validations:
       required: true
-  - type: textarea
-    id: steps
-    attributes:
-      label: Steps to reproduce
-      description: Provide the smallest reproducible steps.
-    validations:
-      required: true
+
   - type: textarea
     id: expected
     attributes:
       label: Expected behavior
+      description: What should have happened?
     validations:
       required: true
+
   - type: textarea
-    id: actual
+    id: repro
     attributes:
-      label: Actual behavior
+      label: Reproduction steps
+      description: Provide the smallest reproducible case.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
     validations:
       required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, runtime, browser, package version, commit, config.
+    validations:
+      required: false
+
+  - type: input
+    id: parent
+    attributes:
+      label: Parent FR or Phase
+      description: Link the parent FR or Phase issue if applicable.
+      placeholder: "https://github.com/WebEnvoy/<repo>/issues/..."
+    validations:
+      required: false

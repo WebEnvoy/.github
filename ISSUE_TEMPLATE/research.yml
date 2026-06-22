@@ -2,6 +2,7 @@ name: Research
 description: External project research, technical investigation, or comparison.
 title: "Research: "
 labels: ["status: needs-triage", "track: research", "area: research"]
+type: "Research"
 body:
   - type: textarea
     id: question

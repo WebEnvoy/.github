@@ -2,6 +2,7 @@ name: Chore
 description: Repository setup, automation, maintenance, or housekeeping.
 title: "Chore: "
 labels: ["status: needs-triage", "area: infra"]
+type: "Chore"
 body:
   - type: textarea
     id: work

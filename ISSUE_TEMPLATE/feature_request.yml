@@ -2,6 +2,7 @@ name: FR
 description: Feature Requirement that can be delivered under a Phase.
 title: "FR: "
 labels: ["status: needs-triage"]
+type: "FR"
 body:
   - type: markdown
     attributes:

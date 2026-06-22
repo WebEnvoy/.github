@@ -2,6 +2,7 @@ name: Docs
 description: Documentation-only change.
 title: "Docs: "
 labels: ["status: needs-triage", "area: docs"]
+type: "Docs"
 body:
   - type: textarea
     id: target

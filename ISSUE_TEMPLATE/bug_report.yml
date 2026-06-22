@@ -2,6 +2,7 @@ name: Bug
 description: Report incorrect behavior.
 title: "Bug: "
 labels: ["status: needs-triage"]
+type: "Bug"
 body:
   - type: textarea
     id: current

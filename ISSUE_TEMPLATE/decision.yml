@@ -2,6 +2,7 @@ name: Decision
 description: Product, architecture, repository, licensing, or workflow decision.
 title: "Decision: "
 labels: ["status: needs-decision"]
+type: "Decision"
 body:
   - type: textarea
     id: question

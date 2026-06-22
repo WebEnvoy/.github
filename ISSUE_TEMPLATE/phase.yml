@@ -2,6 +2,7 @@ name: Phase
 description: Stage-level work block under an Initiative.
 title: "Phase: "
 labels: ["status: needs-triage"]
+type: "Phase"
 body:
   - type: markdown
     attributes:

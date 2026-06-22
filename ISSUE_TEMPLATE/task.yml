@@ -2,6 +2,7 @@ name: Task
 description: Concrete implementation, validation, or setup task.
 title: "Task: "
 labels: ["status: needs-triage"]
+type: "Task"
 body:
   - type: input
     id: parent

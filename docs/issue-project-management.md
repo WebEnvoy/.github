@@ -74,13 +74,7 @@ Docs: <文档>
 Chore: <维护>
 ```
 
-当前 GitHub GraphQL API 支持创建和更新组织 Issue Types，但需要 `admin:org` token scope。现有自动化 token 只有 `repo`、`project`、`workflow`、`read:org` 等 scope，因此本项需要组织 owner 完成一次授权后再执行。授权命令：
-
-```bash
-gh auth refresh -h github.com -s admin:org
-```
-
-授权后应将默认 `Feature` 重命名为 `FR`，保留并规范化 `Task`、`Bug`，新增 `Initiative`、`Phase`、`Decision`、`Research`、`Docs`、`Chore`。
+当前组织 Issue Types 已完成配置：默认 `Feature` 已重命名为 `FR`，默认 `Task`、`Bug` 已规范化，并已新增 `Initiative`、`Phase`、`Decision`、`Research`、`Docs`、`Chore`。
 
 ## Labels
 

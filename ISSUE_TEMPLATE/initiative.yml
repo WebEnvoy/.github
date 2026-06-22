@@ -2,6 +2,7 @@ name: Initiative
 description: Cross-repository objective or organization-level work.
 title: "Initiative: "
 labels: ["status: needs-triage", "track: governance"]
+type: "Initiative"
 body:
   - type: markdown
     attributes:

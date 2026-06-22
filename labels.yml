@@ -1,21 +1,13 @@
 # WebEnvoy organization label schema
 
-# status / triage
+# status exceptions
 - name: "status: needs-triage"
   color: "ededed"
-  description: "Needs initial review and classification."
-
-- name: "status: accepted"
-  color: "c2e0c6"
-  description: "Accepted as valid work but not necessarily scheduled."
-
-- name: "status: blocked"
-  color: "d93f0b"
-  description: "Blocked by another task, decision, dependency, or external condition."
+  description: "Needs manual classification because the issue is incomplete, unclear, or in the wrong place."
 
 - name: "status: needs-decision"
   color: "fbca04"
-  description: "Requires a product, architecture, repository, or licensing decision."
+  description: "Blocked by a product, architecture, repository, or licensing decision."
 
 # priority
 - name: "priority: p0"
@@ -151,3 +143,8 @@
 - name: "impact: licensing"
   color: "fbca04"
   description: "Affects license, repository visibility, dependency licensing, or public/private boundary."
+
+# scope
+- name: "scope: cross-repo"
+  color: "5319e7"
+  description: "Affects or coordinates work across more than one repository."

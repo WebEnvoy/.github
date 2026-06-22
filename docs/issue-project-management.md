@@ -6,10 +6,11 @@
 
 - `.github` 维护组织级规范、默认 issue templates、统一 labels 和 Project 工作流；
 - 产品仓库维护具体执行 issue；
-- `research` 维护调研任务和调研沉淀；
+- `research` 维护调研材料和调研沉淀，普通调研不进入 issue / Project；
 - 不创建 repo-level Projects，统一使用组织级 Project：`WebEnvoy Roadmap`；
-- 不使用 Epic，使用 `Phase` 表达阶段性工作块；
-- 一个 Phase 可以包含多个 FR，一个 FR 可以包含多个 Task。
+- Issue / Project 只管理可执行、可关闭、需要跟踪的工作项；
+- 目标、路线、决策记录、调研沉淀默认进入文档系统，不进入工作队列；
+- 模型收敛为 `Phase -> FR -> Work Item`。
 
 ## Issue 层级
 
@@ -17,77 +18,66 @@
 L0 Project
   WebEnvoy Roadmap
 
-L1 Initiative
-  跨仓目标，通常放 WebEnvoy/.github
+L1 Phase
+  阶段性工作块
 
-L2 Phase
-  阶段性工作块，放实际负责仓库
+L2 FR
+  可交付功能需求
 
-L3 FR
-  可交付功能需求，放实际负责仓库
-
-L4 Task / Bug / Decision / Research / Docs / Chore
-  具体执行项，放实际负责仓库
+L3 Work Item
+  可执行工作项
 ```
 
 ## 层级定义
 
 | 层级 | 用途 | 典型位置 |
 |---|---|---|
-| Initiative | 跨仓目标、组织级目标、长期建设方向 | `.github` |
-| Phase | 阶段性能力域或工作块 | 实际负责仓库 |
-| FR | Feature Requirement，可交付功能需求 | 实际负责仓库 |
-| Task | 可由一个或少量 PR 完成的实现任务 | 实际负责仓库 |
-| Bug | 缺陷修复 | 实际负责仓库 |
-| Decision | 需要明确取舍的产品、架构、仓库或许可证决策 | `.github` 或相关仓库 |
-| Research | 外部项目、技术路线、产品形态或方案调研 | `research` |
-| Docs | 文档变更 | 实际负责仓库 |
-| Chore | 仓库设置、自动化、清理和维护事项 | 实际负责仓库 |
+| Phase | 阶段性能力域或工作块 | 实际负责仓库；跨仓时加 `scope: cross-repo` |
+| FR | Feature Requirement，可交付功能需求 | 实际负责仓库；跨仓时加 `scope: cross-repo` |
+| Work Item | 可执行工作项，可覆盖实现、缺陷、文档、维护、调研动作和决策动作 | 实际负责仓库 |
 
 ## Issue Types
 
-建议组织级启用以下 Issue Types：
+组织级只启用以下 Issue Types：
 
 ```text
-initiative
-phase
-fr
-task
-bug
-decision
-research
-docs
-chore
+Phase
+FR
+Work Item
 ```
 
-在 GitHub 组织 Issue Types 未完成配置前，issue title 前缀作为兼容标识：
+以下类型不再启用：
 
 ```text
-Initiative: <跨仓目标>
-Phase: <阶段性工作块>
-FR: <功能需求>
-Task: <具体任务>
-Bug: <缺陷>
-Decision: <决策>
-Research: <调研>
-Docs: <文档>
-Chore: <维护>
+Initiative
+Decision
+Research
+Docs
+Chore
+Bug
+Task
 ```
 
-当前组织 Issue Types 已完成配置：默认 `Feature` 已重命名为 `FR`，默认 `Task`、`Bug` 已规范化，并已新增 `Initiative`、`Phase`、`Decision`、`Research`、`Docs`、`Chore`。
+处理方式：
+
+- 目标 / Initiative：进入 roadmap 文档、positioning 文档或 milestone，不作为 issue type；
+- Decision：进入决策文档；若阻塞执行，在相关 issue 上加 `status: needs-decision`；
+- Research：进入 `WebEnvoy/research`；若需要执行调研动作，用 `Work Item` 表达；
+- Docs / Chore / Bug / Task：统一用 `Work Item` 表达，并通过 `area`、`impact`、正文和验收标准区分。
 
 ## Labels
 
-Labels 只表达横切属性，不表达层级。层级由 sub-issues 表达，类型由 Issue Type 或 title 前缀表达。
+Labels 只表达横切属性，不表达层级。层级由 sub-issues 表达，类型由 Issue Type 表达。
 
 Label 分组：
 
 ```text
-status: needs-triage / accepted / blocked / needs-decision
+status: needs-triage / needs-decision
 priority: p0 / p1 / p2 / p3
 track: foundation / runtime / capability / product / ecosystem / research / governance
 area: core / api / console / cli / mcp / runtime / profile / browser-driver / evidence / lode / capability / schema / docs / infra / governance / research
 impact: breaking / public-api / security / data-boundary / licensing
+scope: cross-repo
 ```
 
 统一 label schema 维护在根目录 `labels.yml`。
@@ -98,18 +88,12 @@ impact: breaking / public-api / security / data-boundary / licensing
 
 ```text
 config.yml
-initiative.yml
 phase.yml
 feature_request.yml  -> FR 表单
-bug_report.yml       -> Bug 表单
-task.yml
-decision.yml
-research.yml
-docs.yml
-chore.yml
+work_item.yml        -> Work Item 表单
 ```
 
-模板默认添加 `status: needs-triage`，部分模板会额外添加 track / area label。
+模板不再默认添加 `status: needs-triage`。创建 issue 时应通过模板完成基本分类；只有信息不完整、归属不清或需要人工分拣时，才手动添加 `status: needs-triage`。
 
 ## Project
 
@@ -125,77 +109,129 @@ WebEnvoy Roadmap
 
 | 字段 | 类型 | 选项 |
 |---|---|---|
-| Status | Single select | Inbox, Triage, Ready, In Progress, Blocked, In Review, Done, Won’t Do |
+| Status | Single select | Backlog, Ready, In Progress, Blocked, In Review, Done, Won’t Do |
 | Priority | Single select | P0, P1, P2, P3 |
 | Track | Single select | Foundation, Runtime, Capability, Product, Ecosystem, Research, Governance |
-| Target | Single select | P0, P1, P2, P3, Backlog |
 | Size | Single select | XS, S, M, L, XL |
 | Risk | Single select | Low, Medium, High |
 | Start date | Date | - |
 | Target date | Date | - |
 
-GitHub Project 默认字段如 Repository、Labels、Milestone、Assignees、Linked pull requests 保持使用。
+GitHub Project 默认字段如 Milestone、Repository、Labels、Assignees、Parent issue、Sub-issues progress 和 Linked pull requests 保持使用。
+
+`Target` 字段不再使用。发布批次由 GitHub Milestone 管理。
+
+## Milestone 管理
+
+Milestone 用于仓库内发布批次和交付范围，不用于组织级路线、长期目标、Track 分组或优先级。
+
+推荐命名：
+
+```text
+v0.1-runtime-session
+v0.1-runtime-contract
+v0.1-capability-schema
+v0.1-browser-driver
+v0.1-governance
+```
+
+不推荐命名：
+
+```text
+P0
+P1
+Now
+Next
+Backlog
+Runtime
+Foundation
+```
+
+只有当某仓库有明确发布或交付批次时才创建 milestone。
+
+## Project 收录规则
+
+所有通过组织模板创建的 issue 都应进入 `WebEnvoy Roadmap`：
+
+```text
+Phase
+FR
+Work Item
+```
+
+原因：当前 issue type 已经只保留工作型 issue，Project 应作为完整执行面；Roadmap 等视图通过过滤控制显示粒度。
 
 ## 建议视图
 
 | View | 类型 | 用途 |
 |---|---|---|
-| Inbox / Triage | Table | 新 issue 整理 |
-| Roadmap | Roadmap | 按 Track 和 Target 查看计划 |
-| Board by Status | Board | 当前执行状态 |
+| Backlog | Table 或 Board | 需求池，Status = Backlog |
+| Roadmap | Roadmap 或 Table | 只看 Phase / FR，必要时按 Milestone、Track、Priority 查看 |
+| Board by Status | Board | 全部工作项的执行看板 |
 | By Repository | Table | 按仓库查看负载 |
-| Initiatives | Table | 组织级 Initiative |
-| Decisions | Table | 待决策事项 |
-| Research | Table | 调研任务 |
+| By Milestone | Table | 按发布批次查看工作范围 |
+| Phases | Table | 只看 Phase |
+| FRs | Table | 只看 FR |
+| Work Items | Table | 只看 Work Item |
+| Cross-Repo | Table | 只看 `scope: cross-repo` |
 
-GitHub 当前可通过 API 读取 Project views，但未暴露创建或修改 view 的 GraphQL mutation；因此 views 需要在 GitHub UI 中创建和保存。配置路径：进入 `WebEnvoy Roadmap`，点击 `New view`，按上表创建视图并保存。
+不再创建固定的 `Inbox / Triage`、`Initiatives`、`Decisions`、`Research` 视图。
 
-## Auto-add workflow
+GitHub 当前可通过 API 读取 Project views，但未暴露创建或修改 view 的 GraphQL mutation；因此 views 需要在 GitHub UI 中创建和保存。
 
-GitHub Project built-in auto-add workflow 需要在 Project UI 中配置。配置路径：进入 `WebEnvoy Roadmap`，打开右上角菜单，进入 `Workflows`，选择 `Auto-add to project`，设置 repository 和 filter 后启用。
+## 自动化
 
-推荐 auto-add 过滤条件：
+推荐在 `WebEnvoy Roadmap` 中配置 GitHub Project auto-add workflow：
 
 ```text
-is:issue is:open label:"status: needs-triage"
+is:issue is:open
 ```
 
-如果当前计划只允许 1 个 auto-add workflow，优先配置 `WebEnvoy/.github`。如果允许 5 个 workflow，则分别配置 `WebEnvoy/WebEnvoy`、`WebEnvoy/Harbor`、`WebEnvoy/Lode`、`WebEnvoy/.github`、`WebEnvoy/research`。
+原因：当前启用的 issue types 只有 `Phase / FR / Work Item`，所有 issue 都是工作型 issue。
 
-当前 Project 已启用 GitHub 默认 workflows，包括 item added、item closed、pull request merged、pull request linked to issue 和 auto-add sub-issues。它们不替代跨仓 repository auto-add。
+推荐保留或配置低风险自动流转：
+
+```text
+Item added -> Status = Backlog
+Issue closed -> Status = Done
+PR merged -> Status = Done
+```
+
+不自动流转：
+
+```text
+Ready
+In Progress
+Blocked
+Won’t Do
+```
+
+这些状态需要人为判断。
 
 ## 生命周期
 
-1. 创建 issue：默认 `status: needs-triage`；
-2. Triage：补充 Priority、Track、Area、Target、父 issue；
-3. 接受：添加 `status: accepted`，Project Status 设为 Ready；
-4. 执行：Project Status 设为 In Progress，分配 assignee；
-5. 阻塞：添加 `status: blocked`，说明 blocker；
-6. 决策：添加 `status: needs-decision`，创建或链接 Decision issue；
-7. 完成：PR merge 后关闭 issue，Project Status 设为 Done；
-8. 不做：关闭为 not planned，Project Status 设为 Won’t Do，并说明原因。
+1. 创建 issue：通过模板选择 `Phase / FR / Work Item`；
+2. 加入 Project：自动或手动进入 `WebEnvoy Roadmap`，默认 Status = Backlog；
+3. 准备执行：信息完整后，Status 设为 Ready；
+4. 执行：开始处理后，Status 设为 In Progress；
+5. 阻塞：Status 设为 Blocked，并说明 blocker；如果是决策阻塞，加 `status: needs-decision`；
+6. Review：PR、文档或方案进入 review 后，Status 设为 In Review；
+7. 完成：PR merge 或 issue close 后，Status 设为 Done；
+8. 不做：关闭为 not planned，Status 设为 Won’t Do，并说明原因。
 
 ## 示例
 
 ```text
-.github#12 Initiative: Harbor Runtime Session v0
+Phase: Runtime Contract v0
+labels: scope: cross-repo
 
-  Harbor#21 Phase: Runtime Session API
+  FR: WebEnvoy requests Harbor runtime session
+    Work Item: define RuntimeSession request schema
+    Work Item: map Harbor errors to WebEnvoy Core errors
 
-    Harbor#22 FR: create runtime session
-      Harbor#23 Task: define CreateSessionRequest schema
-      Harbor#24 Task: implement session create handler
-      Harbor#25 Docs: document create session API
-
-    Harbor#26 FR: close runtime session
-      Harbor#27 Task: define close behavior
-      Harbor#28 Task: release browser resources
-
-  WebEnvoy#18 Phase: Runtime Contract client
-
-    WebEnvoy#19 FR: request Harbor runtime session
-      WebEnvoy#20 Task: define RuntimeSession request schema
-      WebEnvoy#21 Task: map Harbor errors to Core errors
+  FR: Harbor exposes Runtime Session API
+    Work Item: define RuntimeSession lifecycle states
+    Work Item: implement create session endpoint
 ```
 
 ## 维护规则
@@ -204,6 +240,6 @@ is:issue is:open label:"status: needs-triage"
 - 修改 issue template 前必须确认引用的 label 已存在；
 - Project 字段变更必须先更新本文档；
 - GitHub UI 中的 Project views 和 built-in auto-add workflow 变更必须同步回本文档；
-- 跨仓 Initiative 优先放 `.github`；
-- 单仓 Phase / FR / Task 放实际负责仓库；
-- research 调研结论采纳后，应转化为 Decision 或 Task，不直接作为正式产品文档来源。
+- 跨仓工作使用 `scope: cross-repo`，不使用单独的 Cross-Repo issue type；
+- 普通调研沉淀在 `WebEnvoy/research`；采纳后转化为 Phase / FR / Work Item；
+- 决策记录进入文档；执行中被决策阻塞的 issue 使用 `status: needs-decision` 标记。

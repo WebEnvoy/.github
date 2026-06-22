@@ -1,13 +1,12 @@
 name: FR
 description: Feature Requirement that can be delivered under a Phase.
 title: "FR: "
-labels: ["status: needs-triage"]
 type: "FR"
 body:
   - type: markdown
     attributes:
       value: |
-        Use this for a concrete feature requirement. An FR can contain multiple Task / Docs / Decision issues.
+        Use this for a concrete feature requirement. An FR can contain multiple Work Item issues.
 
   - type: input
     id: parent
@@ -47,9 +46,9 @@ body:
       required: true
 
   - type: textarea
-    id: tasks
+    id: work_items
     attributes:
-      label: Expected tasks
-      description: List expected Task / Docs / Decision issues if known.
+      label: Expected work items
+      description: List expected Work Item issues if known.
     validations:
       required: false

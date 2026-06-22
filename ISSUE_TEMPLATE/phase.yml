@@ -1,7 +1,6 @@
 name: Phase
-description: Stage-level work block under an Initiative.
+description: Stage-level work block.
 title: "Phase: "
-labels: ["status: needs-triage"]
 type: "Phase"
 body:
   - type: markdown
@@ -9,20 +8,19 @@ body:
       value: |
         Use this for a stage-level work block. A Phase can contain multiple FR issues.
 
-  - type: input
-    id: parent
-    attributes:
-      label: Parent initiative
-      description: Link the parent Initiative issue if this phase belongs to one.
-      placeholder: "https://github.com/WebEnvoy/.github/issues/..."
-    validations:
-      required: false
-
   - type: textarea
     id: outcome
     attributes:
       label: Outcome
       description: What should this phase produce?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Which repositories, modules, contracts, or workflows are affected?
     validations:
       required: true
 

@@ -1,8 +1,7 @@
-name: Task
-description: Concrete implementation, validation, or setup task.
-title: "Task: "
-labels: ["status: needs-triage"]
-type: "Task"
+name: Work Item
+description: Executable work item under an FR or Phase.
+title: "Work Item: "
+type: "Work Item"
 body:
   - type: input
     id: parent
@@ -14,10 +13,10 @@ body:
       required: false
 
   - type: textarea
-    id: goal
+    id: work
     attributes:
-      label: Goal
-      description: What should be implemented or changed?
+      label: Work
+      description: What should be implemented, fixed, validated, researched, documented, or maintained?
     validations:
       required: true
 
@@ -25,7 +24,7 @@ body:
     id: context
     attributes:
       label: Context
-      description: Link relevant docs, decisions, research, schemas, or parent issues.
+      description: Link relevant docs, decisions, research, schemas, parent issues, or PRs.
     validations:
       required: false
 
@@ -33,7 +32,7 @@ body:
     id: acceptance
     attributes:
       label: Acceptance criteria
-      description: What must be true before this task is done?
+      description: What must be true before this work item is done?
       placeholder: |
         - [ ] ...
         - [ ] ...

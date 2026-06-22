@@ -6,11 +6,15 @@ WebEnvoy 是面向 Agent 和上游系统的网站能力基础设施。
 
 ## 仓库
 
-- [`WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)：站点能力执行与编排层，包含 Core、API Server、SDK、CLI、MCP 和 Console；
-- [`Harbor`](https://github.com/WebEnvoy/Harbor)：Agent-ready 指纹浏览器 / Profile Runtime / 执行身份浏览器；
-- [`Lode`](https://github.com/WebEnvoy/Lode)：站点知识、站点能力、任务封装与模板资产库；
-- [`research`](https://github.com/WebEnvoy/research)：组织级研究、调研、对比和决策候选仓库；
-- [`.github`](https://github.com/WebEnvoy/.github)：组织主页、issue 模板、PR 模板和社区配置。
+组织级仓库地图见 [WebEnvoy/.github/docs/repository-map.md](https://github.com/WebEnvoy/.github/blob/main/docs/repository-map.md)。
+
+核心仓库包括：
+
+- [`WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)
+- [`Harbor`](https://github.com/WebEnvoy/Harbor)
+- [`Lode`](https://github.com/WebEnvoy/Lode)
+- [`research`](https://github.com/WebEnvoy/research)
+- [`.github`](https://github.com/WebEnvoy/.github)
 
 ## 当前状态
 

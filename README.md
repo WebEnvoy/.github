@@ -11,6 +11,7 @@
 - `labels.yml`：统一 issue label schema；
 - `ISSUE_TEMPLATE/`：默认 issue templates；
 - `PULL_REQUEST_TEMPLATE.md`：PR 模板；
+- `WebEnvoy Project Template`：组织级 Project 模板，用于复制仓库级 Project；
 - 后续可加入安全策略、贡献指南和社区健康文件。
 
 ## 组织级文档

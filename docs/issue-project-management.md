@@ -97,13 +97,25 @@ work_item.yml        -> Work Item 表单
 
 ## Project
 
-组织级 Project：
+组织级 Project 模板：
 
 ```text
-WebEnvoy Roadmap
+WebEnvoy Project Template
+https://github.com/orgs/WebEnvoy/projects/2
 ```
 
-当前只维护这一个 Project。不同视角通过 field 和 view 表达，不为单个仓库创建 repo-level Project。
+该 Project 已标记为模板，只用于复制，不承载真实工作项。
+
+每个主要执行仓库应从该模板复制一个 Project：
+
+```text
+WebEnvoy Core       -> WebEnvoy/WebEnvoy
+Harbor Runtime      -> WebEnvoy/Harbor
+Lode Capability     -> WebEnvoy/Lode
+WebEnvoy Governance -> WebEnvoy/.github
+```
+
+`research` 默认不创建 Project。普通调研沉淀在 `WebEnvoy/research` 文档中；只有明确执行动作时，才在相关产品仓库创建 `Work Item`。
 
 ## Project 字段
 
@@ -151,7 +163,7 @@ Foundation
 
 ## Project 收录规则
 
-所有通过组织模板创建的 issue 都应进入 `WebEnvoy Roadmap`：
+所有通过组织模板创建的 issue 都应进入对应仓库的 Project：
 
 ```text
 Phase
@@ -160,6 +172,13 @@ Work Item
 ```
 
 原因：当前 issue type 已经只保留工作型 issue，Project 应作为完整执行面；Roadmap 等视图通过过滤控制显示粒度。
+
+每个仓库 Project 配置一个 auto-add workflow：
+
+```text
+repository: 当前 Project 对应的仓库
+filter: is:issue is:open
+```
 
 ## 建议视图
 
@@ -177,14 +196,15 @@ Work Item
 
 不再创建固定的 `Inbox / Triage`、`Initiatives`、`Decisions`、`Research` 视图。
 
-GitHub 当前可通过 API 读取 Project views，但未暴露创建或修改 view 的 GraphQL mutation；因此 views 需要在 GitHub UI 中创建和保存。
+GitHub 当前可通过 API 读取 Project views，但未暴露创建或修改 view 的 GraphQL mutation；因此 views 需要在 GitHub UI 中创建和保存。创建新的仓库 Project 时，应优先从 `WebEnvoy Project Template` 复制，避免手工重复配置字段和 views。
 
 ## 自动化
 
-推荐在 `WebEnvoy Roadmap` 中配置 GitHub Project auto-add workflow：
+每个仓库 Project 都应配置 GitHub Project auto-add workflow：
 
 ```text
-is:issue is:open
+repository: 当前 Project 对应的仓库
+filter: is:issue is:open
 ```
 
 原因：当前启用的 issue types 只有 `Phase / FR / Work Item`，所有 issue 都是工作型 issue。

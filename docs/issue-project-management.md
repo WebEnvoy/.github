@@ -106,13 +106,28 @@ https://github.com/orgs/WebEnvoy/projects/2
 
 该 Project 已标记为模板，只用于复制，不承载真实工作项。
 
-每个主要执行仓库应从该模板复制一个 Project：
+当前 Projects：
 
 ```text
-WebEnvoy Core       -> WebEnvoy/WebEnvoy
-Harbor Runtime      -> WebEnvoy/Harbor
-Lode Capability     -> WebEnvoy/Lode
-WebEnvoy Governance -> WebEnvoy/.github
+WebEnvoy Project Template
+  https://github.com/orgs/WebEnvoy/projects/2
+  用途：模板，不承载真实工作项
+
+WebEnvoy Governance
+  https://github.com/orgs/WebEnvoy/projects/1
+  仓库：WebEnvoy/.github
+
+WebEnvoy Core
+  https://github.com/orgs/WebEnvoy/projects/3
+  仓库：WebEnvoy/WebEnvoy
+
+Harbor Runtime
+  https://github.com/orgs/WebEnvoy/projects/4
+  仓库：WebEnvoy/Harbor
+
+Lode Capability
+  https://github.com/orgs/WebEnvoy/projects/5
+  仓库：WebEnvoy/Lode
 ```
 
 `research` 默认不创建 Project。普通调研沉淀在 `WebEnvoy/research` 文档中；只有明确执行动作时，才在相关产品仓库创建 `Work Item`。

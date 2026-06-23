@@ -7,7 +7,7 @@
 - `.github` 维护组织级规范、默认 issue templates、统一 labels 和 Project 工作流；
 - 产品仓库维护具体执行 issue；
 - `research` 维护调研材料和调研沉淀，普通调研不进入 issue / Project；
-- 不创建 repo-level Projects，统一使用组织级 Project：`WebEnvoy Roadmap`；
+- 不创建 repo-level Projects；每个执行仓库使用一个组织级 Project；
 - Issue / Project 只管理可执行、可关闭、需要跟踪的工作项；
 - 目标、路线、决策记录、调研沉淀默认进入文档系统，不进入工作队列；
 - 模型收敛为 `Phase -> FR -> Work Item`。
@@ -16,7 +16,7 @@
 
 ```text
 L0 Project
-  WebEnvoy Roadmap
+  对应仓库的 WebEnvoy 组织级 Project
 
 L1 Phase
   阶段性工作块
@@ -114,19 +114,19 @@ WebEnvoy Project Template
   用途：模板，不承载真实工作项
 
 WebEnvoy Governance
-  https://github.com/orgs/WebEnvoy/projects/1
+  https://github.com/orgs/WebEnvoy/projects/6
   仓库：WebEnvoy/.github
 
 WebEnvoy Core
-  https://github.com/orgs/WebEnvoy/projects/3
+  https://github.com/orgs/WebEnvoy/projects/7
   仓库：WebEnvoy/WebEnvoy
 
 Harbor Runtime
-  https://github.com/orgs/WebEnvoy/projects/4
+  https://github.com/orgs/WebEnvoy/projects/8
   仓库：WebEnvoy/Harbor
 
 Lode Capability
-  https://github.com/orgs/WebEnvoy/projects/5
+  https://github.com/orgs/WebEnvoy/projects/9
   仓库：WebEnvoy/Lode
 ```
 
@@ -202,7 +202,6 @@ filter: is:issue is:open
 | Backlog | Table 或 Board | 需求池，Status = Backlog |
 | Roadmap | Roadmap 或 Table | 只看 Phase / FR，必要时按 Milestone、Track、Priority 查看 |
 | Board by Status | Board | 全部工作项的执行看板 |
-| By Repository | Table | 按仓库查看负载 |
 | By Milestone | Table | 按发布批次查看工作范围 |
 | Phases | Table | 只看 Phase |
 | FRs | Table | 只看 FR |
@@ -246,7 +245,7 @@ Won’t Do
 ## 生命周期
 
 1. 创建 issue：通过模板选择 `Phase / FR / Work Item`；
-2. 加入 Project：自动或手动进入 `WebEnvoy Roadmap`，默认 Status = Backlog；
+2. 加入 Project：自动或手动进入对应仓库 Project，默认 Status = Backlog；
 3. 准备执行：信息完整后，Status 设为 Ready；
 4. 执行：开始处理后，Status 设为 In Progress；
 5. 阻塞：Status 设为 Blocked，并说明 blocker；如果是决策阻塞，加 `status: needs-decision`；

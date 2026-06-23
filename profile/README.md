@@ -10,6 +10,7 @@ WebEnvoy 是面向 Agent 和上游系统的网站能力基础设施。
 
 核心仓库包括：
 
+- [`App`](https://github.com/WebEnvoy/App)
 - [`WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)
 - [`Harbor`](https://github.com/WebEnvoy/Harbor)
 - [`Lode`](https://github.com/WebEnvoy/Lode)

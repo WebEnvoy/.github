@@ -6,8 +6,9 @@
 
 | 仓库 | 可见性 | 许可证 | 职责 |
 |---|---:|---|---|
-| `WebEnvoy/WebEnvoy` | public | AGPL-3.0-only | 站点能力执行与编排层，包含 Core、API Server、CLI、MCP Server、Console 和正式执行逻辑。 |
-| `WebEnvoy/Harbor` | public | AGPL-3.0-only | Agent-ready Profile Runtime，包含 Profile、Execution Identity、Runtime Session、Browser Drivers、CDP / VNC 和 Evidence。 |
+| `WebEnvoy/App` | public | AGPL-3.0-only | WebEnvoy 的统一产品入口和 App Shell，承载 Work、Library、Browser 三个产品域：任务运行、能力资产、运行记录、证据、异常处理，以及 Harbor 提供的 Profile、Runtime Session、Viewer 和人工接管界面。 |
+| `WebEnvoy/WebEnvoy` | public | AGPL-3.0-only | WebEnvoy Core 仓库，包含 API Server、Core Runtime、CLI、MCP Server、SDK 和正式任务执行逻辑；该仓库可简称 WebEnvoy Core，不等同于完整 WebEnvoy 产品体系，也不承载统一 App Shell。 |
+| `WebEnvoy/Harbor` | public | AGPL-3.0-only | Agent-ready Profile Runtime，包含 Profile、Execution Identity、Runtime Session、Browser Drivers、CDP / VNC、Evidence 和 Runtime API。 |
 | `WebEnvoy/Lode` | public | MIT | 站点知识、站点能力、原子动作、任务封装、模板和测试样例资产库。 |
 | `WebEnvoy/research` | private | 无公开许可证 | 组织级研究、外部项目调研、横向对比、技术主题和决策候选。 |
 | `WebEnvoy/.github` | public | MIT | 组织主页、issue / PR 模板、组织级仓库地图、许可证边界和治理文档。 |
@@ -15,13 +16,19 @@
 ## 跨仓关系
 
 ```text
-WebEnvoy/Core
+WebEnvoy/App
+  作为统一人类用户入口
+  通过 WebEnvoy API Server 进入 Core Runtime
+  通过 Lode 或 WebEnvoy API 提供平台资产、用户个人资产、网站探索、能力草稿、版本管理和失效上报入口
+  通过 Harbor Runtime API 呈现 Profile、Runtime Session、Viewer 和人工接管界面
+
+WebEnvoy Core (`WebEnvoy/WebEnvoy`)
   读取 Lode 中的站点知识、站点能力和任务封装
-  通过 Harbor 获取 Runtime Session、执行身份和证据上下文
-  向 Agent、SDK、CLI、MCP 和 Console 返回结构化事实
+  通过 Harbor 获取 Runtime Session、执行身份、能力事实和证据上下文
+  向 Agent、SDK、CLI、MCP 和 WebEnvoy App 返回结构化事实
 
 Harbor
-  提供 Profile、Execution Identity、Browser Session、CDP / VNC、Browser Drivers 和 Evidence
+  提供 Profile、Execution Identity、Browser Session、CDP / VNC、Browser Drivers、能力事实和 Evidence
   不理解具体站点业务，不执行 Lode 任务封装
 
 Lode
@@ -38,7 +45,8 @@ research
 
 ## 命名约定
 
-- 主仓使用 `WebEnvoy/WebEnvoy`；
+- 统一产品入口使用 `WebEnvoy/App`；
+- Core 仓库使用 `WebEnvoy/WebEnvoy`，也称 WebEnvoy Core；
 - Runtime 仓库使用品牌名 `WebEnvoy/Harbor`；
 - 资产库使用首字母大写 `WebEnvoy/Lode`；
 - 研究仓库使用小写 `WebEnvoy/research`；

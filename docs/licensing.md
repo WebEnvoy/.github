@@ -6,7 +6,8 @@
 
 | 仓库 | 许可证 / 可见性 | 策略说明 |
 |---|---|---|
-| `WebEnvoy/WebEnvoy` | AGPL-3.0-only | 保护 Core、API Server、Console、CLI、MCP Server 和正式执行逻辑。 |
+| `WebEnvoy/App` | AGPL-3.0-only | 保护统一 App Shell、WebEnvoy App / Console、Harbor Profile UI、运行记录、证据查看和人工接管界面。 |
+| `WebEnvoy/WebEnvoy` | AGPL-3.0-only | 保护 Core、API Server、CLI、MCP Server、SDK 和正式任务执行逻辑。 |
 | `WebEnvoy/Harbor` | AGPL-3.0-only | 保护 Runtime Server、Profile、Execution Identity、Browser Drivers、Evidence 等核心运行时能力。 |
 | `WebEnvoy/Lode` | MIT | 鼓励站点知识、能力包、任务封装、模板和能力包格式传播与复用。 |
 | `WebEnvoy/.github` | MIT | 组织主页、issue 模板、PR 模板和组织级文档，保持宽松复用。 |
@@ -16,9 +17,9 @@
 
 AGPL 仓库承载产品核心能力：
 
+- WebEnvoy App / Console；
 - WebEnvoy Core；
 - API Server；
-- Console；
 - CLI；
 - MCP Server；
 - Harbor Runtime Server；

@@ -10,7 +10,7 @@
 | `WebEnvoy/WebEnvoy` | AGPL-3.0-only | 保护 Core、API Server、CLI、MCP Server、SDK 和正式任务执行逻辑。 |
 | `WebEnvoy/Harbor` | AGPL-3.0-only | 保护 Runtime Server、Profile、Execution Identity、Browser Drivers、Evidence 等核心运行时能力。 |
 | `WebEnvoy/Lode` | MIT | 鼓励站点知识、能力包、任务封装、模板和能力包格式传播与复用。 |
-| `WebEnvoy/.github` | MIT | 组织主页、issue 模板、PR 模板和组织级文档，保持宽松复用。 |
+| `WebEnvoy/.github` | public，无公开许可证 | 组织主页、issue 模板、PR 模板和组织级文档。 |
 | `WebEnvoy/research` | private，无公开许可证 | 调研、竞品分析、技术比较和决策候选默认不公开。 |
 
 ## AGPL 核心边界

@@ -13,7 +13,3 @@
 - `PULL_REQUEST_TEMPLATE.md`：PR 模板；
 - `WebEnvoy Project Template`：组织级 Project 模板，用于复制仓库级 Project；
 - 后续可加入安全策略、贡献指南和社区健康文件。
-
-## 许可证
-
-本仓库采用 [MIT License](LICENSE)。

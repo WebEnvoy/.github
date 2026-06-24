@@ -11,7 +11,7 @@
 | `WebEnvoy/Harbor` | public | AGPL-3.0-only | Agent-ready Profile Runtime，包含 Profile、Execution Identity、Runtime Session、Browser Drivers、CDP / VNC、Evidence 和 Runtime API。 |
 | `WebEnvoy/Lode` | public | MIT | 站点知识、站点能力、原子动作、任务封装、模板和测试样例资产库。 |
 | `WebEnvoy/research` | private | 无公开许可证 | 组织级研究、外部项目调研、横向对比、技术主题和决策候选。 |
-| `WebEnvoy/.github` | public | MIT | 组织主页、issue / PR 模板、组织级仓库地图、许可证边界和治理文档。 |
+| `WebEnvoy/.github` | public | 无公开许可证 | 组织主页、issue / PR 模板、组织级仓库地图、许可证边界和治理文档。 |
 
 ## 跨仓关系
 

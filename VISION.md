@@ -16,6 +16,23 @@ WebEnvoy 是人类用户、Agent、自动化程序和上游系统使用真实网
 
 ## WebEnvoy 要解决的问题
 
+当前产品纠偏由以下 GitHub truth 和 successor ADR 承接：
+
+- [App #298](https://github.com/WebEnvoy/App/issues/298) 与
+  [App ADR 0009](https://github.com/WebEnvoy/App/blob/main/docs/adr/0009-human-workbench-information-architecture.md)：
+  Work / Browser / Library 人类工作台与信息分层；
+- [Core #290](https://github.com/WebEnvoy/WebEnvoy/issues/290) 与
+  [Core ADR 0009](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/adr/0009-unified-authorization-policy.md)：
+  多入口统一授权策略；
+- [Harbor #278](https://github.com/WebEnvoy/Harbor/issues/278) 与
+  [Harbor ADR 0009](https://github.com/WebEnvoy/Harbor/blob/main/docs/adr/0009-provider-lifecycle-management.md)：
+  provider 检测、安装、更新、修复与启动验证；
+- [Lode #281](https://github.com/WebEnvoy/Lode/issues/281) 与
+  [Lode ADR 0007](https://github.com/WebEnvoy/Lode/blob/main/docs/adr/0007-capability-action-declaration.md)：
+  capability 动作声明与授权边界。
+
+这些 issue/ADR 固化当前产品方向，不代表相应实现或产品 E2E 已完成。
+
 WebEnvoy 面向 Agent，但不只服务 Agent。
 
 真实网站能力的使用者包括：
@@ -333,6 +350,41 @@ Agent / SDK / CLI / MCP / 自动化程序 / 上游系统
 ```
 
 WebEnvoy App 是人类用户入口，不是 WebEnvoy 的唯一产品形态。Agent、自动化程序、SDK、CLI、MCP 和上游系统应通过 WebEnvoy Core 使用网站能力。
+
+## 人类工作台与授权模型
+
+WebEnvoy App 面向人类组织三个业务域：
+
+```text
+Work    -> 创建和管理任务，消费业务结果，处理失败与人工介入
+Browser -> 管理账号身份、provider、浏览器环境和实例生命周期
+Library -> 浏览、管理和使用站点技能
+```
+
+Settings 只承载偏好、全局授权默认值和诊断，不作为第四个业务域。App
+可以观察 App、CLI、MCP、API、SDK 或 Agent 创建的任务，但不为不同入口建立
+平行任务系统。
+
+默认产品表面必须按以下顺序组织信息：
+
+1. 业务结果、失败原因和下一步；
+2. 原页面、账号、技能和时间等来源摘要；
+3. 用户主动展开的运行详情；
+4. 诊断模式中的 run/session/evidence refs、trace、endpoint 和原始错误。
+
+Evidence、Snapshot、RefMap、source trace 和 Run Record 是运行记录与诊断能力，
+不是 App 默认页面的业务内容。它们可以支持结果追溯、故障排查和能力修复，
+但不能因为“可见”就被当成用户价值或任务完成证明。
+
+所有任务入口共用 Core 的授权策略。第一版策略只需要三层：全局默认、当前任务
+覆盖和单次授权。Lode 声明动作类别和目标范围；Core 解析策略并记录决定；Harbor
+执行已经允许的浏览器动作；App、CLI、MCP、API 和 SDK 只配置或投影同一语义。
+个人本机产品不建立多级组织审批流。
+
+Browser 域覆盖 provider 的完整本机生命周期。对于 WebEnvoy 可管理的 provider，
+用户应能完成检测、下载、安装、更新、修复和启动验证；系统浏览器和外部 provider
+按各自所有权提供检测、定位或连接验证。底层指纹、隔离和浏览器能力由 provider
+提供，Harbor 统一管理其生命周期和客观能力事实。
 
 ## 核心仓库分工
 

@@ -17,7 +17,7 @@ WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统
 
 为支撑这些产品能力，目标状态包括：
 
-- `WebEnvoy/WebEnvoy` 提供统一 API Server、Core Runtime、Run Record、Result Envelope、Admission 和 Action Risk 合同。
+- `WebEnvoy/WebEnvoy` 提供统一 API Server、Core Runtime、Run Record、Result Envelope、Admission 和统一授权策略合同。
 - `WebEnvoy/Harbor` 提供 Profile、Execution Identity、Runtime Session、Provider facts、Snapshot、RefMap、Evidence refs 和 Viewer / handoff facts。
 - `WebEnvoy/Lode` 提供 capability package、workflow package、schema、fixtures、post-check、asset registry、版本和失效标记。
 - `WebEnvoy/App` 提供 Work、Library、Browser 三个用户表面，展示上游事实并发送用户意图，不复制上游 truth。
@@ -44,6 +44,12 @@ WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统
 - 首批能力选择低风险读能力或 validate-only 写能力，用来验证模型，不用复杂真实提交任务证明平台完整性。
 - 已收敛研究成果要进入阶段完成标准；路线图不从零开始，也不把外部项目整体搬进 WebEnvoy。
 - 生态扩展只由已经跑通的产品闭环拉动，不提前把 hosted runtime、marketplace、团队同步或 crawler 写成默认交付前提。
+- App 的用户验收以能否完成工作、理解业务结果和处理异常为准，不以 runtime 状态、refs 或日志数量为准。
+- Work、Browser、Library 是 App 的三个业务域；Settings 只承载偏好、全局授权默认值和诊断。
+- App、CLI、MCP、API、SDK 和 Agent 共用 Core 任务与授权路径。授权采用全局默认、任务覆盖和单次确认，不在各入口或站点技能中复制确认流程；“审批”只保留给未来真实多人组织流程。
+- Evidence、Run Record、Snapshot、RefMap 和 source trace 默认是后台运行记录；只有来源追溯、故障诊断或用户主动查看时才进入产品表面。
+- Provider 管理必须覆盖从检测到安装、更新、修复和启动验证的恢复闭环，不能止于下载链接或错误文本。
+- UI 实施前必须经过用户场景、对象模型、信息架构和低保真旅程验收；不得从临时 fixture 或技术状态字段反推最终界面。
 
 ## 阶段阶梯
 
@@ -56,7 +62,7 @@ WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统
 达到该阶段时：
 
 - 首个真实用户任务明确为低风险只读网站任务：在受控运行现场打开目标页面或账号环境，提取结构化信息，返回结果封装、证据引用和失败原因。
-- 首个写侧边界明确为 validate-only、draft 或 preview，不默认真实提交；真实写入必须等待审批、幂等、post-check、unknown outcome 和对账入口的最小语义成立。
+- 首个写侧边界明确为 validate-only、draft 或 preview，不默认真实提交；真实写入必须等待符合统一策略的明确授权，以及幂等、post-check、unknown outcome 和对账入口的最小语义成立。
 - 跨仓 architecture 说明四仓角色、truth source、数据流和禁止跨界。
 - 首个端到端用户任务旅程说明 Work、Library、Browser、Core、Harbor 和 Lode 各自承担什么。
 - 研究吸收边界明确：CloakBrowser provider baseline、Snapshot / RefMap、Run Record / evidence、capability package / schema / fixtures 和 handoff / recovery 作为机制吸收方向。
@@ -72,7 +78,7 @@ WebEnvoy 先稳定最小公共协议骨架，让 App、API、CLI、MCP 和 SDK �
 
 达到该阶段时：
 
-- Core 的最小 `task`、`run`、`result`、`admission`、`action risk`、状态机和 `evidence ref` 语义被定义为公共 spine，而不是一次性铺满全部字段。
+- Core 的最小 `task`、`run`、`result`、`admission`、统一授权、状态机和 `evidence ref` 语义被定义为公共 spine，而不是一次性铺满全部字段。
 - Harbor 的最小 `runtime facts`、`session ref`、`snapshot ref`、`evidence ref` 和 `viewer ref` 语义能被 Core 引用。
 - Lode 的最小 `capability package`、`schema`、`fixtures`、`resource requirements` 和 `post-check` 语义能被 Core 准入和校验。
 - 至少一个机器入口和一个用户入口消费同一套最小协议；入口可以很窄，但不能各自发明字段真相。
@@ -116,26 +122,26 @@ WebEnvoy 先稳定最小公共协议骨架，让 App、API、CLI、MCP 和 SDK �
 
 ### 阶段六：写前验证闭环
 
-WebEnvoy 可以准备写操作、生成预览、验证风险和请求审批，但默认不执行真实提交。
+WebEnvoy 可以准备写操作、生成预览、说明动作范围并请求授权确认，但默认不执行真实提交。
 
 达到该阶段时：
 
 - Lode 能声明 validate-only、draft 或 preview 写能力，以及预期变更、resource requirements、post-check 和失败分类。
-- Core 能生成 action request、risk classification、approval request 和结构化预览，不把预览当作已提交结果。
+- Core 能生成 action request、授权要求和结构化预览，不把预览当作已提交结果。
 - Harbor 能提供页面引用、表单状态、输入目标和证据引用，支撑用户理解将要发生的写操作。
-- App 能展示写前预览、风险、审批请求和用户可取消入口。
+- App 能展示写前预览、目标、动作范围、授权确认和用户可取消入口。
 - 写前验证失败、页面变化或用户取消都能进入 Run Record，而不是消失在 UI 状态里。
 
 ### 阶段七：受控写入闭环
 
-首批低风险真实写操作可以在明确审批、证据、幂等和对账语义下执行。
+首批低风险真实写操作可以在明确授权、运行记录、幂等和对账语义下执行。
 
 达到该阶段时：
 
 - Lode 能声明真实写能力的 action boundary、idempotency key、write operation ref、post-check 和修复线索。
-- Core 能记录 accepted、running、terminal、unknown outcome、write operation ref、approval 和 post-check 事实。
+- Core 能记录 accepted、running、terminal、unknown outcome、write operation ref、authorization decision 和 post-check 事实。
 - Harbor 能提供写入前后证据、控制权事实和页面现场 provenance。
-- App 能让用户审批、执行、查看写入证据、理解 unknown outcome，并进入对账或人工处理。
+- App 能让用户确认授权、执行、查看业务结果、理解 unknown outcome，并进入对账或人工处理；详细运行记录按需展开。
 - 真实写入仍限制在首批低风险能力内，不因阶段成立而开放任意网站提交。
 
 ### 阶段八：可恢复多步读写工作流
@@ -156,11 +162,11 @@ WebEnvoy 可以准备写操作、生成预览、验证风险和请求审批，�
 
 达到该阶段时：
 
-- Work 表面覆盖任务提交、运行状态、结果、证据、审批、恢复和对账入口。
+- Work 表面覆盖任务提交、业务结果、授权确认、恢复和对账入口；运行状态与证据按需进入详情或诊断。
 - Library 表面覆盖能力浏览、安装、更新、锁定、草稿、修复、上报和版本策略。
 - Browser 表面覆盖 Profile、Runtime Session、Viewer、接管、Provider facts 和连接状态。
 - Settings 能表达本地 API、Harbor、Lode 资产来源、数据目录、权限和隐私策略。
-- API、CLI、MCP、SDK 和 App 共用同一条 Core 任务路径；错误、证据、权限、审批和恢复入口语义一致。
+- API、CLI、MCP、SDK 和 App 共用同一条 Core 任务路径；错误、运行记录、权限、授权和恢复入口语义一致。
 
 ### 阶段十：生态与协作扩展
 

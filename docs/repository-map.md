@@ -15,7 +15,7 @@ canonical 产品 code、PR 和新的执行 Work Item 入口已切换到 [`WebEnv
 | 仓库 | 可见性 | 许可证 | 当前职责 |
 |---|---:|---|---|
 | [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) | public | AGPL-3.0-only | WebEnvoy Core 仓库，包含 API Server、Core Runtime、CLI、MCP Server、SDK 和正式任务执行逻辑。 |
-| [`WebEnvoy/App`](https://github.com/WebEnvoy/App) | public | AGPL-3.0-only | 统一产品入口和 App Shell，承载 Work、Library、Browser 三个产品域，以及运行记录、证据、异常处理和 Harbor 运行现场界面。 |
+| [`WebEnvoy/App`](https://github.com/WebEnvoy/App) | public | AGPL-3.0-only | legacy source/history/backlog/rollback locator；active App 模块位于 monorepo `apps/desktop`，承载 Work、Library、Browser、运行记录、证据、异常处理和 Harbor 运行现场界面。 |
 | [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor) | public | AGPL-3.0-only | Agent-ready Profile Runtime，包含 Profile、Execution Identity、Runtime Session、Browser Drivers、CDP / VNC、Evidence 和 Runtime API。 |
 | [`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode) | public | MIT | 站点知识、站点能力、原子动作、任务封装、模板和测试样例资产库；`sites/` 仍在此仓库内，不再拆出独立站点仓。 |
 | [`WebEnvoy/.github`](https://github.com/WebEnvoy/.github) | public | 无公开许可证 | 组织主页、issue / PR 模板、仓库地图、许可证边界和治理文档。 |

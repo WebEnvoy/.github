@@ -9,7 +9,7 @@
 | 仓库 | 许可证 / 可见性 | 当前策略说明 |
 |---|---|---|
 | [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) | AGPL-3.0-only / public | 承载 Core、API Server、CLI、MCP Server、SDK 和正式任务执行逻辑。 |
-| [`WebEnvoy/App`](https://github.com/WebEnvoy/App) | AGPL-3.0-only / public | 承载统一 App Shell、Work / Library / Browser 用户入口、运行记录和证据展示、人工接管界面。 |
+| [`WebEnvoy/App`](https://github.com/WebEnvoy/App) | AGPL-3.0-only / public | legacy source/history/backlog/rollback locator；active App 模块位于 monorepo `apps/desktop`，保持 App Shell、Work / Library / Browser 与独立进程边界。 |
 | [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor) | AGPL-3.0-only / public | 承载 Runtime Server、Profile、Execution Identity、Browser Drivers、Evidence 和运行时 API。 |
 | [`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode) | MIT / public | 承载站点知识、能力包、任务封装、模板、fixtures、包格式和版本/失效标记。 |
 | [`WebEnvoy/.github`](https://github.com/WebEnvoy/.github) | 无公开许可证 / public | 组织主页、模板、仓库地图、许可证边界和治理文档。 |
@@ -62,9 +62,9 @@ AGPL 仓库承载产品核心能力：
 
 ## 许可证迁移门
 
-任何源码迁移或入口切换都必须通过组织级[仓库地图迁移门](repository-map.md#迁移门)中的数据与许可证门：确认每个导入文件的来源和许可证、保留历史和 notices、审查第三方依赖，并证明 Profile、credential、Cookie、token、raw DOM/HAR/截图等敏感材料未进入 monorepo 或迁移证据。许可证、历史来源或依赖归属存在歧义时，标记 `needs-decision` 并停止迁移，不用文档推测覆盖冲突。
+任何源码历史导入、发布或 source-object 退役都必须通过组织级[仓库地图迁移门](repository-map.md#迁移门)中的数据与许可证门：确认每个导入文件的来源和许可证、保留历史和 notices、审查第三方依赖，并证明 Profile、credential、Cookie、token、raw DOM/HAR/截图等敏感材料未进入 monorepo 或迁移证据。canonical development entry 已切换，不由该门重新门禁；许可证、历史来源或依赖归属存在歧义时，标记 `needs-decision` 并停止剩余迁移，不用文档推测覆盖冲突。
 
-旧 App/Harbor 仓库在所有合同、历史、clean-checkout、运行时装配、GitHub mapping、回滚和许可证证据完成前保持权威；切换失败时恢复旧入口和原许可证载体。归档或退役属于后续独立确认门，本批次不执行。
+旧 App/Harbor 仓库仅保留 history/backlog/rollback locator，不是新的开发权威；canonical entry 已切换。若后续导入、发布或运行时验证失败，按 rollback evidence 恢复原许可证载体和 legacy locator；source-object transfer、close、archive/retirement 仍由 [#10](https://github.com/WebEnvoy/.github/issues/10) 单独授权，本批次不执行。
 
 ## 当前落地规则
 

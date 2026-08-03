@@ -20,7 +20,7 @@ WebEnvoy 重点解决真实网站能力使用中的几个关键问题：
 
 ## 核心仓库
 
-- [`App`](https://github.com/WebEnvoy/App)：统一人类用户入口，承载 Work、Library、Browser 三个产品域。
+- [`App`](https://github.com/WebEnvoy/App)：legacy source/history/backlog/rollback locator；active App 模块位于 [`WebEnvoy/WebEnvoy/apps/desktop`](https://github.com/WebEnvoy/WebEnvoy/tree/main/apps/desktop)，承载 Work、Library、Browser 三个产品域。
 - [`WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)：WebEnvoy Core，负责 API Server、Core Runtime、能力准入、资源匹配、Run Record、结果封装和失败归因。
 - [`Harbor`](https://github.com/WebEnvoy/Harbor)：Agent-ready Profile Runtime，负责 Profile、执行身份、Runtime Session、Viewer、人工接管、provider 能力事实和运行证据。
 - [`Lode`](https://github.com/WebEnvoy/Lode)：能力资产库，负责站点知识、站点能力、原子动作、任务封装、模板、测试样例、输出契约、资源需求和版本资产。

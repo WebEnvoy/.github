@@ -14,15 +14,15 @@
 
 ## 3+1 拓扑的治理映射
 
-组织级拓扑决策由 [Phase #5](https://github.com/WebEnvoy/.github/issues/5)、[FR #6](https://github.com/WebEnvoy/.github/issues/6) 和其 child [Work Item #8](https://github.com/WebEnvoy/.github/issues/8) 承载，均属于 [`v0.1-product-repository-topology`](https://github.com/WebEnvoy/.github/milestone/1) milestone；#8 的 parent 是 #6，#6 的 parent 是 #5。#8 的文档 closeout 已完成；当前 GitHub 真相 dry-run 由 [Work Item #9](https://github.com/WebEnvoy/.github/issues/9) 承载，入口/退役 gate 由 [#10](https://github.com/WebEnvoy/.github/issues/10) 约束。源码导入、workspace、GitHub 真相切换和旧仓退役不因 #8 closeout 自动完成。
+组织级拓扑决策由 [Phase #5](https://github.com/WebEnvoy/.github/issues/5)、[FR #6](https://github.com/WebEnvoy/.github/issues/6) 和其 child [Work Item #8](https://github.com/WebEnvoy/.github/issues/8) 承载，均属于 [`v0.1-product-repository-topology`](https://github.com/WebEnvoy/.github/milestone/1) milestone；#8 的 parent 是 #6，#6 的 parent 是 #5。#8 的文档 closeout 已完成；当前 GitHub mapping 与 canonical entry 由 [Work Item #9](https://github.com/WebEnvoy/.github/issues/9) 承载，source-object 退役 gate 由 [#10](https://github.com/WebEnvoy/.github/issues/10) 约束。源码历史导入、workspace 和旧仓退役不因 #8 closeout 自动完成。
 
-迁移前沿用当前多仓 Project：Core、App、Harbor 分别维护执行真相，Lode 继续维护独立能力资产，`.github` 维护组织治理；不转移 issue、Project、milestone、PR、权限或入口。迁移验收前旧 `WebEnvoy/App` / `WebEnvoy/Harbor` 仓库保持权威且不归档。
+canonical 新开发和新的执行 Work Item 统一进入 `WebEnvoy/WebEnvoy` 的 Core Project #7；`WebEnvoy/App` Project #11 与 `WebEnvoy/Harbor` Project #8 仅保留 legacy backlog/source locator，不接受新的实现工作，也不转移、关闭或归档源对象。Lode 继续维护独立 MIT 能力资产，`.github` 维护组织治理；本批次不转移 issue、Project、milestone、PR、权限或仓库。
 
-目标拓扑是 `WebEnvoy/WebEnvoy` 产品 monorepo 中的 Core、App、Harbor 三个独立模块，加上独立 MIT 的 `WebEnvoy/Lode`。迁移后的 Project、仓库归属和对象映射只有在 GitHub mapping 门通过后才能由后续 FR 明确；本文件不预先创建或改写目标 Project。无论是否位于同一 monorepo，Core、App、Harbor 都保持独立进程、owner API 和 truth source；Lode 通过 version/hash pin 和 compatibility CI 消费，不使用 git submodule，不拆 sites。
+目标拓扑是 `WebEnvoy/WebEnvoy` 产品 monorepo 中的 Core、App、Harbor 三个独立模块，加上独立 MIT 的 `WebEnvoy/Lode`。Core Project #7 已作为 monorepo 的 canonical execution Project；App/Harbor 的现有 Project 只作 legacy backlog locator，逐项 target mapping 仍记为 `deferred / not-created`，不在此批次创建替代对象或转移源对象。无论是否位于同一 monorepo，Core、App、Harbor 都保持独立进程、owner API 和 truth source；Lode 通过 version/hash pin 和 compatibility CI 消费，不使用 git submodule，不拆 sites。
 
-当前 dry-run inventory 直接列出 App 的 17 个 open issues、Harbor 的 14 个 open issues、Lode PR #291 以及源仓 milestones；逐项 source/target/readback 见 [`docs/github-truth-cutover.md`](github-truth-cutover.md)。目标对象不存在时写 `deferred / not-created`；parent、sub-issue、blocked-by、dependency 或 Project readback 不可用时写 `unavailable`，不得推断关系或创建替代对象。
+当前 dry-run inventory 直接列出 `.github` 4、Core 13、App 17、Harbor 14、Lode 3 个 open issues、App PR #291、Lode PR #291 以及源仓 milestones；逐项 source/target/readback 见 [`docs/github-truth-cutover.md`](github-truth-cutover.md)。App/Harbor 目标对象不存在时写 `deferred / not-created`，Core/Lode/.github 写同仓 identity；只有 API 真不可用才写 `unavailable`，native 空数组写 `none`，不得推断关系或创建替代对象。
 
-迁移门必须覆盖合同与所有权、历史、clean-checkout、运行时装配、数据/许可证、GitHub mapping 和回滚；任一门失败、GitHub 事实不可读或映射缺口存在时，Status 设为 `Blocked` / 加 `status: needs-decision`，继续以现有多仓为权威。切换失败时恢复旧入口和权威分支，保留差异证据；归档、transfer、close 和发布动作都需要后续明确授权。
+迁移门必须覆盖合同与所有权、历史、clean-checkout、运行时装配、数据/许可证、GitHub mapping 和回滚；任一门失败、GitHub 事实不可读或映射缺口存在时，Status 设为 `Blocked` / 加 `status: needs-decision`，暂停剩余迁移并保留 legacy locator 与 rollback evidence。canonical development entry 已切换；source-object 归档、transfer、close 和发布动作仍需要后续明确授权。
 
 ## Issue 层级
 
@@ -146,7 +146,7 @@ Lode Capability
   仓库：WebEnvoy/Lode
 ```
 
-以上列表是迁移验收前的 GitHub 当前事实。本批次不创建 monorepo Project，也不把 App / Harbor 的 issue 或 Project 转移到 Core；目标 Project 形态、历史映射和入口切换由 GitHub mapping Work Item 在全部迁移门通过后另行记录。源仓保持 legacy authority，Lode 保持独立 MIT 和可写能力资产真相源。
+以上列表是当前 GitHub Project 事实：Core Project #7 是 monorepo 的 canonical execution Project；App Project #11 与 Harbor Project #8 仅作 legacy backlog locator，不承载新的 monorepo 实现。App / Harbor 的 issue 或 Project 不在本批次转移到 Core；逐项历史映射和 source-object 退役仍由 GitHub mapping Work Item 与 #10 gate 记录。Lode 保持独立 MIT 和可写能力资产真相源。
 
 `research` 默认不创建 Project。普通调研沉淀在 `WebEnvoy/research` 文档中；只有明确执行动作时，才在相关产品仓库创建 `Work Item`。
 

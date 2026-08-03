@@ -1,6 +1,6 @@
 # WebEnvoy
 
-> **Canonical product entry**：产品代码、PR 与新的执行 Work Item 统一进入 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) 的 `apps/desktop`、`packages/*` 与 `services/harbor` 模块。`WebEnvoy/App` 与 `WebEnvoy/Harbor` 仍保留历史、backlog locator 和 rollback，未归档且不接受新的实现；入口切换和退役仍需 [WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 的 explicit confirmation。Core、App、Harbor 保持独立进程和 owner API；Harbor 独占 credential、cookie、token、profile、raw DOM、HAR、screenshot，Lode/站点策略/结果归一化不进入 Harbor，Lode 继续独立 MIT version/hash pin。
+> **Canonical product entry**：产品代码、PR 与新的执行 Work Item 统一进入 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) 的 `apps/desktop`、`packages/*` 与 `services/harbor` 模块。`WebEnvoy/App` 与 `WebEnvoy/Harbor` 仍保留历史、backlog locator 和 rollback，未归档且不接受新的实现；canonical development entry 已切换，#10 只对 legacy source issue/Project 的 transfer、close、archive/retirement 要求 explicit confirmation。Core、App、Harbor 保持独立进程和 owner API；Harbor 独占 credential、cookie、token、profile、raw DOM、HAR、screenshot，Lode/站点策略/结果归一化不进入 Harbor，Lode 继续独立 MIT version/hash pin。
 
 真实网站不应该只靠 Agent 现场摸索，也不应该只靠一堆随时失效的浏览器脚本。
 

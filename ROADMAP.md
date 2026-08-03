@@ -1,14 +1,20 @@
 # WebEnvoy 路线图
 
-本文是 WebEnvoy 四仓共同遵循的长期路线图。它只描述目标状态和阶段阶梯，不维护当前活跃 issue、Work Item、PR 或执行看板。
+本文是 WebEnvoy 组织级产品路线图。当前实现仍分布在 Core、App、Harbor、Lode 四个产品仓库；目标产品拓扑是 `WebEnvoy/WebEnvoy` 中的 Core、App、Harbor 三个模块，加上独立的 Lode（3+1）。本文只描述目标状态、阶段阶梯和迁移约束，不维护当前活跃 issue、Work Item、PR 或执行看板。
 
 当前执行状态以 GitHub Milestones、Project、issues 和 PR 为准。
+
+## 组织拓扑与迁移状态
+
+迁移验收前，`WebEnvoy/WebEnvoy`、`WebEnvoy/App`、`WebEnvoy/Harbor` 和 `WebEnvoy/Lode` 仍是独立产品仓库；旧 App/Harbor 仓库和入口保持权威，不归档、不转移。目标状态是一个模块化产品 monorepo：Core、App、Harbor 仍保持独立模块、独立进程和 owner API；Lode 继续作为独立 MIT 仓库，通过 version/hash pin 和 compatibility CI 被消费，不使用 git submodule，也不再拆 sites。
+
+文档规划不等于代码迁移完成。只有合同与所有权、历史、clean-checkout、运行时装配、数据/许可证、GitHub mapping 和回滚门全部通过，并完成可回滚发布、readback 和 owner 明确确认后，才允许切换执行入口。任一门失败、事实不可用或运行验证不稳定，都继续以现有多仓为权威；切换失败时恢复旧 App/Harbor 入口和权威分支。详细当前/目标映射和证据要求见[组织级仓库地图](docs/repository-map.md)，许可证边界见[组织级许可证文档](docs/licensing.md)，GitHub 执行映射见[Issue 与 Project 管理规范](docs/issue-project-management.md)。
 
 ## 目标状态
 
 WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统一任务入口复用稳定的网站能力，并让每次网页操作任务都可准入、可执行、可记录、可验证、可恢复、可对账。
 
-用户和上游系统最终不需要理解四仓内部结构，而是能完成这些工作：
+用户和上游系统最终不需要理解 3+1 内部结构，而是能完成这些工作：
 
 - 在 Work 中提交网站任务、查看运行状态、读取结构化结果、打开证据和处理异常。
 - 在 Library 中找到、安装、锁定、更新、上报和修复网站能力。
@@ -17,10 +23,10 @@ WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统
 
 为支撑这些产品能力，目标状态包括：
 
-- `WebEnvoy/WebEnvoy` 提供统一 API Server、Core Runtime、Run Record、Result Envelope、Admission 和统一授权策略合同。
-- `WebEnvoy/Harbor` 提供 Profile、Execution Identity、Runtime Session、Provider facts、Snapshot、RefMap、Evidence refs 和 Viewer / handoff facts。
-- `WebEnvoy/Lode` 提供 capability package、workflow package、schema、fixtures、post-check、asset registry、版本和失效标记。
-- `WebEnvoy/App` 提供 Work、Library、Browser 三个用户表面，展示上游事实并发送用户意图，不复制上游 truth。
+- `WebEnvoy/WebEnvoy` 目标 monorepo 中的 Core 模块提供统一 API Server、Core Runtime、Run Record、Result Envelope、Admission 和统一授权策略合同。
+- `WebEnvoy/WebEnvoy` 目标 monorepo 中的 Harbor 模块提供 Profile、Execution Identity、Runtime Session、Provider facts、Snapshot、RefMap、Evidence refs 和 Viewer / handoff facts。
+- `WebEnvoy/Lode` 继续提供 capability package、workflow package、schema、fixtures、post-check、asset registry、版本和失效标记，并保持独立 MIT 仓库。
+- `WebEnvoy/WebEnvoy` 目标 monorepo 中的 App 模块提供 Work、Library、Browser 三个用户表面，展示上游事实并发送用户意图，不复制上游 truth。
 
 最终产品应满足：
 
@@ -28,10 +34,10 @@ WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统
 - 任务围绕连续执行身份、环境一致性和风险状态准入；资源或状态不满足时可以停止、接管和记录。
 - 页面现场优先压缩为低噪音结构化上下文、evidence refs 和 result envelope，不要求调用方默认消费完整 DOM、截图或原始请求响应。
 - 账号、Cookie、token、完整 DOM、完整请求响应、用户业务内容和未脱敏执行现场默认不上传；平台资产与用户个人资产分离。
-- Core 不直接拥有浏览器现场、站点知识或 App UI 状态。
-- Harbor 不判断任务业务成功，不拥有 Lode schema 或 Core Run Record。
+- Core 模块不直接拥有浏览器现场、站点知识或 App UI 状态。
+- Harbor 模块不判断任务业务成功，不拥有 Lode schema 或 Core Run Record。
 - Lode 不选择具体 Runtime Session，不保存真实账号状态或生产运行现场。
-- App 不直接执行能力、不写 Run Record、不绕过 Harbor 操作 Runtime Session。
+- App 模块不直接执行能力、不写 Run Record、不绕过 Harbor 操作 Runtime Session。
 
 ## 产品化原则
 
@@ -53,23 +59,23 @@ WebEnvoy 的目标是让用户、Agent、自动化程序和上游系统通过统
 
 ## 阶段阶梯
 
-阶段阶梯描述 WebEnvoy 从当前状态到目标状态的产品和架构成熟度。它不是 GitHub Milestone，也不指定近期 issue 顺序。每个阶段都应同时回答：用户能做什么、系统记录什么、四仓边界如何保持清楚。
+阶段阶梯描述 WebEnvoy 从当前多仓过渡态到目标 3+1 拓扑的产品和架构成熟度。它不是 GitHub Milestone，也不指定近期 issue 顺序。每个阶段都应同时回答：用户能做什么、系统记录什么、模块与 Lode 的边界如何保持清楚。
 
 ### 阶段一：用户任务与吸收边界
 
-首个真实用户任务、非目标、四仓边界和研究吸收边界稳定下来，后续工作不会各自发明平行路线，也不会按空白项目从零铺平台。
+首个真实用户任务、非目标、3+1 边界和研究吸收边界稳定下来，后续工作不会各自发明平行路线，也不会按空白项目从零铺平台。
 
 达到该阶段时：
 
 - 首个真实用户任务明确为低风险只读网站任务：在受控运行现场打开目标页面或账号环境，提取结构化信息，返回结果封装、证据引用和失败原因。
 - 首个写侧边界明确为 validate-only、draft 或 preview，不默认真实提交；真实写入必须等待符合统一策略的明确授权，以及幂等、post-check、unknown outcome 和对账入口的最小语义成立。
-- 跨仓 architecture 说明四仓角色、truth source、数据流和禁止跨界。
+- 跨仓 architecture 说明当前多仓到目标 3+1 的角色、truth source、数据流和禁止跨界。
 - 首个端到端用户任务旅程说明 Work、Library、Browser、Core、Harbor 和 Lode 各自承担什么。
 - 研究吸收边界明确：CloakBrowser provider baseline、Snapshot / RefMap、Run Record / evidence、capability package / schema / fixtures 和 handoff / recovery 作为机制吸收方向。
 - 源码复用只允许裁剪小而清晰的模块或协议种子，例如旧 WebEnvoy、Syvert、OpenCLI、BrowserSkill 和 bb-browser；外部 UI shell、hosted 平台、browser binary 和 runtime 主链不整体搬迁。
 - MVP 非目标明确：完整 hosted browser、marketplace、crawler queue、benchmark task contract、通用 browser agent loop 和反检测成功率承诺不进入早期产品合同。
 - 方向性 ADR 记录关键取舍，pending decision 集中索引。
-- 总 ROADMAP 和四仓 AGENTS 约束路线图、GitHub Milestone、功能需求和工作项的关系。
+- 总 ROADMAP 和各仓 AGENTS 约束路线图、GitHub Milestone、功能需求和工作项的关系。
 - 单仓文档不创建与总路线冲突的平行路线图。
 
 ### 阶段二：最小统一协议
@@ -158,7 +164,7 @@ WebEnvoy 可以准备写操作、生成预览、说明动作范围并请求授�
 
 ### 阶段九：日常产品与多入口稳定
 
-用户可以通过 Work、Library、Browser、API、CLI、MCP 和 SDK 日常使用同一套能力模型，而不需要理解四仓内部结构。
+用户可以通过 Work、Library、Browser、API、CLI、MCP 和 SDK 日常使用同一套能力模型，而不需要理解 3+1 内部结构。
 
 达到该阶段时：
 
@@ -192,4 +198,5 @@ WebEnvoy 可以扩展到更多 provider、更多资产来源、团队协作、�
 - 除仓库级 `ROADMAP.md` 外，单仓 planning 文档只能解释本仓如何服务当前活跃 Milestone，不能新增跨仓 Milestone。
 - 不允许在单仓创建与本文冲突的平行路线图。
 - 规格文档只服务当前或下一个活跃 Milestone，不提前铺满远期设计。
+- 产品 3+1 拓扑、许可证边界、迁移门、回滚条件和旧仓过渡态的组织级事实，以本仓 [`docs/repository-map.md`](docs/repository-map.md)、[`docs/licensing.md`](docs/licensing.md) 和 [`docs/issue-project-management.md`](docs/issue-project-management.md) 为准；产品代码或仓库级路线图不得单独宣告迁移完成。
 - 修改目标状态、阶段阶梯或跨仓边界时，优先在 `WebEnvoy/.github` 发起 PR，并说明受影响仓库。

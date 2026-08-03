@@ -1,6 +1,6 @@
 # Issue 与 Project 管理规范
 
-本文档是 WebEnvoy 组织级 issue、label、template 和 Project 配置的权威来源。
+本文档是 WebEnvoy 组织级 issue、label、template 和 Project 配置的权威来源，也规定产品 3+1 拓扑迁移期间的 GitHub 真相映射。它描述治理规则，不把文档规划或 issue 完成写成源码迁移完成。
 
 ## 总体原则
 
@@ -11,6 +11,16 @@
 - Issue / Project 只管理可执行、可关闭、需要跟踪的工作项；
 - 目标、路线、决策记录、调研沉淀默认进入文档系统，不进入工作队列；
 - 模型收敛为 `Phase -> FR -> Work Item`。
+
+## 3+1 拓扑的治理映射
+
+组织级拓扑决策由 [Phase #5](https://github.com/WebEnvoy/.github/issues/5)、[FR #6](https://github.com/WebEnvoy/.github/issues/6) 和其唯一 child [Work Item #8](https://github.com/WebEnvoy/.github/issues/8) 承载，均属于 [`v0.1-product-repository-topology`](https://github.com/WebEnvoy/.github/milestone/1) milestone；#8 的 parent 是 #6，#6 的 parent 是 #5，当前均为 open，`blocked-by: none`。源码导入、workspace、GitHub 真相切换和旧仓退役属于后续 Work Items，不由 #8 或本文件执行。
+
+迁移前沿用当前多仓 Project：Core、App、Harbor 分别维护执行真相，Lode 继续维护独立能力资产，`.github` 维护组织治理；不转移 issue、Project、milestone、PR、权限或入口。迁移验收前旧 `WebEnvoy/App` / `WebEnvoy/Harbor` 仓库保持权威且不归档。
+
+目标拓扑是 `WebEnvoy/WebEnvoy` 产品 monorepo 中的 Core、App、Harbor 三个独立模块，加上独立 MIT 的 `WebEnvoy/Lode`。迁移后的 Project、仓库归属和对象映射只有在 GitHub mapping 门通过后才能由后续 FR 明确；本文件不预先创建或改写目标 Project。无论是否位于同一 monorepo，Core、App、Harbor 都保持独立进程、owner API 和 truth source；Lode 通过 version/hash pin 和 compatibility CI 消费，不使用 git submodule，不拆 sites。
+
+迁移门必须覆盖合同与所有权、历史、clean-checkout、运行时装配、数据/许可证、GitHub mapping 和回滚；任一门失败、GitHub 事实不可读或映射缺口存在时，Status 设为 `Blocked` / 加 `status: needs-decision`，继续以现有多仓为权威。切换失败时恢复旧入口和权威分支，保留差异证据；归档、transfer、close 和发布动作都需要后续明确授权。
 
 ## Issue 层级
 
@@ -133,6 +143,8 @@ Lode Capability
   https://github.com/orgs/WebEnvoy/projects/9
   仓库：WebEnvoy/Lode
 ```
+
+以上列表是迁移验收前的 GitHub 当前事实。本批次不创建 monorepo Project，也不把 App / Harbor 的 issue 或 Project 转移到 Core；目标 Project 形态、历史映射和入口切换由后续 GitHub mapping Work Item 在全部迁移门通过后另行记录。
 
 `research` 默认不创建 Project。普通调研沉淀在 `WebEnvoy/research` 文档中；只有明确执行动作时，才在相关产品仓库创建 `Work Item`。
 

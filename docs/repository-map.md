@@ -2,6 +2,12 @@
 
 本文档是 WebEnvoy 组织级仓库地图、产品 3+1 拓扑和迁移边界的权威来源。它区分当前多仓事实与目标单工作区；产品仓库只维护自身职责，不重复维护完整组织仓库清单。当前仓库、许可证和 GitHub 对象的事实以可回读的仓库文件和 GitHub 链接为准，不把规划完成写成代码迁移完成。
 
+## GitHub 真相切换快照（dry-run）
+
+当前 canonical 产品开发入口是 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)，其中 `services/harbor` 和 `apps/desktop` 分别是 Harbor 与 App 模块；`WebEnvoy/App`、`WebEnvoy/Harbor` 仍是可读、未归档的 legacy source/history/backlog/rollback 入口。Lode 继续是独立 MIT 能力资产仓，不能迁入或改作 runtime runner。
+
+本批次的逐项 inventory、Core #339–#347 closeout、PR/artifact provenance、repo flags、rollback 和 `WebEnvoy/.github#10` explicit-confirmation gate 见 [`docs/github-truth-cutover.md`](github-truth-cutover.md)。App/Harbor 未完成 issue 的 target URL 统一记为 `deferred / not-created`；缺失 parent、blocked-by 或 dependency readback 统一记为 `unavailable`，不推断、不转移、不关闭、不归档。
+
 ## 当前多仓事实
 
 在迁移验收前，Core、App、Harbor 和 Lode 仍是四个独立产品仓库；`WebEnvoy/App` 与 `WebEnvoy/Harbor` 保持当前权威，不归档、不转移，也不改变入口。

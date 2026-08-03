@@ -1,5 +1,7 @@
 # WebEnvoy
 
+> **Canonical product entry**：产品代码、PR 与新的执行 Work Item 统一进入 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) 的 `apps/desktop`、`packages/*` 与 `services/harbor` 模块。`WebEnvoy/App` 与 `WebEnvoy/Harbor` 仍保留历史、backlog locator 和 rollback，未归档且不接受新的实现；入口切换和退役仍需 [WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 的 explicit confirmation。Core、App、Harbor 保持独立进程和 owner API；Harbor 独占 credential、cookie、token、profile、raw DOM、HAR、screenshot，Lode/站点策略/结果归一化不进入 Harbor，Lode 继续独立 MIT version/hash pin。
+
 真实网站不应该只靠 Agent 现场摸索，也不应该只靠一堆随时失效的浏览器脚本。
 
 WebEnvoy 把账号环境、站点知识、网页读写、结果归一和运行证据组织成可复用能力，让人类用户、Agent 和上游系统安全、高效、稳定地完成采集、发布、修改、验证和恢复任务。
@@ -28,4 +30,3 @@ WebEnvoy 重点解决真实网站能力使用中的几个关键问题：
 
 - [仓库地图](https://github.com/WebEnvoy/.github/blob/main/docs/repository-map.md)
 - [许可证边界](https://github.com/WebEnvoy/.github/blob/main/docs/licensing.md)
-

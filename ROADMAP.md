@@ -2,13 +2,15 @@
 
 本文是 WebEnvoy 组织级产品路线图。当前实现仍分布在 Core、App、Harbor、Lode 四个产品仓库；目标产品拓扑是 `WebEnvoy/WebEnvoy` 中的 Core、App、Harbor 三个模块，加上独立的 Lode（3+1）。本文只描述目标状态、阶段阶梯和迁移约束，不维护当前活跃 issue、Work Item、PR 或执行看板。
 
-当前执行状态以 GitHub Milestones、Project、issues 和 PR 为准。
+当前执行状态以 GitHub Milestones、Project、issues 和 PR 为准。GitHub 真相切换的 dry-run inventory、逐项 legacy mapping 和证据快照见 [`docs/github-truth-cutover.md`](docs/github-truth-cutover.md)；该文档不替代 GitHub native readback。
 
 ## 组织拓扑与迁移状态
 
 迁移验收前，`WebEnvoy/WebEnvoy`、`WebEnvoy/App`、`WebEnvoy/Harbor` 和 `WebEnvoy/Lode` 仍是独立产品仓库；旧 App/Harbor 仓库和入口保持权威，不归档、不转移。目标状态是一个模块化产品 monorepo：Core、App、Harbor 仍保持独立模块、独立进程和 owner API；Lode 继续作为独立 MIT 仓库，通过 version/hash pin 和 compatibility CI 被消费，不使用 git submodule，也不再拆 sites。
 
 文档规划不等于代码迁移完成。只有合同与所有权、历史、clean-checkout、运行时装配、数据/许可证、GitHub mapping 和回滚门全部通过，并完成可回滚发布、readback 和 owner 明确确认后，才允许切换执行入口。任一门失败、事实不可用或运行验证不稳定，都继续以现有多仓为权威；切换失败时恢复旧 App/Harbor 入口和权威分支。详细当前/目标映射和证据要求见[组织级仓库地图](docs/repository-map.md)，许可证边界见[组织级许可证文档](docs/licensing.md)，GitHub 执行映射见[Issue 与 Project 管理规范](docs/issue-project-management.md)。
+
+GitHub 入口切换和旧仓退役仍受 [WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 的 explicit-confirmation gate 约束：必须先有 W9/W10 的 release/readback/rollback、snapshot、source mapping、repo flags 和 owner 明确确认；本路线图和本批次文档不执行 transfer、close、archive、delete 或默认入口设置变更。
 
 ## 目标状态
 

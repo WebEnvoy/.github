@@ -4,13 +4,13 @@
 
 ## 当前已确认事实
 
-迁移验收前，Core、App、Harbor 和 Lode 仍分别由独立仓库承载。下表以各仓 `LICENSE` 和 README 为准；`.github` 与 `research` 当前没有公开许可证声明。
+历史 LICENSE、README 和来源事实仍可由 Core、App、Harbor、Lode source repos 逐一回读；canonical 产品 code、PR 与新的执行 Work Item 已进入 `WebEnvoy/WebEnvoy` 的 Core/App/Harbor modules，Lode 保持独立。下表以各仓 `LICENSE` 和 README 为准；`.github` 与 `research` 当前没有公开许可证声明。
 
 | 仓库 | 许可证 / 可见性 | 当前策略说明 |
 |---|---|---|
-| [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) | AGPL-3.0-only / public | 承载 Core、API Server、CLI、MCP Server、SDK 和正式任务执行逻辑。 |
+| [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) | AGPL-3.0-only / public | canonical 产品 monorepo；Core 模块承载 API Server、CLI、MCP Server、SDK 和正式任务执行逻辑。 |
 | [`WebEnvoy/App`](https://github.com/WebEnvoy/App) | AGPL-3.0-only / public | legacy source/history/backlog/rollback locator；active App 模块位于 monorepo `apps/desktop`，保持 App Shell、Work / Library / Browser 与独立进程边界。 |
-| [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor) | AGPL-3.0-only / public | 承载 Runtime Server、Profile、Execution Identity、Browser Drivers、Evidence 和运行时 API。 |
+| [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor) | AGPL-3.0-only / public | legacy source/history/backlog/rollback locator；active Harbor 模块位于 monorepo `services/harbor`，承载 Runtime Server、Profile、Execution Identity、Browser Drivers、Evidence 和运行时 API，并保持敏感事实 owner 边界。 |
 | [`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode) | MIT / public | 承载站点知识、能力包、任务封装、模板、fixtures、包格式和版本/失效标记。 |
 | [`WebEnvoy/.github`](https://github.com/WebEnvoy/.github) | 无公开许可证 / public | 组织主页、模板、仓库地图、许可证边界和治理文档。 |
 | [`WebEnvoy/research`](https://github.com/WebEnvoy/research) | 无公开许可证 / private | 调研、竞品分析、技术比较和决策候选，默认不公开。 |

@@ -1,5 +1,7 @@
 # WebEnvoy
 
+> **Canonical product entry**：产品代码、PR 与新的执行 Work Item 统一进入 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) 的 `apps/desktop`、`packages/*` 与 `services/harbor` 模块。`WebEnvoy/App` 与 `WebEnvoy/Harbor` 仍保留历史、backlog locator 和 rollback，未归档且不接受新的实现；canonical development entry 已切换，#10 只对 legacy source issue/Project 的 transfer、close、archive/retirement 要求 explicit confirmation。Core、App、Harbor 保持独立进程和 owner API；Harbor 独占 credential、cookie、token、profile、raw DOM、HAR、screenshot，Lode/站点策略/结果归一化不进入 Harbor，Lode 继续独立 MIT version/hash pin。
+
 真实网站不应该只靠 Agent 现场摸索，也不应该只靠一堆随时失效的浏览器脚本。
 
 WebEnvoy 把账号环境、站点知识、网页读写、结果归一和运行证据组织成可复用能力，让人类用户、Agent 和上游系统安全、高效、稳定地完成采集、发布、修改、验证和恢复任务。
@@ -18,9 +20,9 @@ WebEnvoy 重点解决真实网站能力使用中的几个关键问题：
 
 ## 核心仓库
 
-- [`App`](https://github.com/WebEnvoy/App)：统一人类用户入口，承载 Work、Library、Browser 三个产品域。
-- [`WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)：WebEnvoy Core，负责 API Server、Core Runtime、能力准入、资源匹配、Run Record、结果封装和失败归因。
-- [`Harbor`](https://github.com/WebEnvoy/Harbor)：Agent-ready Profile Runtime，负责 Profile、执行身份、Runtime Session、Viewer、人工接管、provider 能力事实和运行证据。
+- [`App`](https://github.com/WebEnvoy/App)：legacy source/history/backlog/rollback locator；active App 模块位于 [`WebEnvoy/WebEnvoy/apps/desktop`](https://github.com/WebEnvoy/WebEnvoy/tree/main/apps/desktop)，承载 Work、Library、Browser 三个产品域。
+- [`WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)：canonical 产品 monorepo；Core 模块负责 API Server、Core Runtime、能力准入、资源匹配、Run Record、结果封装和失败归因。
+- [`Harbor`](https://github.com/WebEnvoy/Harbor)：legacy source/history/backlog/rollback locator；active Harbor 模块位于 [`WebEnvoy/WebEnvoy/services/harbor`](https://github.com/WebEnvoy/WebEnvoy/tree/main/services/harbor)，负责 Profile、执行身份、Runtime Session、Viewer、人工接管、provider 能力事实和运行证据。
 - [`Lode`](https://github.com/WebEnvoy/Lode)：能力资产库，负责站点知识、站点能力、原子动作、任务封装、模板、测试样例、输出契约、资源需求和版本资产。
 - [`.github`](https://github.com/WebEnvoy/.github)：组织级文档、仓库地图、许可证边界、issue / PR 模板和协作规则。
 
@@ -28,4 +30,3 @@ WebEnvoy 重点解决真实网站能力使用中的几个关键问题：
 
 - [仓库地图](https://github.com/WebEnvoy/.github/blob/main/docs/repository-map.md)
 - [许可证边界](https://github.com/WebEnvoy/.github/blob/main/docs/licensing.md)
-

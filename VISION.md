@@ -388,9 +388,9 @@ Browser 域覆盖 provider 的完整本机生命周期。对于 WebEnvoy 可管�
 
 ## 核心仓库分工
 
-### WebEnvoy/App
+### App module (`WebEnvoy/WebEnvoy/apps/desktop`; legacy source `WebEnvoy/App`)
 
-`WebEnvoy/App` 是统一人类用户入口。
+`WebEnvoy/WebEnvoy/apps/desktop` 是统一人类用户入口；`WebEnvoy/App` 仅保留 legacy source/history/backlog/rollback locator。
 
 它承载三个产品域：
 
@@ -402,9 +402,9 @@ Browser → 浏览器身份、Profile、Runtime Session、Viewer、人工接管
 
 App 是产品入口，不是任务执行真相源，也不是能力资产真相源。
 
-### WebEnvoy/WebEnvoy
+### Core module (`WebEnvoy/WebEnvoy`)
 
-`WebEnvoy/WebEnvoy` 是 WebEnvoy Core 仓库。
+`WebEnvoy/WebEnvoy` 是 canonical 产品 monorepo；Core 模块负责统一 Core 能力。
 
 Core 负责：
 
@@ -423,9 +423,9 @@ Core 负责：
 
 Core 不是完整 WebEnvoy 产品体系，也不承载统一 App Shell。
 
-### WebEnvoy/Harbor
+### Harbor module (`WebEnvoy/WebEnvoy/services/harbor`; legacy source `WebEnvoy/Harbor`)
 
-`WebEnvoy/Harbor` 是 Agent-ready Profile Runtime。
+`WebEnvoy/WebEnvoy/services/harbor` 是 Agent-ready Profile Runtime；`WebEnvoy/Harbor` 仅保留 legacy source/history/backlog/rollback locator。
 
 Harbor 负责：
 

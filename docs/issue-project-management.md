@@ -127,9 +127,9 @@ WebEnvoy Governance
   https://github.com/orgs/WebEnvoy/projects/6
   仓库：WebEnvoy/.github
 
-WebEnvoy App
-  Project：暂不创建，仓库已创建
-  仓库：WebEnvoy/App
+WebEnvoy APP
+  https://github.com/orgs/WebEnvoy/projects/11
+  仓库/范围：WebEnvoy/App（当前 Project，346 items，private）
 
 WebEnvoy Core
   https://github.com/orgs/WebEnvoy/projects/7

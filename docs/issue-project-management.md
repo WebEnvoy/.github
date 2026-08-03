@@ -131,7 +131,7 @@ WebEnvoy Governance
 
 WebEnvoy APP
   https://github.com/orgs/WebEnvoy/projects/11
-  仓库/范围：WebEnvoy/App（当前 Project，346 items，private）
+  仓库/范围：WebEnvoy/App legacy backlog/source locator（private Project）
 
 WebEnvoy Core
   https://github.com/orgs/WebEnvoy/projects/7

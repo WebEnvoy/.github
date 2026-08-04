@@ -1,17 +1,17 @@
-# GitHub 真相切换、旧仓映射与归档准备
+# GitHub 真相切换、旧仓映射与源仓归档
 
-本文件是 Work Item [WebEnvoy/.github#9](https://github.com/WebEnvoy/.github/issues/9) 与 reopened [#10](https://github.com/WebEnvoy/.github/issues/10) 共用的唯一 GitHub mapping / source-retirement-readiness carrier。#9 baseline 的 `readback_at=2026-08-04T05:28:57+08:00`；#10 最终 pre-archive readiness 的 `pre_archive_readback_at=2026-08-04T06:42:59Z`。canonical 产品 code、PR 与新的执行 Work Item 入口已经切换到 monorepo；#10 已完成授权的 issue transfer、metadata/relations 修复、open PR 处置和证据固化，但不授权实际 archive、delete、release 或其他 live write。
+本文件是 Work Item [WebEnvoy/.github#9](https://github.com/WebEnvoy/.github/issues/9) 与 reopened [#10](https://github.com/WebEnvoy/.github/issues/10) 共用的唯一 GitHub mapping / source-retirement-readiness carrier。#9 baseline 的 `readback_at=2026-08-04T05:28:57+08:00`；#10 最终 pre-archive readiness 的 `pre_archive_readback_at=2026-08-04T06:42:59Z`，归档后回读时间为 `archive_readback_at=2026-08-04T07:17:43Z`。canonical 产品 code、PR 与新的执行 Work Item 入口已经切换到 monorepo；#10 已完成 issue transfer、metadata/relations 修复、open PR 处置、源仓归档和证据固化。未执行 delete、release 或其他 live write。
 
 ## Canonical 与 legacy 边界
 
 - canonical 产品 code、PR 与新的执行 Work Item 入口已经切换到 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) 的 `packages/*`、`apps/desktop` 和 `services/harbor`；Core、App、Harbor 仍是独立进程、独立 owner API 和独立 truth source。
-- legacy source/history/rollback locator：[`WebEnvoy/App`](https://github.com/WebEnvoy/App) 与 [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)。两仓保持可读、`archived=false`，open issue/PR 均为零；不接受新的实现，不改变 canonical development entry。
+- legacy source/history/rollback locator：[`WebEnvoy/App`](https://github.com/WebEnvoy/App) 与 [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)。两仓保持 public、可读、默认分支 `main`、`archived=true`，open issue/PR 均为零；不接受新的实现，不改变 canonical development entry。
 - Project mapping：[`WebEnvoy Product` Project #7](https://github.com/orgs/WebEnvoy/projects/7) 保持 open，是 monorepo 的 canonical execution Project；legacy [`WebEnvoy APP` Project #11](https://github.com/orgs/WebEnvoy/projects/11) 与 [`Harbor Runtime` Project #8](https://github.com/orgs/WebEnvoy/projects/8) 已关闭。Project #11/#8 只保留历史 locator，不承载新的 monorepo 实现；[`WebEnvoy/Lode` Project #9](https://github.com/orgs/WebEnvoy/projects/9) 保持独立能力资产执行面。
 - 独立能力资产：[`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode) 保持独立 MIT、独立可写仓库，通过 version/hash pin 与 compatibility CI 被消费；不迁入 monorepo、不使用 submodule、不成为 runtime runner。
 - Harbor 敏感运行事实继续独占 credential、cookie、token、profile、raw DOM、HAR、screenshot；Lode、站点策略和业务结果归一化不进入 Harbor。
 - 未读回或目标不存在的关系写为 `unavailable` / `deferred / not-created`，不以标题、相邻 issue 或历史习惯推断 parent、sub-issue、blocked-by、dependency、Project 或 target URL。
 
-入口切换、31 个 legacy issue transfer、关系修复与 source workflow disable 已完成；[#10](https://github.com/WebEnvoy/.github/issues/10) 在 `2026-08-04T04:51:24Z` reopened 后承载这些动作与归档准备。App、Harbor 仍分别等待 owner 最终明确确认实际 archive，当前均保持 `archived=false`；#10 不再门禁 monorepo 的默认 development entry。
+入口切换、31 个 legacy issue transfer、关系修复与 source workflow disable 已完成；[#10](https://github.com/WebEnvoy/.github/issues/10) 在 `2026-08-04T04:51:24Z` reopened 后承载这些动作与归档准备。owner 随后明确确认归档 App 与 Harbor；两仓已串行归档并回读为 `archived=true`，#10 不再门禁 monorepo 的默认 development entry。
 
 ## Canonical entry switch evidence
 
@@ -126,7 +126,7 @@ Native parent edges `26/26` 回读正确：`#357,#358→#359`；`#361→#362`；
 | Gate | State | Evidence / stop condition |
 | --- | --- | --- |
 | Canonical code/PR/Work Item entry | pass | monorepo + Project #7 `WebEnvoy Product`; source README banners merged |
-| #10 execution authorization | pass for transfer/readiness only | archive/delete/release/live write remain unauthorized |
+| #10 execution authorization | pass | owner 明确确认归档 App 与 Harbor；delete/release/live write 未授权且未执行 |
 | Native transfer semantics | pass after correction | 31/31 transferred；body/comments、redirect、metadata、relations 与 fully-qualified refs 已独立复核 |
 | Full source→target mapping | pass | 上表固化 31 行 old/new node、URL、milestone/type、Project 与 redirect |
 | Source open issues | pass | App `0`；Harbor `0` |
@@ -138,8 +138,14 @@ Native parent edges `26/26` 回读正确：`#357,#358→#359`；`#361→#362`；
 | Actions artifacts | pass | exact digest/run/head/expiry and non-sensitive JSON content persisted above |
 | Source workflows | pass | App 4 + Harbor 5 均 `disabled_manually`；无 queued/in-progress run |
 | Source milestones / Projects | pass | App #14/#15、Harbor #12/#13/#14 closed；legacy Projects #11/#8 closed；Project #7 open |
-| Repository metadata | precondition pass | App/Harbor public、`archived=false`、default `main`、admin readback available；实际 archive 前仍须立即重读 |
-| Final owner confirmation | **pending separately for App and Harbor** | no archive call until owner explicitly names the repository to archive |
+| Repository metadata | pass | App/Harbor public、`archived=true`、default `main`、admin readback available |
+| Final owner confirmation | pass | owner 明确确认归档 App 与 Harbor，归档后按精确 repo id/node id 回读 |
+
+### Post-archive readback
+
+owner 在同一执行任务中明确确认“归档 App Harbor”。归档前立即回读精确目标并串行调用 repository archive：App `id=1277863401` / `node_id=R_kgDOTCql6Q`，Harbor `id=1276563752` / `node_id=R_kgDOTBbRKA`。`2026-08-04T07:17:43Z` 回读两仓均为 `public`、`archived=true`、`disabled=false`、default `main`、`permissions.admin=true`，open issue/PR 为零；App 4 个、Harbor 5 个 workflow 仍全部 `disabled_manually`，queued/in-progress run 均为零。
+
+归档后 source history 与恢复定位仍可读：App [PR #291](https://github.com/WebEnvoy/App/pull/291) 保持 closed/unmerged，branch `work/app-290-boss-deferred-ui` 仍指向 `b3b8f6318512fbf9c6c1e61b3a1f84376bf2b079`；抽查旧 App #290 与 Harbor #264 API 均解析到 canonical [#356](https://github.com/WebEnvoy/WebEnvoy/issues/356) 与 [#386](https://github.com/WebEnvoy/WebEnvoy/issues/386)。需要回滚源仓可写状态时，由具有 `admin=true` 的 owner 对精确 repo 执行 unarchive，再以本文件记录的 source SHA、preserved branch 与 import mapping 验证；不得 reset、rewrite 或删除历史。
 
 ## Legacy inventory（逐项 source URL）
 
@@ -243,16 +249,16 @@ Lode 继续是独立 MIT 能力资产仓库；source Project 是 [#9 Lode Capabi
 
 ## Open PR readback（final source audit `2026-08-04T06:42:59Z`）
 
-`gh pr list --state open` 的 native readback：App `[]`、Harbor `[]`。App [PR #291](https://github.com/WebEnvoy/App/pull/291) 已按上方 disposition 关闭且未合并；Core/Lode 的 #9 baseline open-PR readback 仍为 `[]`。本 carrier update 未 merge、archive、release 或 live write。
+`gh pr list --state open` 的 native readback：App `[]`、Harbor `[]`。App [PR #291](https://github.com/WebEnvoy/App/pull/291) 已按上方 disposition 关闭且未合并；Core/Lode 的 #9 baseline open-PR readback 仍为 `[]`。归档后 REST readback 仍为 App/Harbor open PR `0`；未执行 release 或其他 live write。
 
 ## Source flags and rollback
 
-#9 baseline readback 中五仓均为 `public`、`archived=false`、默认分支 `main`：[`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)、[`WebEnvoy/App`](https://github.com/WebEnvoy/App)、[`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)、[`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode)、[`WebEnvoy/.github`](https://github.com/WebEnvoy/.github)。#10 final readback 中 31 个 open issues 已转移、App PR #291 已处置、source workflows/milestones/legacy Projects 已停用或关闭；App/Harbor 仍为 `public`、`archived=false`、default `main`、`permissions.admin=true`，没有 archive、delete、visibility、permission、ruleset、release 或 live-write 变更。
+#9 baseline readback 中五仓均为 `public`、`archived=false`、默认分支 `main`：[`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)、[`WebEnvoy/App`](https://github.com/WebEnvoy/App)、[`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)、[`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode)、[`WebEnvoy/.github`](https://github.com/WebEnvoy/.github)。#10 pre-archive readback 中 31 个 open issues 已转移、App PR #291 已处置、source workflows/milestones/legacy Projects 已停用或关闭；owner 明确确认后，App/Harbor 仅将 `archived` 从 `false` 切换为 `true`，visibility、default branch、history 与恢复 locator 未改变，也没有 delete、release 或其他 live-write 变更。
 
 可恢复 rollback target 由 #347 carrier 绑定：monorepo baseline `26704259b5acb428a29e954eebad144b14bc640e`，Core `2c401cf90c0cf7150e8156b904975cefaf435fa8`，Harbor `f9e13311ccd3f80cf8ef54cb97245a42da49882b`，Lode `1fbef74b4bf1b4f0a86aacd885386d7a62181207`。旧仓、旧入口、历史和 artifact 不因 mapping 文档改变；回滚只使用独立 clean checkout 和记录的安装/验证命令，不 reset、rewrite 或删除源历史。
 
-## Explicit-confirmation gate（#10）
+## Explicit-confirmation closeout（#10）
 
-canonical development entry 与 pre-archive readiness 已完成；reopened [WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 已授权 legacy open issue transfer、必要关系修复、PR #291 处置和本 carrier 更新，但没有授权 repository archive/delete、release 或 live write。实际 archive 前仍须立即重读 repo metadata，并由 owner 分别明确确认 “archive App” 与 “archive Harbor”；未获得对应确认的仓库保持 `archived=false`。
+canonical development entry 与 pre-archive readiness 已完成；reopened [WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 已完成 legacy open issue transfer、必要关系修复、PR #291 处置和本 carrier 更新。owner 明确确认归档 App 与 Harbor 后，执行前再次核对精确 repo metadata，并串行完成两仓 archive；归档后 readback 与本 carrier 一致。
 
-本 carrier update 只固化静态归档准备证据；不把 issue close、PR merge、milestone close、单次 build 或 `admin=true` 当作 source-object retirement 授权。
+本 closeout 不把 issue close、PR merge、milestone close、单次 build 或 `admin=true` 当作授权；实际归档授权来自 owner 的明确确认。delete、release、真实账号/页面与其他 live write 仍未授权且未执行。

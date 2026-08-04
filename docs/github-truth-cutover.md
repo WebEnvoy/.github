@@ -1,23 +1,23 @@
-# GitHub 真相切换与旧仓映射（dry-run）
+# GitHub 真相切换、旧仓映射与归档准备
 
-本文件是 Work Item [WebEnvoy/.github#9](https://github.com/WebEnvoy/.github/issues/9) 的 GitHub mapping carrier。`readback_at=2026-08-04T05:28:57+08:00`（由 `date -Iseconds` 核验）。canonical 产品 code、PR 与新的执行 Work Item 入口已经切换到 monorepo；本文件记录 source URL、标题、类型、状态、milestone、目标入口和证据缺口，不创建目标 issue、不转移对象、不关闭源 issue、不归档仓库。
+本文件是 Work Item [WebEnvoy/.github#9](https://github.com/WebEnvoy/.github/issues/9) 与 reopened [#10](https://github.com/WebEnvoy/.github/issues/10) 共用的唯一 GitHub mapping / source-retirement-readiness carrier。#9 baseline 的 `readback_at=2026-08-04T05:28:57+08:00`；#10 最终 pre-archive readiness 的 `pre_archive_readback_at=2026-08-04T06:42:59Z`。canonical 产品 code、PR 与新的执行 Work Item 入口已经切换到 monorepo；#10 已完成授权的 issue transfer、metadata/relations 修复、open PR 处置和证据固化，但不授权实际 archive、delete、release 或其他 live write。
 
 ## Canonical 与 legacy 边界
 
 - canonical 产品 code、PR 与新的执行 Work Item 入口已经切换到 [`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy) 的 `packages/*`、`apps/desktop` 和 `services/harbor`；Core、App、Harbor 仍是独立进程、独立 owner API 和独立 truth source。
-- legacy source/history/backlog/rollback locator：[`WebEnvoy/App`](https://github.com/WebEnvoy/App) 与 [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)。两仓保持可读、未归档，仅承载既有 backlog 与 rollback；不接受新的实现，不改变 canonical development entry。
-- Project mapping：[`WebEnvoy/WebEnvoy` Project #7](https://github.com/orgs/WebEnvoy/projects/7) 是 monorepo 的 canonical execution Project；[`WebEnvoy/App` Project #11](https://github.com/orgs/WebEnvoy/projects/11) 与 [`WebEnvoy/Harbor` Project #8](https://github.com/orgs/WebEnvoy/projects/8) 仅作 legacy backlog locator，不承载新的 monorepo 实现；[`WebEnvoy/Lode` Project #9](https://github.com/orgs/WebEnvoy/projects/9) 保持独立能力资产执行面。
+- legacy source/history/rollback locator：[`WebEnvoy/App`](https://github.com/WebEnvoy/App) 与 [`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)。两仓保持可读、`archived=false`，open issue/PR 均为零；不接受新的实现，不改变 canonical development entry。
+- Project mapping：[`WebEnvoy Product` Project #7](https://github.com/orgs/WebEnvoy/projects/7) 保持 open，是 monorepo 的 canonical execution Project；legacy [`WebEnvoy APP` Project #11](https://github.com/orgs/WebEnvoy/projects/11) 与 [`Harbor Runtime` Project #8](https://github.com/orgs/WebEnvoy/projects/8) 已关闭。Project #11/#8 只保留历史 locator，不承载新的 monorepo 实现；[`WebEnvoy/Lode` Project #9](https://github.com/orgs/WebEnvoy/projects/9) 保持独立能力资产执行面。
 - 独立能力资产：[`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode) 保持独立 MIT、独立可写仓库，通过 version/hash pin 与 compatibility CI 被消费；不迁入 monorepo、不使用 submodule、不成为 runtime runner。
 - Harbor 敏感运行事实继续独占 credential、cookie、token、profile、raw DOM、HAR、screenshot；Lode、站点策略和业务结果归一化不进入 Harbor。
 - 未读回或目标不存在的关系写为 `unavailable` / `deferred / not-created`，不以标题、相邻 issue 或历史习惯推断 parent、sub-issue、blocked-by、dependency、Project 或 target URL。
 
-入口切换已完成；[#10](https://github.com/WebEnvoy/.github/issues/10) 只门禁 legacy source issue/Project 的 transfer、close、archive/retirement。它不再门禁 monorepo 的默认 development entry；缺少 source-object retirement 证据时只保留 legacy locator，不退役源仓对象。
+入口切换、31 个 legacy issue transfer、关系修复与 source workflow disable 已完成；[#10](https://github.com/WebEnvoy/.github/issues/10) 在 `2026-08-04T04:51:24Z` reopened 后承载这些动作与归档准备。App、Harbor 仍分别等待 owner 最终明确确认实际 archive，当前均保持 `archived=false`；#10 不再门禁 monorepo 的默认 development entry。
 
 ## Canonical entry switch evidence
 
 入口 banner 已在两个 legacy source repo 合并，作为 canonical development entry 的可回读证据：App [PR #347](https://github.com/WebEnvoy/App/pull/347) → merge `3eeedfb3eb6c20f753060d34b9b14db710f85173`，Harbor [PR #354](https://github.com/WebEnvoy/Harbor/pull/354) → merge `961b54fe742afe5a3bdef0ecaddd383209d57ab0`。两项只更新入口说明，不归档、不关闭、不转移源仓对象。
 
-App legacy backlog 的 [PR #291](https://github.com/WebEnvoy/App/pull/291) 已由 [freeze comment](https://github.com/WebEnvoy/App/pull/291#issuecomment-5171710766) 标记为 Draft/freeze；它仍是 source-side backlog locator，target PR 记为 `deferred / not-created`，不推断关系、不关闭。
+App legacy backlog 的 [PR #291](https://github.com/WebEnvoy/App/pull/291) 已在 `2026-08-04T05:02:27Z` 关闭且未合并。[处置说明](https://github.com/WebEnvoy/App/pull/291#issuecomment-5174816721) 保留 source branch `work/app-290-boss-deferred-ui`、head `b3b8f6318512fbf9c6c1e61b3a1f84376bf2b079`、commits、comments 和 checks；其 stale machine head `a4ceb24c7de80ac20455a9fcf5a8ab4486afbe11` 与 APP-290 / APP-239 stacked diff 使整包迁移不成立。若未来恢复行为，只能在 `WebEnvoy/WebEnvoy` 新 Work Item 中向 `apps/desktop` 搬运仍需要的最小子集并重新验证。
 
 ## Core closeout truth
 
@@ -35,11 +35,119 @@ Core FR [#339](https://github.com/WebEnvoy/WebEnvoy/issues/339) 与 [#340](https
 
 #347 的 `no_release` artifact readback：hosted run `30850165337`，artifact `8870340324`，digest `sha256:bdad356186e2eb8fda7c338f78277e3ec2a08540419796161cb50d1ae82472b7`；post-merge host readback run `30851598937` / artifact `8870798139`。证据 carrier 是 `WebEnvoy/WebEnvoy/docs/verification/core-347-clean-checkout.md` 与 `core-347-release-artifact-provenance-v1.json`，包含独立 Core/Harbor、精确 Lode pin、四态 offline smoke、旧多仓 rollback 和 no-release/no-archive 边界。
 
+## #10 静态归档准备证据
+
+### Native transfer pilot 与语义修正
+
+[App #290](https://github.com/WebEnvoy/App/issues/290) 在 `2026-08-04T05:10:24Z` 原生 transfer 为 [Core #356](https://github.com/WebEnvoy/WebEnvoy/issues/356)：old node `I_kwDOTCql6c8AAAABIg062w` → new node `I_kwDOTBbQ1s8AAAABLWq6rA`，旧 HTML/API URL 当前回读到新 URL；title、state、body 保持，body SHA-256 为 `9338861671f0ed3fed8c9b1909878504a50852b8202c5590ae678def5122bd49`。关系在 transfer 后短暂为空，约 25 秒后收敛为 milestone Core #13、type `Work Item`、`WebEnvoy Product` Project #7 only、parent [WebEnvoy/WebEnvoy #366](https://github.com/WebEnvoy/WebEnvoy/issues/366)、blocked-by Core #281 与 Lode #273；旧 Project #11 membership 已移除。
+
+GitHub 自动把 transferred comments 中的 bare `#N` 改写到 source repo，native edge 正确但文字语义错误，因此第一次 PASS 被 [correction](https://github.com/WebEnvoy/.github/issues/10#issuecomment-5174935076) 覆盖。#356 comments `5174864184` / `5174864235` 已修为 fully-qualified Core/Lode locators；App #256/#243/#244 与 closed #246/#304 的误写 Core/App/Harbor refs 也已修复，GitHub edit history 保留原平台版本。全部批次均等待 eventual consistency 后扫描 `Core|Harbor|Lode|App` 与 wrong-repository links；未把只读 native relations 单独当作通过证明。
+
+### Final native transfer mapping（31/31）
+
+以下是 `2026-08-04T06:42:59Z` 最终回读。旧 Web URL 均 HTTP `302` 到 target；App/Harbor open issue 与 open PR 均为 `0`。目标 [#356–#386](https://github.com/WebEnvoy/WebEnvoy/issues) 全部为 `OPEN`，type、milestone 与 Project #7 正确，legacy Project #11/#8 membership 为空。
+
+| Source | Target | old node → new node | Target milestone / type | Redirect / Project |
+| --- | --- | --- | --- | --- |
+| [WebEnvoy/App#236](https://github.com/WebEnvoy/App/issues/236) | [#357](https://github.com/WebEnvoy/WebEnvoy/issues/357) | `I_kwDOTCql6c8AAAABH0xbyg` → `I_kwDOTBbQ1s8AAAABLWwWvw` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#237](https://github.com/WebEnvoy/App/issues/237) | [#358](https://github.com/WebEnvoy/WebEnvoy/issues/358) | `I_kwDOTCql6c8AAAABH0xh9Q` → `I_kwDOTBbQ1s8AAAABLWwdgQ` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#233](https://github.com/WebEnvoy/App/issues/233) | [#359](https://github.com/WebEnvoy/WebEnvoy/issues/359) | `I_kwDOTCql6c8AAAABH0xOSA` → `I_kwDOTBbQ1s8AAAABLWwjxQ` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/App#238](https://github.com/WebEnvoy/App/issues/238) | [#360](https://github.com/WebEnvoy/WebEnvoy/issues/360) | `I_kwDOTCql6c8AAAABH0xnmg` → `I_kwDOTBbQ1s8AAAABLWzpoQ` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/App#244](https://github.com/WebEnvoy/App/issues/244) | [#361](https://github.com/WebEnvoy/WebEnvoy/issues/361) | `I_kwDOTCql6c8AAAABH0yDfA` → `I_kwDOTBbQ1s8AAAABLW0dbQ` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#243](https://github.com/WebEnvoy/App/issues/243) | [#362](https://github.com/WebEnvoy/WebEnvoy/issues/362) | `I_kwDOTCql6c8AAAABH0yBUA` → `I_kwDOTBbQ1s8AAAABLW0hUw` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/App#257](https://github.com/WebEnvoy/App/issues/257) | [#363](https://github.com/WebEnvoy/WebEnvoy/issues/363) | `I_kwDOTCql6c8AAAABICSOCA` → `I_kwDOTBbQ1s8AAAABLW2QmQ` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#258](https://github.com/WebEnvoy/App/issues/258) | [#364](https://github.com/WebEnvoy/WebEnvoy/issues/364) | `I_kwDOTCql6c8AAAABICSREg` → `I_kwDOTBbQ1s8AAAABLW2Uhw` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#261](https://github.com/WebEnvoy/App/issues/261) | [#365](https://github.com/WebEnvoy/WebEnvoy/issues/365) | `I_kwDOTCql6c8AAAABICSbGA` → `I_kwDOTBbQ1s8AAAABLW2ZEQ` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#256](https://github.com/WebEnvoy/App/issues/256) | [#366](https://github.com/WebEnvoy/WebEnvoy/issues/366) | `I_kwDOTCql6c8AAAABICFyXQ` → `I_kwDOTBbQ1s8AAAABLW2duw` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/App#290](https://github.com/WebEnvoy/App/issues/290) | [#356](https://github.com/WebEnvoy/WebEnvoy/issues/356) | `I_kwDOTCql6c8AAAABIg062w` → `I_kwDOTBbQ1s8AAAABLWq6rA` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#240](https://github.com/WebEnvoy/App/issues/240) | [#367](https://github.com/WebEnvoy/WebEnvoy/issues/367) | `I_kwDOTCql6c8AAAABH0xwSw` → `I_kwDOTBbQ1s8AAAABLW4Y4w` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#245](https://github.com/WebEnvoy/App/issues/245) | [#368](https://github.com/WebEnvoy/WebEnvoy/issues/368) | `I_kwDOTCql6c8AAAABH0yJMw` → `I_kwDOTBbQ1s8AAAABLW4eUA` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#287](https://github.com/WebEnvoy/App/issues/287) | [#369](https://github.com/WebEnvoy/WebEnvoy/issues/369) | `I_kwDOTCql6c8AAAABIgz1ww` → `I_kwDOTBbQ1s8AAAABLW4ixQ` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#288](https://github.com/WebEnvoy/App/issues/288) | [#370](https://github.com/WebEnvoy/WebEnvoy/issues/370) | `I_kwDOTCql6c8AAAABIgz2bA` → `I_kwDOTBbQ1s8AAAABLW4nFQ` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#289](https://github.com/WebEnvoy/App/issues/289) | [#371](https://github.com/WebEnvoy/WebEnvoy/issues/371) | `I_kwDOTCql6c8AAAABIgz3KQ` → `I_kwDOTBbQ1s8AAAABLW4rWg` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/App#286](https://github.com/WebEnvoy/App/issues/286) | [#372](https://github.com/WebEnvoy/WebEnvoy/issues/372) | `I_kwDOTCql6c8AAAABIgzdxQ` → `I_kwDOTBbQ1s8AAAABLW4wsw` | #14 / FR | 302 / #7 only |
+| [WebEnvoy/Harbor#254](https://github.com/WebEnvoy/Harbor/issues/254) | [#373](https://github.com/WebEnvoy/WebEnvoy/issues/373) | `I_kwDOTBbRKM8AAAABIdpw4A` → `I_kwDOTBbQ1s8AAAABLW6Qfw` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#263](https://github.com/WebEnvoy/Harbor/issues/263) | [#374](https://github.com/WebEnvoy/WebEnvoy/issues/374) | `I_kwDOTBbRKM8AAAABIgvYHQ` → `I_kwDOTBbQ1s8AAAABLW6URw` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#241](https://github.com/WebEnvoy/Harbor/issues/241) | [#375](https://github.com/WebEnvoy/WebEnvoy/issues/375) | `I_kwDOTBbRKM8AAAABIT0dQA` → `I_kwDOTBbQ1s8AAAABLW6ZNA` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#219](https://github.com/WebEnvoy/Harbor/issues/219) | [#376](https://github.com/WebEnvoy/WebEnvoy/issues/376) | `I_kwDOTBbRKM8AAAABICSevg` → `I_kwDOTBbQ1s8AAAABLW7eLA` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#252](https://github.com/WebEnvoy/Harbor/issues/252) | [#377](https://github.com/WebEnvoy/WebEnvoy/issues/377) | `I_kwDOTBbRKM8AAAABIdovSw` → `I_kwDOTBbQ1s8AAAABLW7iaA` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#259](https://github.com/WebEnvoy/Harbor/issues/259) | [#378](https://github.com/WebEnvoy/WebEnvoy/issues/378) | `I_kwDOTBbRKM8AAAABIghd5g` → `I_kwDOTBbQ1s8AAAABLW7nrQ` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#267](https://github.com/WebEnvoy/Harbor/issues/267) | [#379](https://github.com/WebEnvoy/WebEnvoy/issues/379) | `I_kwDOTBbRKM8AAAABIg0itw` → `I_kwDOTBbQ1s8AAAABLW7sdA` | #13 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#203](https://github.com/WebEnvoy/Harbor/issues/203) | [#380](https://github.com/WebEnvoy/WebEnvoy/issues/380) | `I_kwDOTBbRKM8AAAABH0mUqA` → `I_kwDOTBbQ1s8AAAABLW7w4w` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/Harbor#218](https://github.com/WebEnvoy/Harbor/issues/218) | [#381](https://github.com/WebEnvoy/WebEnvoy/issues/381) | `I_kwDOTBbRKM8AAAABICFzgw` → `I_kwDOTBbQ1s8AAAABLW72og` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/Harbor#278](https://github.com/WebEnvoy/Harbor/issues/278) | [#382](https://github.com/WebEnvoy/WebEnvoy/issues/382) | `I_kwDOTBbRKM8AAAABIyi9Yg` → `I_kwDOTBbQ1s8AAAABLW77tQ` | #13 / FR | 302 / #7 only |
+| [WebEnvoy/Harbor#251](https://github.com/WebEnvoy/Harbor/issues/251) | [#383](https://github.com/WebEnvoy/WebEnvoy/issues/383) | `I_kwDOTBbRKM8AAAABIdmyzw` → `I_kwDOTBbQ1s8AAAABLW-OMg` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#265](https://github.com/WebEnvoy/Harbor/issues/265) | [#384](https://github.com/WebEnvoy/WebEnvoy/issues/384) | `I_kwDOTBbRKM8AAAABIgz6Ng` → `I_kwDOTBbQ1s8AAAABLW-WNQ` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#266](https://github.com/WebEnvoy/Harbor/issues/266) | [#385](https://github.com/WebEnvoy/WebEnvoy/issues/385) | `I_kwDOTBbRKM8AAAABIgz7FA` → `I_kwDOTBbQ1s8AAAABLW-bvg` | #14 / Work Item | 302 / #7 only |
+| [WebEnvoy/Harbor#264](https://github.com/WebEnvoy/Harbor/issues/264) | [#386](https://github.com/WebEnvoy/WebEnvoy/issues/386) | `I_kwDOTBbRKM8AAAABIgzeyg` → `I_kwDOTBbQ1s8AAAABLW-iNg` | #14 / FR | 302 / #7 only |
+
+Native parent edges `26/26` 回读正确：`#357,#358→#359`；`#361→#362`；`#356,#359,#360,#362-#365→#366`；`#367-#371→#372`；`#373,#374→#375`；`#375-#380→#381`；`#383-#385→#386`。blocked-by/blocking 双向一致；#377 的两个 `#268` 分别是 Harbor #268 与 Lode #268，不是重复边。
+
+语义修复采用“`App|Harbor|Core|Lode` 前缀表示 owner/domain，URL 表示 canonical locator”的约定；bare range、wrong-repository 与混合 current/source ref 已 fully qualify。独立只读复核确认 #356–#386 body 均非空且无剩余确定误引用。一次本地 `jq` 参数错误曾瞬时清空 #356–#372 body；随后立即从 transfer snapshot 恢复，并在任何语义修改前逐项核对 body SHA-256 `17/17 exact PASS`。GitHub edit history 保留，comments、relations 与其他字段未丢失；[checkpoint](https://github.com/WebEnvoy/.github/issues/10#issuecomment-5175546656) 明确记录该恢复事实。
+
+### Source commits、history import 与恢复演练
+
+| Source | Recorded/import tip / tree | Current `main` / tree | Import target at squash commit `26704259…` | Import merge / second parent |
+| --- | --- | --- | --- | --- |
+| App | `d417eb39b91217adc801d149e2333fe6304d9ff0` / `7405c3db75db54c1000948d95a16619e73c62eb3` | `3eeedfb3eb6c20f753060d34b9b14db710f85173` / `0fe0e38a207b697e3a5d8c8bc8ae3f71b56fd2aa` | `apps/desktop` / `7405c3db75db54c1000948d95a16619e73c62eb3` | `078f8834f3d38456c7b601b6fa201f5ca01a503e` / App recorded tip |
+| Harbor | `bcfc1b902c3fb8c2fd691c805a2ada1ddae51181` / `95a4a09f0b0f909c58849999db3bab0618551229` | `961b54fe742afe5a3bdef0ecaddd383209d57ab0` / `c7f16402e661df24f32d1183b7c241559bcc9275` | `services/harbor` / `95a4a09f0b0f909c58849999db3bab0618551229` | `b47ea4ef3ff17f72a4eef11906e0165c30de4a91` / Harbor recorded tip |
+
+两个 source `main` 都只比 recorded/import tip 多一个 README-only canonical-entry commit（各 `+2/-0`），无其他 default-branch product delta；App、Harbor 当前均无 open PR，PR #291 branch 仍指向 `b3b8f6318512fbf9c6c1e61b3a1f84376bf2b079`。原始 App/Harbor default DAG 可从 preserved branch `work/core-344-history-import@99a6e01fa0c26bb3f2344d68a0861a86547c65dd` 经两个 import merge 的第二父到达。
+
+`26704259b5acb428a29e954eebad144b14bc640e` 是单父 squash merge：它保留相同 prefix trees，但 App/Harbor source tips 不是该 main commit 的 ancestors。因而 tree-level monorepo 恢复使用 `26704259…` 与上述 prefix tree；original DAG/history 恢复使用 preserved source repos 或 `work/core-344-history-import`，不能只依赖 main ancestry。
+
+只读恢复演练使用身份 `mcontheway`（user id `9820018`）；App 与 Harbor repository API 均返回 `permissions.admin=true`。在一次性 clean clones 中，两个 source 的 current 与 recorded SHA 均可 detached checkout 且 status clean；monorepo 可定位两个 prefix、验证 source DAG 在 import branch 可达，并验证 squash-main ancestry caveat。临时 checkout 已清理；未调用 archive/unarchive、未改 source refs、未 push。
+
+### Source activity 与外部 surface inventory
+
+| Surface | App | Harbor | 结论 |
+| --- | --- | --- | --- |
+| Workflows | 4：host attestation、Loom strong governance、delivery gate、py-compile | 5：host attestation、Loom strong governance、delivery gate、py-compile、Windows provider ZIP security | 9 个注册项全部 `disabled_manually`；无 queued/in-progress run |
+| Tags / releases | `0 / 0` | `0 / 0` | 无 tag/release 迁移 |
+| Webhooks / deploy keys | `0 / 0` | `0 / 0` | admin readback 为空 |
+| Pages / environments / deployments | `0 / 0 / 0` | `0 / 0 / 0` | `has_pages=false` 且 Pages API `404`，无 public page |
+| Package manifest / publish path | `@webenvoy/app`, `private=true`, 无 publish script/workflow | `@webenvoy/harbor`, `private=true`, 无 publish script/workflow | 未发现 source-repo publish path |
+| GitHub Packages | public org page = 0；private/internal scope-limited | 同左 | manifest 均 `private=true`，无 publish script/workflow；当前 token 缺 `read:packages`，private/internal API `403`，不误报为零，也不存在活动 source publish path |
+
+### Actions artifacts 的持久摘要
+
+下列 zip 在 `/tmp` 下载后重算 SHA-256，与 GitHub artifact digest 一致；内容仅为短 JSON，无敏感材料。为防短期 artifact 过期，实际字段与 inner-file hash 固化如下，临时目录已清理。
+
+| Repository / artifact | Run / branch / head | Expires at | Downloaded content |
+| --- | --- | --- | --- |
+| App `8871254243` `loom-host-attestation-347`, `sha256:033ac063ea6bf517596938784d4f412b44e7b9d3e09bc26a9883032d68654b7d` | `30852797611` / `work/app-org-10-monorepo-entry` / `b88b7aa05455ef3de3e2a6f67ebb39de6a878cd8` | `2026-08-17T21:01:00Z` | `host-attestation.json`, 143 bytes, `sha256:06c61789cfb51c78b68ae3428afa0509fe24c32528d9c79f8bd2295bc7634d44`; schema `loom-host-attestation-evidence/v1`, PR 347, exact head, base `main` |
+| App `8871265786` `untrusted-loom-native-validation-30852797160`, `sha256:f9b15761cb2b1cb6ae52d1119e0ec2c7d404a874b70ff3aa03a2a7695aef6440` | `30852797160` / same branch / same head | `2026-08-04T21:01:25Z` | `result.json`, 86 bytes, `sha256:10c5b00808308da84102eb039802a4d1f63c3b7578da6e00dddd6e496c6a7b15`; schema `loom-native-validation-result/v1`, `status=passed`, `exit_code=0` |
+| Harbor `8871209821` `loom-host-attestation-354`, `sha256:d6df375694a27387c6877ad597d8dbed8d124befb8e17259a09786a9c3e59164` | `30852679263` / `work/harbor-org-10-monorepo-entry` / `5a0e6edf35288d6c789e8e5ba5dcd797d04cc891` | `2026-08-17T20:59:25Z` | `host-attestation.json`, 143 bytes, `sha256:5d95f4ce437f409d5ca73a681da29b6fd10603d5255f4c615b28a141f0279610`; schema `loom-host-attestation-evidence/v1`, PR 354, exact head, base `main` |
+| Harbor `8871226544` `untrusted-loom-native-validation-30852679697`, `sha256:a90193aae09aed6b0e0ae726338be7321d97cbcd6fc2a0ca0624220c2cd793a6` | `30852679697` / same branch / `5a0e6edf35288d6c789e8e5ba5dcd797d04cc891` | `2026-08-04T21:00:01Z` | `result.json`, 86 bytes, `sha256:10c5b00808308da84102eb039802a4d1f63c3b7578da6e00dddd6e496c6a7b15`; schema `loom-native-validation-result/v1`, `status=passed`, `exit_code=0` |
+| Harbor `8871208078` `untrusted-loom-native-validation-30852649046`, `sha256:cfe40057d731c7f2ecfd3164912776261331c92f07e1b84839ee76fa62791c04` | `30852649046` / same branch / `9db685883a79216f241d10547f9fda1669d09706` | `2026-08-04T20:59:22Z` | `result.json`, 86 bytes, `sha256:10c5b00808308da84102eb039802a4d1f63c3b7578da6e00dddd6e496c6a7b15`; schema `loom-native-validation-result/v1`, `status=passed`, `exit_code=0` |
+
+### Pre-archive checklist（final readback）
+
+| Gate | State | Evidence / stop condition |
+| --- | --- | --- |
+| Canonical code/PR/Work Item entry | pass | monorepo + Project #7 `WebEnvoy Product`; source README banners merged |
+| #10 execution authorization | pass for transfer/readiness only | archive/delete/release/live write remain unauthorized |
+| Native transfer semantics | pass after correction | 31/31 transferred；body/comments、redirect、metadata、relations 与 fully-qualified refs 已独立复核 |
+| Full source→target mapping | pass | 上表固化 31 行 old/new node、URL、milestone/type、Project 与 redirect |
+| Source open issues | pass | App `0`；Harbor `0` |
+| Source open PRs | pass | both zero；App PR #291 closed without merge and branch/head preserved |
+| Source SHA/import/rollback locator | pass | current/recorded trees, preserved import branch, prefix mapping, squash caveat and #347 rollback carrier recorded |
+| Read-only restore/admin | pass | `admin=true`; detached current/recorded source checkout and monorepo locator verified without external mutation |
+| Tags/releases/hooks/keys/pages | pass | all zero; no public page/environment/deployment |
+| GitHub Packages | accepted scope-limited | public org page `0`；private/internal API 因缺 `read:packages` 返回 `403`；无 manifest/workflow/script 活动发布路径 |
+| Actions artifacts | pass | exact digest/run/head/expiry and non-sensitive JSON content persisted above |
+| Source workflows | pass | App 4 + Harbor 5 均 `disabled_manually`；无 queued/in-progress run |
+| Source milestones / Projects | pass | App #14/#15、Harbor #12/#13/#14 closed；legacy Projects #11/#8 closed；Project #7 open |
+| Repository metadata | precondition pass | App/Harbor public、`archived=false`、default `main`、admin readback available；实际 archive 前仍须立即重读 |
+| Final owner confirmation | **pending separately for App and Harbor** | no archive call until owner explicitly names the repository to archive |
+
 ## Legacy inventory（逐项 source URL）
+
+以下表格是 #9 在 `2026-08-04T05:28:57+08:00` 的不可变 pre-transfer baseline，不是 #10 transfer 后的当前计数、状态或 target mapping；当前真相只以上方 31 行 final mapping 与 final checklist 为准。保留本节用于审计迁移前 title、relation 与 PR/history，不把其中 `OPEN`、`deferred / not-created` 或旧 Project 名称解释为当前状态。
 
 ### App：17 个 open issues
 
-目标位置统一为 `WebEnvoy/WebEnvoy/apps/desktop`；source Project 是 [#11 WebEnvoy APP](https://github.com/orgs/WebEnvoy/projects/11)。下表中的 `none (native)` 表示 API 返回空数组或无 parent，不是未读回；每行同时记录 parent、blocked-by、blocking/sub-issues 和 PR/history。源 issue 保留原状态和 milestone，不关闭、不转移。
+目标位置统一为 `WebEnvoy/WebEnvoy/apps/desktop`；source Project 是 [#11 WebEnvoy APP](https://github.com/orgs/WebEnvoy/projects/11)。下表中的 `none (native)` 表示 baseline API 返回空数组或无 parent，不是未读回；每行同时记录当时的 parent、blocked-by、blocking/sub-issues 和 PR/history。
 
 | Source URL | 标题 | Milestone | Type | State | Source Project | Parent | Blocked-by / dependency | Native sub/blocking | PR / history | Target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -65,13 +173,13 @@ App PR 也逐项记录：
 
 | Source URL | 标题 | Milestone | Type | State | Source Project | Parent | Blocked-by / dependency | Native relation | PR / history | Target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [App PR #291](https://github.com/WebEnvoy/App/pull/291) | fix(app): 禁用 BOSS 延期任务入口 | — | PR | OPEN, DRAFT | — | — | no native closing issue | freeze: [comment](https://github.com/WebEnvoy/App/pull/291#issuecomment-5171710766) | head `b3b8f6318512fbf9c6c1e61b3a1f84376bf2b079`; frozen historical patch | deferred / not-created |
+| [App PR #291](https://github.com/WebEnvoy/App/pull/291) | fix(app): 禁用 BOSS 延期任务入口 | — | PR | CLOSED, unmerged draft | — | — | no native closing issue | disposition: [comment](https://github.com/WebEnvoy/App/pull/291#issuecomment-5174816721) | branch `work/app-290-boss-deferred-ui`; head `b3b8f6318512fbf9c6c1e61b3a1f84376bf2b079`; preserved historical patch | deferred / not-created |
 
 Lode 的 [PR #291](https://github.com/WebEnvoy/Lode/pull/291) 已合并为 `6238d3f9de0cd09157c9769e27d90174c299406a`，仅作为独立 Lode pin 事实，不是 App target PR。
 
 ### Harbor：14 个 open issues
 
-目标位置统一为 `WebEnvoy/WebEnvoy/services/harbor`；source Project 是 [#8 Harbor Runtime](https://github.com/orgs/WebEnvoy/projects/8)。下表按 native readback 记录 parent、blocked-by、blocking/sub-issues 和 PR/history；源 issue 保留原状态和 milestone，不关闭、不转移。
+目标位置统一为 `WebEnvoy/WebEnvoy/services/harbor`；source Project 是 [#8 Harbor Runtime](https://github.com/orgs/WebEnvoy/projects/8)。下表按 baseline native readback 记录当时的 parent、blocked-by、blocking/sub-issues 和 PR/history。
 
 | Source URL | 标题 | Milestone | Type | State | Source Project | Parent | Blocked-by / dependency | Native sub/blocking | PR / history | Target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -90,7 +198,7 @@ Lode 的 [PR #291](https://github.com/WebEnvoy/Lode/pull/291) 已合并为 `6238
 | [Harbor #218](https://github.com/WebEnvoy/Harbor/issues/218) | 提供 App/Core 可消费的本地 Harbor runtime 与 provider 生命周期 API | [#12](https://github.com/WebEnvoy/Harbor/milestone/12) | FR | OPEN (REOPENED) | #8 Harbor Runtime | none (native) | none (native) | sub: Harbor #203, #208 CLOSED, #219, #220 CLOSED, #221 CLOSED, #222 CLOSED, #223 CLOSED, #234 CLOSED, #241, #245 CLOSED, #252, #259, #261 CLOSED, #267, #268 CLOSED, #296 CLOSED, #318 CLOSED, #320 CLOSED, #329 CLOSED, #332 CLOSED, #334 CLOSED, #336 CLOSED, #338 CLOSED, #340 CLOSED, #342 CLOSED, #344 CLOSED, #346 CLOSED, #350 CLOSED; blocks App #237, #257, #265 CLOSED, #261, #258, Core #220 CLOSED, App #233, App #256 | history PR #216, #217, #224, #225, #226, #227, #228, #229, #230, #231, #232 | deferred / not-created |
 | [Harbor #203](https://github.com/WebEnvoy/Harbor/issues/203) | 管理小红书本地身份环境和敏感材料状态 | [#12](https://github.com/WebEnvoy/Harbor/milestone/12) | FR | OPEN (REOPENED) | #8 Harbor Runtime | [Harbor #218](https://github.com/WebEnvoy/Harbor/issues/218) | [Harbor #198 CLOSED](https://github.com/WebEnvoy/Harbor/issues/198) | sub: Harbor #204 CLOSED, #205 CLOSED, #206 CLOSED, #207 CLOSED, #283 CLOSED, #287 CLOSED, #288 CLOSED, #292 CLOSED | [Harbor PR #228](https://github.com/WebEnvoy/Harbor/pull/228)（merged; closedByPR）；history PR #213, #214, #227 | deferred / not-created |
 
-readiness milestone [#14](https://github.com/WebEnvoy/Harbor/milestone/14) 保持 open；已完成的 [Harbor #352](https://github.com/WebEnvoy/Harbor/issues/352) / [PR #353](https://github.com/WebEnvoy/Harbor/pull/353) 仍作为跨仓 owner-facts 证据，不存在待迁入的 target issue。
+#9 baseline 时 readiness milestone [#14](https://github.com/WebEnvoy/Harbor/milestone/14) 为 open；当前已 closed。已完成的 [Harbor #352](https://github.com/WebEnvoy/Harbor/issues/352) / [PR #353](https://github.com/WebEnvoy/Harbor/pull/353) 仍作为跨仓 owner-facts 证据，不存在待迁入的 target issue。
 
 ### Core：13 个 open issues
 
@@ -133,18 +241,18 @@ Lode 继续是独立 MIT 能力资产仓库；source Project 是 [#9 Lode Capabi
 | [`.github #9`](https://github.com/WebEnvoy/.github/issues/9) | 迁移未完成 GitHub 真相并建立旧仓映射 | [#1](https://github.com/WebEnvoy/.github/milestone/1) | type field null | OPEN | #6 WebEnvoy Governance | [.github #7](https://github.com/WebEnvoy/.github/issues/7) | [Core #347 CLOSED](https://github.com/WebEnvoy/WebEnvoy/issues/347) | blocks `.github #10` | [`.github PR #12`](https://github.com/WebEnvoy/.github/pull/12)（current carrier; `Fixes #9`） | identity: WebEnvoy/.github |
 | [`.github #10`](https://github.com/WebEnvoy/.github/issues/10) | 切换组织入口并在验收后归档 App/Harbor | [#1](https://github.com/WebEnvoy/.github/milestone/1) | type field null | OPEN | #6 WebEnvoy Governance | [.github #7](https://github.com/WebEnvoy/.github/issues/7) | [.github #9](https://github.com/WebEnvoy/.github/issues/9) | none (native) | none observed (native body/comments/closedByPR readback) | identity: WebEnvoy/.github |
 
-## Open PR readback（2026-08-04）
+## Open PR readback（final source audit `2026-08-04T06:42:59Z`）
 
-`gh pr list --state open --json number,title,isDraft,headRefOid,headRefName,baseRefName,url,closingIssuesReferences` 的 native readback：Core `[]`、Harbor `[]`、Lode `[]`；App 仅有 [PR #291](https://github.com/WebEnvoy/App/pull/291)，`OPEN+DRAFT`，head `b3b8f6318512fbf9c6c1e61b3a1f84376bf2b079`，base `main`，无 native closing issue。冻结证据为 [freeze comment](https://github.com/WebEnvoy/App/pull/291#issuecomment-5171710766)，目标仍 `deferred / not-created`；未执行 transfer、close、archive 或 live write。
+`gh pr list --state open` 的 native readback：App `[]`、Harbor `[]`。App [PR #291](https://github.com/WebEnvoy/App/pull/291) 已按上方 disposition 关闭且未合并；Core/Lode 的 #9 baseline open-PR readback 仍为 `[]`。本 carrier update 未 merge、archive、release 或 live write。
 
 ## Source flags and rollback
 
-截至本次 readback，以下仓库均为 `public`、`archived=false`、默认分支 `main`：[`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)、[`WebEnvoy/App`](https://github.com/WebEnvoy/App)、[`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)、[`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode)、[`WebEnvoy/.github`](https://github.com/WebEnvoy/.github)。本批次没有 transfer、close、archive、delete、visibility、permission 或 ruleset 变更。
+#9 baseline readback 中五仓均为 `public`、`archived=false`、默认分支 `main`：[`WebEnvoy/WebEnvoy`](https://github.com/WebEnvoy/WebEnvoy)、[`WebEnvoy/App`](https://github.com/WebEnvoy/App)、[`WebEnvoy/Harbor`](https://github.com/WebEnvoy/Harbor)、[`WebEnvoy/Lode`](https://github.com/WebEnvoy/Lode)、[`WebEnvoy/.github`](https://github.com/WebEnvoy/.github)。#10 final readback 中 31 个 open issues 已转移、App PR #291 已处置、source workflows/milestones/legacy Projects 已停用或关闭；App/Harbor 仍为 `public`、`archived=false`、default `main`、`permissions.admin=true`，没有 archive、delete、visibility、permission、ruleset、release 或 live-write 变更。
 
 可恢复 rollback target 由 #347 carrier 绑定：monorepo baseline `26704259b5acb428a29e954eebad144b14bc640e`，Core `2c401cf90c0cf7150e8156b904975cefaf435fa8`，Harbor `f9e13311ccd3f80cf8ef54cb97245a42da49882b`，Lode `1fbef74b4bf1b4f0a86aacd885386d7a62181207`。旧仓、旧入口、历史和 artifact 不因 mapping 文档改变；回滚只使用独立 clean checkout 和记录的安装/验证命令，不 reset、rewrite 或删除源历史。
 
 ## Explicit-confirmation gate（#10）
 
-canonical development entry 已切换完成；[WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 只作为 legacy source issue/Project transfer、close、archive/retirement 的明确授权门。只有在 W9/W10 release/readback/rollback evidence、完整 snapshot、source mapping、所有 repo URL/visibility/archive flags、恢复步骤和 owner 明确确认均已读回后，才能单独授权上述 source-object 退役动作。#10 不再门禁 monorepo 的默认 development entry。
+canonical development entry 与 pre-archive readiness 已完成；reopened [WebEnvoy/.github#10](https://github.com/WebEnvoy/.github/issues/10) 已授权 legacy open issue transfer、必要关系修复、PR #291 处置和本 carrier 更新，但没有授权 repository archive/delete、release 或 live write。实际 archive 前仍须立即重读 repo metadata，并由 owner 分别明确确认 “archive App” 与 “archive Harbor”；未获得对应确认的仓库保持 `archived=false`。
 
-本 PR 只写 mapping 和 canonical/legacy 说明；不把 issue close、PR merge、milestone close 或单次 build 当作 source-object retirement 授权，也不创建目标 issue、Project 或替代 dependency 关系。
+本 carrier update 只固化静态归档准备证据；不把 issue close、PR merge、milestone close、单次 build 或 `admin=true` 当作 source-object retirement 授权。

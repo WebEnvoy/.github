@@ -32,7 +32,7 @@ Work Item 至少写清：用户结果、规范依据、非目标、已知事实�
 - 原生 parent/sub-issue 表达分解；dependency 只表达“不满足就不能开始或验收”的硬阻塞。
 - 跨仓软对齐写在正文，不伪造跨仓 Milestone 归属。
 - `completed`：原 Issue 的验收已有可核对证据；Project `Status = Done`。
-- `not_planned`：原目标未完成且被替代或取消；Project `Status = Won’t Do`，必须链接后继或延期归宿。
+- `not_planned`：原目标未完成且被替代或取消；Project `Status = Won’t Do`。被替代时链接真实后继；纯取消说明原因，不为整齐虚构后继。
 - 延期：Issue 保持 open、退出活跃 Milestone、Project `Status = Backlog`，写明重新进入条件；不得标为 Blocked。
 - PR 合并、checks 成功、子项关闭或进度 100% 都不能单独证明父项或业务能力完成。
 

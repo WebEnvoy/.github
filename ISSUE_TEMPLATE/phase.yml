@@ -1,52 +1,23 @@
 name: Phase
-description: Stage-level work block.
-title: "Phase: "
+description: 确有多个 FR 时使用的阶段成果；普通工作请直接创建 Work Item。
+title: ""
 type: "Phase"
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Use this for a stage-level work block. A Phase can contain multiple FR issues.
-
   - type: textarea
-    id: outcome
+    id: intent
     attributes:
-      label: Outcome
-      description: What should this phase produce?
+      label: 意图与用户价值
     validations:
       required: true
-
   - type: textarea
-    id: scope
+    id: children
     attributes:
-      label: Scope
-      description: Which repositories, modules, contracts, or workflows are affected?
+      label: FR 与退出信号
     validations:
       required: true
-
-  - type: textarea
-    id: frs
-    attributes:
-      label: Expected FRs
-      description: List expected FR issues if known.
-      placeholder: |
-        - FR: create runtime session
-        - FR: close runtime session
-    validations:
-      required: false
-
   - type: textarea
     id: boundaries
     attributes:
-      label: Boundaries
-      description: What is explicitly out of scope?
+      label: 约束与非目标
     validations:
       required: true
-
-  - type: textarea
-    id: validation
-    attributes:
-      label: Validation
-      description: How will this phase be validated?
-    validations:
-      required: false

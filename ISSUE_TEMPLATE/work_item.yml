@@ -1,48 +1,38 @@
 name: Work Item
-description: Executable work item under an FR or Phase.
-title: "Work Item: "
+description: 可独立执行和验收的工作项。
+title: ""
 type: "Work Item"
 body:
-  - type: input
-    id: parent
-    attributes:
-      label: Parent FR or Phase
-      description: Link the parent FR or Phase issue if applicable.
-      placeholder: "https://github.com/WebEnvoy/<repo>/issues/..."
-    validations:
-      required: false
-
   - type: textarea
-    id: work
+    id: outcome
     attributes:
-      label: Work
-      description: What should be implemented, fixed, validated, researched, documented, or maintained?
+      label: 用户或 Agent 结果
     validations:
       required: true
-
   - type: textarea
     id: context
     attributes:
-      label: Context
-      description: Link relevant docs, decisions, research, schemas, parent issues, or PRs.
+      label: 规范依据、事实与假设
+      description: 链接 canonical 章节和真实入口；区分已知事实与待验证假设。
     validations:
-      required: false
-
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 范围与非目标
+    validations:
+      required: true
   - type: textarea
     id: acceptance
     attributes:
-      label: Acceptance criteria
-      description: What must be true before this work item is done?
-      placeholder: |
-        - [ ] ...
-        - [ ] ...
+      label: 验收
+      description: 写清成功、必要拒绝和可恢复失败，以及最小真实消费者。
     validations:
       required: true
-
   - type: textarea
-    id: validation
+    id: dependencies
     attributes:
-      label: Validation
-      description: How should this be tested or reviewed?
+      label: 真正依赖、复用与删除
+      description: 只有不满足就不能开始或验收的事项才是硬依赖。
     validations:
       required: false

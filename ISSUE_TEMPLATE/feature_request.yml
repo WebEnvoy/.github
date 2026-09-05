@@ -1,54 +1,25 @@
 name: FR
-description: Feature Requirement that can be delivered under a Phase.
-title: "FR: "
+description: 有多个独立交付项时使用的用户或系统成果。
+title: ""
 type: "FR"
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Use this for a concrete feature requirement. An FR can contain multiple Work Item issues.
-
-  - type: input
-    id: parent
-    attributes:
-      label: Parent phase
-      description: Link the parent Phase issue if this FR belongs to one.
-      placeholder: "https://github.com/WebEnvoy/<repo>/issues/..."
-    validations:
-      required: false
-
   - type: textarea
-    id: requirement
+    id: outcome
     attributes:
-      label: Requirement
-      description: What capability, behavior, API, package feature, or user-visible outcome is required?
+      label: 结果与价值
+      description: 谁能完成什么以前不能完成的事？
     validations:
       required: true
-
   - type: textarea
-    id: users
+    id: children
     attributes:
-      label: Users / callers
-      description: Who or what consumes this FR?
-      placeholder: "Agent, WebEnvoy Core, Harbor Runtime API, Lode maintainer, Console operator, SDK user..."
-    validations:
-      required: false
-
-  - type: textarea
-    id: acceptance
-    attributes:
-      label: Acceptance criteria
-      description: What must be true before this FR is done?
-      placeholder: |
-        - [ ] ...
-        - [ ] ...
+      label: 子项与退出信号
+      description: 列出必要子 Work Item；没有真实分解时请直接创建 Work Item。
     validations:
       required: true
-
   - type: textarea
-    id: work_items
+    id: constraints
     attributes:
-      label: Expected work items
-      description: List expected Work Item issues if known.
+      label: 约束与非目标
     validations:
-      required: false
+      required: true

@@ -20,7 +20,7 @@
 ## Issue 类型
 
 - `Work Item`：默认类型；一个可独立执行和验收的工作。
-- `FR`：确有多个 Work Item 时使用的用户或系统成果父项。
+- `FR`：承载完整用户或系统成果；可先明确结果、边界和退出信号，接近实施时再创建必要的 Work Item 子项。
 - `Phase`：确有多个 FR 时使用的阶段父项。
 
 层级按需使用，不要求普通 Work Item 补空 FR／Phase。标题描述结果，不加 `FR:`、`Work Item:` 或 `Phase:` 前缀。
@@ -38,14 +38,14 @@ Work Item 至少写清：用户结果、规范依据、非目标、已知事实�
 
 ## Milestone 与 Project
 
-沿用组织 Project：Governance `#6`、WebEnvoy Product `#7`、Lode Capability `#9`；不新建平行 Project。Milestone 只创建当前批和下一批，名称描述交付结果，不机械使用阶段号。
+沿用组织 Project：Governance `#6`、WebEnvoy Product `#7`、Lode Capability `#9`；不新建平行 Project。已可见产品目标完整落到 Milestone 和 FR，名称描述交付结果，不机械使用阶段号。V1 必需、待原型验证和条件性后续范围分别说明；远期 Milestone 的 open 状态不表示正在实施，其 FR 保持 Backlog，不虚构日期、容量或上线承诺。
 
 Project 字段沿用 `Status`、`Priority`、`Track`、`Size`、`Risk` 及 GitHub 默认字段。允许自动加入 open Issue；不得配置“任意 Issue close 或 PR merge 即 Done”的无条件自动化。自动化无法区分 close reason 时，由处置者回读并设置 `Done` 或 `Won’t Do`。
 
 ## 生命周期
 
 1. 创建或复用 Issue，先核对是否已有等价对象。
-2. 只为当前或下一批设置 Milestone；其余保持 ROADMAP 或 Backlog。
+2. 为已可见产品结果建立或复用 Milestone／FR；具体 Work Item 仅在接近实施、能明确真实消费者和验收时滚动创建，不预建远期执行树。未进入实施的 FR 保持 Backlog；明确延期项仍遵守退出活跃 Milestone 的规则。
 3. 开始前确认最小消费者、验收和真正依赖；Ready 不要求完整未来任务树。
 4. PR 绑定真实 Work Item，按风险运行检查并取得 exact-head 独立 review。
 5. 合并后回读 `main`、checks、review 和 Issue 验收；再决定 completed、继续 open 或 not_planned。

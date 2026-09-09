@@ -1,6 +1,6 @@
 # WebEnvoy v1 产品与架构方向规范
 
-> **文档状态：** v1.0 产品与架构方向规范
+> **文档状态：** v1.1 产品与架构方向规范（Runtime 完整能力与 Plugin-first 实施基线）
 > **适用范围：** WebEnvoy 的产品定位、核心对象、权限模型、Profile 与账号管理、Provider 策略、Agent 接入、App、Harbor、Core、Lode／SKILL 的职责边界，以及 V1 实施与验收范围。
 > **不包含：** 对当前仓库实现状态、历史 PR、历史架构质量或完成度的评价。
 > **重要说明：** 本规范描述目标方向与 V1 约束，不表示相关能力已经完成实现。
@@ -731,6 +731,26 @@ Agent 创建 Profile 时：
 
 ---
 
+
+## 4.5 深层浏览器能力的授权
+
+**[已确认原则]**
+
+> Runtime 是否具备某项浏览器能力，与当前 Agent 是否被允许发现、读取或执行该能力，是两个不同问题。
+
+Network、Console、受控脚本、存储、下载和其他深层浏览器能力必须继续遵守有效权限交集，不得因为被归类为“调试”“诊断”或“内部能力”而绕过授权。
+
+至少区分：
+
+- 低风险元数据观察；
+- 可能包含业务或敏感内容的内容读取；
+- 会改变请求、页面或浏览器状态的拦截、脚本和存储操作；
+- 破坏性或敏感数据操作。
+
+SKILL 可以声明任务需要的 Runtime capability，并建议 Agent 只呈现或优先使用其中一部分工具；这属于能力选择与任务指导，不是新的权限来源。SKILL、工具隐藏、宿主批准和 allowed-tools 元数据均不得替代 Core／Runtime 的正式授权检查。
+
+Cookie 原文、密码、验证码、token、未脱敏凭据和 raw DevTools／CDP／Juggler endpoint 不作为普通 Agent 浏览器能力直接暴露。
+
 # 5. 账号、Profile 和经营对象规则
 
 ## 5.1 一账号一 Profile
@@ -1081,28 +1101,66 @@ CloakBrowser 不作为免费多实例默认底座，也不作为 WebEnvoy 必需
 
 ## 9.6 Provider Driver 抽象
 
-Harbor 的公共浏览器能力不得长期等同于 CDP。
+Harbor 的公共浏览器能力不得长期等同于 CDP、Playwright 或 Juggler 的原始协议。
 
-公共能力应表达：
+V1 的 Browser Runtime capability plane 至少覆盖以下主要能力类别；公共语义由 WebEnvoy 定义，Provider Driver 负责适配：
 
 ```text
-launchInstance
-closeInstance
-listPages
-openPage
-switchPage
-pageInfo
-snapshot
-screenshot / frameStream
-click
-input
-scroll
-upload
-download
-evaluateControlledScript
-readState
-acquireControl
-releaseControl
+Instance
+  launchInstance
+  closeInstance
+  readInstanceState
+
+Page / Tab / Window
+  listPages
+  openPage
+  switchPage
+  closePage
+  pageInfo
+  navigate
+  reload
+  historyNavigation
+  popup / dialog facts
+
+Observation
+  snapshot
+  visibleText / semanticControls
+  frame / shadow-boundary facts
+  screenshot / frameStream
+
+Interaction
+  click
+  input
+  press
+  mouse / scroll
+  select
+  dragAndDrop
+  waitForState
+
+Files
+  upload
+  download
+  browserDialog
+
+Network
+  observeRequests
+  observeResponses
+  observeFailures
+  waitForNetworkResult
+  readSelectedResponse
+  interceptOrModifyRequest
+
+Console / Page Runtime
+  observeConsole
+  observePageErrors
+  evaluateControlledScript
+
+Control / Recovery
+  acquireControl
+  releaseControl
+  cancelOperation
+  queryOperation
+  readState
 ```
 
 底层分别适配：
@@ -1113,9 +1171,25 @@ Chrome / CDP Driver
 未来经过验证的其他 Driver
 ```
 
-不得为了理论通用性提前建设复杂 Provider 插件平台。
+不得为了理论通用性提前建设复杂 Provider 插件平台，也不得为了某个站点把站点知识写回 Runtime 公共能力。
 
----
+## 9.7 Runtime 能力完整性与 Provider 支持状态
+
+**[已确认原则]**
+
+> V1 先明确主要浏览器能力类别，再通过真实交付单元逐步实现和验证；不得因为当前网站或当前 Agent 暂时没有使用某一基础能力，就从 Runtime 规划中省略该能力类别。
+
+每项公共 capability 必须能够回答：
+
+1. WebEnvoy 的公共语义是什么；
+2. 当前 Provider 是 `supported`、`limited` 还是 `unsupported`；
+3. 是否已有对应的真实或确定性验证；
+4. 已安装 Plugin 是否能够消费；
+5. 当前主体在什么授权和运行条件下能够使用。
+
+能力存在不等于 Agent 自动获得能力。Plugin 可以按宿主、任务、SKILL 和授权上下文减少工具呈现；Core／Runtime 仍独立执行权限、身份、ControlLease、敏感数据和 ExternalOutcome 检查。
+
+对于明确列为 V1 必需的能力，不能仅以 `unsupported` 标记作为完成证据；应提供实现、受约束的等价路径，或通过明确产品决策调整支持范围。不同 Provider 不要求具备完全相同的实现方式或能力等级。
 
 # 10. 设备环境与自动化暴露控制
 
@@ -1355,6 +1429,39 @@ Provider 安装、更新和修复是否允许由 Agent 直接执行，属于待�
 
 ---
 
+
+## 12.5 Plugin-first 的 V1 实施优先级
+
+**[V1 收敛约束]**
+
+> 在完整 App 产品化之前，先让一个明确支持的第三方 Agent 宿主通过已安装 WebEnvoy Plugin，完整消费 V1 中允许委托给 Agent 的管理和浏览器能力。
+
+这意味着第一完整消费端应能够在有效 Grant 范围内：
+
+- 管理和使用 Profile、Instance、Account／AccountSystem、BusinessTarget、Environment、Provider facts、SKILL 和 Run／结果；
+- 使用没有网站 SKILL 时的通用 Browser Runtime capability；
+- 加载并使用版本化网站 SKILL，提高特定网站任务的效率和准确性；
+- 在 App 未启动时连接独立 Runtime，并在需要用户处理时进入可信的人类确认或同实例接管路径；
+- 不依赖开发 worktree、内部数据库写入、复制 supervisor／owner 凭据或手工调试端口。
+
+Plugin 必须保持薄层：负责宿主适配、能力呈现、SKILL 分发和工具接入；不得拥有第二套 Profile、账号、权限、Run、恢复或浏览器状态真相。
+
+首期只要求一个主要 Agent 宿主完成该完整消费检查点，不因此提前建设多宿主注册平台。
+
+## 12.6 Runtime 能力与 Agent 工具暴露
+
+Runtime 的 V1 capability plane 可以比某一次任务向 Agent 展示的工具集合更完整。
+
+Plugin／宿主可以根据：
+
+- 当前 Grant；
+- Profile 权限上限；
+- 当前任务范围；
+- 已安装 SKILL 声明的所需能力；
+- Provider 当前实际能力；
+
+选择向 Agent 呈现更小的工具集合或更有界的结果。但工具是否展示不参与权限计算，也不能将 Runtime 缺失的能力伪装成“由 SKILL 实现”。
+
 # 13. App 定位
 
 ## 13.1 人类控制台
@@ -1462,6 +1569,23 @@ App 不接管外部 Agent 的完整计划、聊天记录和文档工作流。
 
 ---
 
+
+## 13.8 V1 实施优先级
+
+**[V1 收敛约束]**
+
+完整 App 资源工作台、Library、Activity 工作台和高级管理体验在 Plugin 完整体验检查点之后集中产品化。该后置不取消本章的完整 V1 产品要求。
+
+Plugin-first 阶段 App 或其他可信 owner 入口必须继续提供完成真实闭环所需的最小人类控制面，包括：
+
+- AgentPrincipal／Grant 的建立、查看、收紧和撤销；
+- 首次信任、权限扩大和其他必须由人作出的敏感决定；
+- 身份冲突、迁移、删除等需要用户处理的明确入口；
+- 同一原 Instance 的接管和交还；
+- 当前 Profile／Instance／控制者和“需要我处理”状态的最小可理解展示。
+
+已经在有效授权内明确允许的 Agent 管理意图，不应被强制重复到 App 中再次批准同一意图。App 不得成为 Runtime 生命周期或普通 Agent 操作的隐藏硬依赖。
+
 # 14. 多实例现场视图
 
 ## 14.1 产品能力
@@ -1538,6 +1662,13 @@ interactive_view
 App 根据能力降级。
 
 ---
+
+
+## 14.5 Runtime 画面能力与 App 布局分离
+
+原页面截图、基础画面获取和 Provider 对画面能力的事实属于 Browser Runtime capability plane，不应因为完整 App 多实例布局后置而一起延期。
+
+App 的单实例主视图、多实例概览、分屏、旧帧展示和留存体验仍由本章负责。Runtime 提供画面能力不等于默认录制，也不授予 ControlLease。
 
 # 15. 现场画面和数据留存
 
@@ -1666,6 +1797,22 @@ SKILL 应围绕用户目标，例如：
 > 当 Runtime 已经支持必要基础操作时，新增网站或场景应主要通过新增或修改 SKILL 完成，而不需要同时修改 App、Core 和 Harbor。
 
 ---
+
+
+## 16.8 SKILL 与 Runtime capability 的关系
+
+网站 SKILL 可以声明完成某项用户目标所需要的 Runtime capability，并向 Agent 推荐更小、更高效的工具集合、页面入口、字段语义、等待条件、结果判断和恢复方式。
+
+但必须保持：
+
+```text
+Runtime capability 是否存在
+≠ SKILL 是否安装
+≠ 工具是否向当前 Agent 展示
+≠ 当前主体是否获得执行权限
+```
+
+新增网站不应通过在 Harbor／Core 中增加站点专用 Network、Console、DOM 或输入旁路来弥补 Runtime 基础能力缺失。必要的通用浏览器能力应先归入 Runtime 公共能力；真正的网站知识留在 SKILL／Lode。
 
 # 17. Run、连接、实例、控制权和外部结果
 
@@ -1863,115 +2010,60 @@ Agent 请求或用户接管
 
 ---
 
-# 21. V1 实施顺序
+# 21. V1 实施优先级
 
-## 阶段一：对象模型和硬约束
+本章描述实施优先级，不规定按架构层或 Milestone 全串行交付。
 
-完成：
+**[已确认实施原则]**
 
-- AccountSystem；
-- Account；
-- BusinessTarget；
-- Profile；
-- ProviderBinding；
-- EnvironmentConfiguration；
-- AgentPrincipal；
-- AgentConnection；
-- Grant；
-- Instance；
-- ControlLease；
-- Activity；
-- Run；
-- ExternalOutcome；
-- 一账号一 Profile；
-- 同体系单账号；
-- discovered identity；
-- 导入与迁移语义。
+> 先明确 V1 Browser Runtime 的主要能力类别，并通过一个已安装 Plugin 在真实第三方 Agent 中持续消费；每个交付单元仍以“用户或 Agent 能完整做成一件事”为边界，贯穿必要模块。不得先封闭建设一个无人消费的大 Runtime，也不得等待某个站点需要时才决定基础浏览器能力是否存在。
 
-## 阶段二：Camoufox 原型
+## 21.1 Runtime 能力与 Plugin 主入口
 
-最低验证：
+优先：
 
-- 三个独立 Profile 同时运行；
-- 独立数据目录；
-- 设备配置跨重启稳定；
-- Cookie 和账号不串；
-- 代理、语言和时区生效；
-- 原生窗口人工使用；
-- 中文输入；
-- 上传下载；
-- 富文本；
-- 目标网站登录；
-- 版本升级与恢复。
+- 建立 V1 Browser Runtime capability plane 的完整能力基线；
+- 逐步交付 Page／Window、Observation、Interaction、Files、Network、Console／Errors、受控脚本、Screenshot／Frame、Control 和 Recovery；
+- 每项能力同时给出 Provider 支持状态、验证证据和授权边界；
+- 一个明确支持的第三方 Agent 宿主通过已安装 Plugin 持续消费这些能力；
+- 没有网站 SKILL 时仍可完成通用浏览器操作。
 
-“三个 Profile”是原型规模建议，不是长期容量上限。
+## 21.2 长期 Profile、身份与设备环境并行成熟
 
-## 阶段三：Runtime 脱离 App
+并行推进 AccountSystem／Account／BusinessTarget、Profile 生命周期和 Provider／Environment；需要真实登录、账号绑定或业务写入的现场验证在取得相应授权后执行，缺授权只暂停相关动作，不把无关 Runtime／环境工作全局停止。
 
-完成：
+## 21.3 Plugin 完整资源管理与资产消费
 
-- 独立本地 Runtime；
-- Profile 管理 API；
-- Provider 管理 API；
-- AccountSystem 与 Account API；
-- Instance 管理 API；
-- ControlLease；
-- App 与 Agent 共用接口。
+在完整 App 产品化之前，先证明一个主要 Agent 宿主通过 Plugin 可以消费所有 V1 允许委托的 Profile／Instance、Account／AccountSystem／BusinessTarget、Environment／Provider facts、SKILL，以及 Run／结果／恢复能力。Plugin 更新、卸载或 Runtime 重启不得建立第二套现场或丢失长期 Profile。
 
-## 阶段四：Plugin 与一个 Agent 宿主
+## 21.4 Plugin 完整体验检查点
 
-完成：
-
-- 安装和连接；
-- Principal 与 Grant；
-- WebEnvoy 管理 SKILL；
-- 通用浏览器 SKILL；
-- Profile 创建与启动；
-- 账号发现和显式绑定；
-- 人工接管；
-- 结果返回。
-
-## 阶段五：App 管理台
-
-优先交付：
-
-- Agent 接入；
-- AccountSystem；
-- Account；
-- Profile；
-- Provider；
-- SKILL；
-- Instance；
-- Activity；
-- 单实例主视图；
-- 待处理事项。
-
-## 阶段六：多实例观看
-
-依次验证：
-
-1. 单实例截图；
-2. 实例切换；
-3. 多实例缩略图；
-4. 两实例分屏；
-5. 实时画面；
-6. 根据价值决定四实例网格。
-
-## 阶段七：首个真实网站 SKILL
-
-完成一条真实纵向链路：
+在进入第二网站 SKILL 扩展和完整 App 产品化前，至少证明：
 
 ```text
-创建或导入 Profile
-→ 登录 Account
-→ 识别 BusinessTarget
-→ Agent 加载 SKILL
-→ 完成真实运营任务
-→ 用户观看或接管
-→ 回读并核验结果
+安装第三方 Agent 接入口
+→ 完成必要 owner 授权
+→ App 可完全退出
+→ Agent 管理长期 Profile / 身份 / 环境 / SKILL
+→ 使用完整 V1 浏览器能力完成通用任务
+→ 人类按需接管同一实例并交还
+→ 结果、拒绝、unknown 和恢复可信
+→ 更新 / 重启 / 卸载边界不丢长期数据
 ```
 
----
+该检查点证明 Agent-native 主入口成立，不等于完整 V1 已验收。
+
+## 21.5 第二网站 SKILL 扩展验证
+
+基础能力和正式资产消费达到明确门槛后，选择一个真实用户目标和不同网站／场景，主要通过 SKILL／AccountSystem 共享资产交付站点知识；真正的公共能力缺口归入既有 Runtime capability，不为站点增加旁路。
+
+## 21.6 完整 App 产品化与多实例监督
+
+Plugin 完整体验检查点后，再集中完善 Agent 接入、AccountSystem／Account、Profile／Environment、Provider、SKILL、Instance／Activity、多实例切换与概览。Plugin-first 阶段已经需要的授权、人工接管、交还和敏感决定入口不得等待到此阶段才首次实现。
+
+## 21.7 V1 产品交付与最终验收
+
+持续回读 V1 验收项，不在末期第一次集成。最终同时核对 Plugin 完整体验、完整 App／Viewer 产品路径、Provider／Profile／身份／环境长期一致性、SKILL 扩展成本、安装升级卸载恢复，以及 Run／ExternalOutcome、权限、隐私与失败边界。
 
 # 22. V1 验收标准
 
@@ -2010,6 +2102,10 @@ V1 至少必须证明：
 
 ---
 
+
+31. V1 Browser Runtime 的主要能力类别有明确公共语义、Provider 支持状态、实际验证和授权边界；基础能力不依赖某个站点 SKILL 才存在。
+32. 一个明确支持的第三方 Agent 宿主通过已安装 Plugin，可以消费所有 V1 允许委托的资源管理、浏览器、SKILL 和结果／恢复能力；App 未启动时普通 Agent 路径仍成立，必要人类决定和同实例接管有可信入口。
+
 # 23. 待原型验证清单
 
 以下方向已经明确，但必须通过工程验证：
@@ -2043,6 +2139,9 @@ V1 至少必须证明：
 > **Camoufox 是默认 Provider 的第一验证对象，官方 Chrome 是显式兼容性 Provider。Provider 在 Profile 创建时确定，后续变更通过迁移完成，不得静默替换。每个 Profile 持久化一套自洽的设备环境和独立浏览器存储，并减少由驱动和运行环境不必要暴露的自动化特征；WebEnvoy 不承诺不可检测，也不提供绕过平台安全机制的能力。**
 >
 > **网站知识以 SKILL 为主要载体，AccountSystem 模板等共享知识作为独立资产被多个 SKILL 引用。SKILL 决定 Agent 推荐怎样完成任务，Runtime 决定实际提供哪些操作，授权系统决定当前允许执行什么。没有 SKILL 时，Agent 仍可使用通用浏览器能力；有 SKILL 后，应减少探索、试错和错误，并提高账号、经营对象和结果判断的准确性。**
+>
+
+> **V1 以一个已安装 Plugin 在真实第三方 Agent 中完成完整消费作为优先检查点。Browser Runtime 先明确主要能力类别，包括页面／窗口、交互、文件、Network、Console／错误、受控执行、画面、控制和恢复；能力是否存在与当前 Agent 是否被展示或授权使用必须分离。完整 App 产品化在该检查点后集中完善，但必要的人类授权、敏感决定和同实例接管不能缺失。**
 >
 > **ConnectionState、InstanceState、ControlState、RunState 和 ExternalOutcome 必须分离。断线、关闭 App、观看失败、实例退出或用户停止后续操作，都不能自动改写网站侧已经发生或可能发生的结果。无法确认写入结果时，必须保留 unknown outcome，并禁止自动重复写入。**
 
@@ -2118,6 +2217,10 @@ Lode
 | 通用 Browser Agent | 明确非目标 |
 | Hosted Browser 服务 | 明确非目标 |
 | 自动养号、虚假互动、绕过平台安全 | 明确非目标 |
+| V1 Browser Runtime 能力基线独立于站点 SKILL 定义 | 已确认原则 |
+| Runtime 能力存在与 Agent 工具暴露／授权分离 | 已确认原则 |
+| 首个完整消费端优先为一个第三方 Agent 的已安装 Plugin | V1 收敛约束 |
+| 完整 App 产品化在 Plugin 完整体验检查点之后集中推进，必要 owner 控制持续保留 | V1 收敛约束 |
 
 # 附录 C：实施解释与分级验收
 

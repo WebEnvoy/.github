@@ -1,9 +1,10 @@
 # WebEnvoy v1 产品与架构方向规范
 
-> **文档状态：** v1.2 产品与架构方向规范（多 Provider 用户选择与 Obscura 有界验证基线）
+> **文档状态：** v1.3 产品与架构方向规范（Provider 资格、用户选择与职责边界）
 > **适用范围：** WebEnvoy 的产品定位、核心对象、权限模型、Profile 与账号管理、Provider 策略、Agent 接入、App、Harbor、Core、Lode／SKILL 的职责边界，以及 V1 实施与验收范围。
 > **不包含：** 对当前仓库实现状态、历史 PR、历史架构质量或完成度的评价。
 > **重要说明：** 本规范描述目标方向与 V1 约束，不表示相关能力已经完成实现。
+> **2026-09-12 修订：** 明确 WebEnvoy 不补浏览器核心能力，建立 Provider Qualification Gate，并以 [#511](https://github.com/WebEnvoy/WebEnvoy/issues/511) 登记 Obscura 在当前愿景完成前不采用。v1.2 及更早附件只作历史背景；本版的 Plugin-first、用户选择和证据语义优先。
 
 ---
 
@@ -108,7 +109,8 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 17. WebEnvoy 不承诺不可检测、不封号或绕过平台安全机制。
 18. 自然交互必须服务真实任务，不得演变为养号、虚假互动或无意义行为伪装。
 19. Provider 是用户选择：新增 Provider 增加选择，不替换现有 Provider；项目工程优先级、产品推荐、用户新建默认偏好和 Profile 实际绑定必须分离。
-20. Provider 的内核、协议、启动、存储、版本和网站兼容差异必须先记录为适配工作、能力限制或待验证事实，不自动构成拒绝整个 Provider 的理由。
+20. Provider 的协议、启动和可接受能力差异可以由 Driver 适配或准确展示；核心浏览器能力缺失不得包装为普通兼容任务。
+21. WebEnvoy 可以适配、管理、约束、组合、观察和验证 Provider 已经具备的浏览器能力；不得通过 Harbor、Driver、App、Plugin、SKILL、安装脚本或站点脚本实现、模拟或长期补偿 Provider 缺失的浏览器核心语义，也不得以自维护浏览器 fork 或内核补丁链作为当前愿景的交付路线。
 
 ## 2.2 V1 收敛约束
 
@@ -134,7 +136,6 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 8. CloakBrowser BYOL 是否值得作为长期可选 Provider 维护。
 9. Camoufox 是否适合长时间人工浏览，而不只是短时接管。
 10. 用户自定义 AccountSystem 的身份识别覆盖范围。
-11. Obscura 在固定版本、受管 Driver 和正式消费路径中能否满足身份隔离、人机共用现场、网站操作与可信恢复底线。
 
 ## 2.4 长期目标
 
@@ -1039,30 +1040,54 @@ App 和 Agent API 应同时表达：
 
 # 9. Provider 策略
 
-## 9.1 产品接入底线、支持范围与推荐
+## 9.1 Provider Qualification Gate、支持范围与推荐
 
-### 产品接入底线
+### 先分类，再确定工作范围
 
-一个可选 Provider 必须能通过 WebEnvoy Driver 与既有 owner 路径满足其声明范围内的底线：
+1. **接口差异**：Provider 已经提供真实能力，只是协议、启动或调用方式不同，由 Driver 适配。
+2. **可接受能力差异**：限制不会破坏已承诺的用户结果，准确展示并局部处理；不要求所有 Provider 完全同等级。
+3. **核心浏览器能力缺失**：实现已承诺结果需要 WebEnvoy 自行建设或模拟底层浏览器行为，停止采用，不转成普通 Driver 任务。
 
-- Profile 身份和数据不混淆，不与外部软件并发写同一目录；
-- ProviderBinding、实际可用性和授权可查询，运行中不静默切换；
-- 人与 Agent 观看和操作同一原 Instance，输入服从 ControlLease；
-- 结果、失败和 `unknown` 可信，断连或恢复不自动重复有影响动作；
-- 失败只阻止受影响动作，保留用户 Profile 数据和历史结果；
-- 版本、构建、许可、分发和已知安全边界有可核对事实。
+核心浏览器能力至少包括浏览器渲染与命中、键盘和 IME、窗口／弹窗／对话框、下载、Web Storage／IndexedDB、站点权限，以及浏览器级设备身份。边界按实际承担了什么能力判断，不按代码位于 Driver、SKILL 或安装脚本、也不按使用的语言判断。
 
-Provider 不必自带 WebEnvoy 的完整 Profile、授权、Grant、Run、恢复或人类控制体系，也不必与其他 Provider 使用相同内核、协议或窗口实现。
+### 固定资格顺序
+
+```text
+产品场景与职责边界初筛
+→ 固定版本文档／源码和最小黑盒核对
+→ 必要的可丢弃适配 spike
+→ 有证据的采用／不采用决定
+→ 正式 Driver、注册、合同、App／Plugin 与安装交付
+```
+
+前置核对必须回答：长期账号状态是否由浏览器可靠提供；必要人工操作是否有原现场路径；关键输入、弹窗和文件行为是否真实存在；接口是否空返回或自动替用户决定；安全和版本路径是否可接受。接口存在或命令成功不是资格证据；也不要求零 Driver、零成本或所有站点完全兼容。
+
+每次 spike 开始前必须写清产品问题、已有能力证据、允许范围和输出决定。资格未通过时，不把候选加入正式 Provider enum、持久合同、用户安装、App 选择项或支持承诺。发现必须补核心浏览器语义、维护 fork／内核补丁链，或放弃身份隔离、可信控制与结果真实性时立即停止；普通执行者不得以“临时兼容”续接。
+
+### 接入底线与允许的正常工作
+
+一个可选 Provider 必须能通过 WebEnvoy Driver 与既有 owner 路径满足其声明范围内的底线：Profile 身份与数据不混淆；ProviderBinding、可用性和授权可查询；人与 Agent 使用同一原 Instance且输入服从 ControlLease；结果、失败和 `unknown` 可信；失败局部且保留用户数据；版本、构建、许可、分发和安全边界可核对。
+
+WebEnvoy 可以且应继续：
+
+- 对接 Provider 已有协议、启动方式及页面、输入、文件、网络和窗口接口；
+- 管理受管目录、进程、Profile／账号归属、授权、ControlLease、结果与恢复；
+- 保存并重放 Provider 已支持的配置、seed 或官方生成结果，核对实际生效与漂移；
+- 管理 Provider 原生持久数据的生命周期、备份、导入、迁移和版本兼容；
+- 转发原实例画面与可靠输入并提供可信人类入口；
+- 在不改变浏览器语义时组合调用、等待状态、诊断和处理失败。
+
+这不要求 Provider 自带 WebEnvoy 的管理体系，也不禁止不同协议、配置持久化或非原生有头窗口；但配置管理不能演变为自建设备身份系统，数据管理不能实现缺失的网页存储引擎，画面和输入转发不能自行判断浏览器渲染层叠或模拟输入系统。
 
 ### 能力与支持范围
 
-每个 Provider／Driver 必须按版本和平台分别声明 capability 的 `supported`、`limited` 或 `unsupported`，以及 `provider_claim`、`fixture_verified`、`live_verified`、`plugin_verified` 或 `stale` 证据。未测试不等于 `unsupported`。不同 Provider 不要求完全相同的能力等级；V1 必需能力仍须在产品层继续承接，不能因某个 Provider 受限而从 Runtime 基线删除。
+每个 Provider／Driver 必须按版本和平台分别声明 capability 的 `supported`、`limited` 或 `unsupported`。未测试不等于 `unsupported`；支持状态、证据来源、运行可用性和授权状态分别表达。不同 Provider 不要求完全相同的能力等级；某候选受限不能删除 V1 Runtime 能力类别，也不能反向要求 WebEnvoy 补其核心缺口。
 
-人工使用的要求是用户能观看并操作原实例、完成必要浏览与接管。Provider 可以提供原生有头窗口，也可以通过原实例画面与受控输入交付等价体验；只有截图不能证明人工交互通过。
+人工使用要求用户能观看并操作原实例、完成必要浏览与接管；可以是原生窗口或原实例画面与可靠输入，只有截图不能证明人工交互通过。
 
 ### 产品推荐考虑因素
 
-产品推荐可以综合免费／付费与并发成本、开源和可审计程度、目标平台、资源开销、网站兼容性、环境控制、维护活跃度、版本／构建／升级质量及分发许可。这些是推荐权衡，不机械升级为每个可选 Provider 的同一准入条件；许可和分发事实仍必须单独核实并遵守。
+产品推荐可以综合免费／付费与并发成本、开源和可审计程度、目标平台、资源开销、网站兼容性、环境控制、维护活跃度、版本／构建／升级质量及分发许可。这些是推荐权衡，不机械升级为每个可选 Provider 的同一准入条件；推荐不是授权、用户设置或 ProfileBinding。
 
 ## 9.2 Camoufox
 
@@ -1122,13 +1147,13 @@ CloakBrowser 不作为免费多实例默认底座，也不作为 WebEnvoy 必需
 - Wayfern：不研究、不接入；
 - 没有真实 Work Item、消费者和有界验收的横向 Provider 集成。
 
-## 9.6 Obscura 有界验证
+## 9.6 Obscura 不采用决定
 
-**[待原型验证]**
+**[当前愿景内明确不采用]**
 
-Obscura 是本轮可选受管 Provider 验证对象，不表示已经采用、已经正式可选或将替换 Camoufox／Chrome。验证必须固定版本／commit／artifact，经过 Harbor Driver、受管 Profile、owner API、ControlLease、可信恢复和已安装 Plugin；不得让 App／Agent 直接使用 Obscura MCP 或 raw CDP endpoint 另起现场。
+在 WebEnvoy 当前愿景完成前，不采用、不继续接入 Obscura；停止研发、适配、验证、分发准备、候选跟踪与版本监控，不以待授权、新版本、重命名或临时补丁继续。原因是继续满足核心产品场景会越过 WebEnvoy 与浏览器的职责边界，需要本项目承担浏览器核心能力补偿。
 
-低风险场景是验证顺序，不是永久只读／采集定位。发现内核、连接生命周期、存储、画面、输入或网站差异时，应限定到具体版本／平台／动作，先判断 Driver 等价路径；只有身份隔离、授权控制、同现场、结果和 unknown 不重放底线在最小 Driver 后仍不能可靠满足，或需要另行决定的不可维护内核改造，才形成不采用结论。
+这不是“已经证明永远不可用”，也不取消多 Provider、用户选择或完整 Runtime 目标。当前愿景完成不会自动重新开启；届时仍需新的显式产品决定。历史目标、实验和失败证据保留在 [#511](https://github.com/WebEnvoy/WebEnvoy/issues/511)，其 `not_planned` 关闭不表示功能验收成功。
 
 ## 9.7 Provider Driver 抽象
 
@@ -1220,7 +1245,26 @@ Chrome / CDP Driver
 
 能力存在不等于 Agent 自动获得能力。Plugin 可以按宿主、任务、SKILL 和授权上下文减少工具呈现；Core／Runtime 仍独立执行权限、身份、ControlLease、敏感数据和 ExternalOutcome 检查。
 
-对于明确列为 V1 必需的能力，不能仅以 `unsupported` 标记作为完成证据；应提供实现、受约束的等价路径，或通过明确产品决策调整支持范围。不同 Provider 不要求具备完全相同的实现方式或能力等级。
+对于明确列为 V1 必需的能力，不能仅以 `unsupported` 标记作为完成证据；应由具备真实能力的成熟 Provider 加 WebEnvoy 有界适配交付，或通过明确产品决定调整支持范围。不同 Provider 不要求具备完全相同的实现方式或能力等级；不得由 WebEnvoy 实现缺失的浏览器核心语义来制造“支持”。
+
+## 9.9 验证证据语义
+
+验收按用户结果选择所需证据，并明确区分：
+
+| 证据类型 | 含义 |
+|---|---|
+| 确定性测试 | fixture、mock 或单元测试；证明受控逻辑，不证明真实浏览器或用户路径。 |
+| 真实 Provider | 真实二进制与原 Instance 的实际行为。 |
+| 安装路径 | 正式构建与隔离安装资产经正式接口调用；测试客户端可以证明此类证据。 |
+| 真实 Agent | 真实第三方 Agent 通过已安装 Plugin 完成声明路径，不是测试脚本代发工具请求。 |
+| 真人操作 | 真实人类完成观看、输入、接管等；中文 IME 不得由 `insertText` 脚本替代。 |
+| 真实站点 | 记录第三方站点、版本／时间和具体场景；受控站点不算第三方站点，真实读取不证明账号登录或写入。 |
+
+六类不是互斥等级，也不是所有操作都必须凑齐六项。保留 `fixture_verified`、`live_verified`、`plugin_verified` 的合同名称和原含义；`plugin_verified` 只用于“已安装 Plugin + 真实第三方 Agent”。安装路径、真人和真实站点上下文优先写入现有 evidence／verification 记录，现有消费者确实无法区分时才增加最小版本化字段。
+
+`provider_claim` 只是上游声明。没有测试不等于 `unsupported`；API 返回成功、CI 通过或 PR APPROVE 都不等于用户结果、真人可用、Work Item 完成或 main 已交付。
+
+每份验收至少记录：测试的用户结果、实际消费者、固定源码与 build／config、平台及是否原实例、场景和身份／授权边界、成功／拒绝／恢复、脱敏证据地址，以及明确未执行项。不得保存凭据、原始 Profile、私有业务数据或未脱敏画面。
 
 # 10. 设备环境与自动化暴露控制
 
@@ -1945,6 +1989,8 @@ Agent 请求或用户接管
 | **Lode** | SKILL、AccountSystem 模板、站点知识、脚本、测试和版本 |
 | **Provider** | 浏览器内核、原生设备环境能力和底层运行 |
 
+职责边界按实际承担的能力判断：Harbor、Driver、App、Plugin 或 Lode 都不得实现、模拟或长期补偿 Provider 缺失的浏览器渲染／命中、键盘／IME、窗口／弹窗／对话框、下载、Web Storage／IndexedDB、站点权限或浏览器级设备身份。WebEnvoy 管理既有能力的配置、生命周期、授权、调用、观察、恢复和证据；Provider 负责浏览器内核及其核心语义。
+
 ## 19.1 Core 不应做
 
 - 直接读写 Profile 目录；
@@ -2076,7 +2122,7 @@ Agent 请求或用户接管
 
 并行推进 AccountSystem／Account／BusinessTarget、Profile 生命周期和 Provider／Environment；需要真实登录、账号绑定或业务写入的现场验证在取得相应授权后执行，缺授权只暂停相关动作，不把无关 Runtime／环境工作全局停止。
 
-Provider 接入以真实 Work Item 有界推进。Camoufox 的首个工程验证顺序不阻止 Obscura 等明确对象验证；每项验证都必须区分原型、能力交付、正式可选、用户默认与完整 V1，不以某个 Provider 的局部缺口缩减公共能力。
+Provider 接入按 9.1 的 Qualification Gate 有界推进；当前不启动新 Provider 研究。每项验证必须区分原型、能力交付、正式可选、用户默认与完整 V1；某个 Provider 的局部缺口不缩减公共能力，需要 WebEnvoy 补浏览器核心语义的候选停止采用。
 
 ## 21.3 Plugin 完整资源管理与资产消费
 
@@ -2113,7 +2159,7 @@ Plugin 完整体验检查点后，再集中完善 Agent 接入、AccountSystem�
 
 # 22. V1 验收标准
 
-V1 至少必须证明：
+V1 至少必须证明以下用户结果，并按 9.9 的证据类型记录实际消费者、固定源码／构建、平台／原实例、身份授权、成功／拒绝／恢复、证据地址与未执行项：
 
 1. WebEnvoy 自己创建和保存 Profile；
 2. 外部 Profile 导入后不再依赖源目录；
@@ -2163,7 +2209,6 @@ V1 至少必须证明：
 - Camoufox 多实例资源成本；
 - Camoufox 与目标社媒、店铺站点兼容性；
 - Camoufox 配置跨版本稳定性；
-- Obscura 固定版本的受管 Profile、连接与页面生命周期、存储连续性、人工交互、网站能力和恢复；
 - macOS 实例画面流；
 - Playwright Firefox 的实时画面和输入能力；
 - 系统文件选择器与原生弹窗边界；
@@ -2186,7 +2231,7 @@ V1 至少必须证明：
 >
 > **App 可以切换和同时展示多个真实浏览器 Instance。画面必须来自原实例，不得通过重新加载 URL 创建第二个会话。观看与控制分离，输入必须持有 ControlLease；复杂交互可以打开同一实例的原生窗口。实时观看默认不等于录制。**
 >
-> **Provider 由用户选择；新增 Provider 增加选择，不替换现有 Provider。产品推荐、用户新建默认和 Profile 实际绑定必须分离，显式选择优先，不可用或未授权时局部拒绝且不静默回退。Camoufox 保留首个工程验证对象及已验证范围，Chrome 保留显式兼容选择，Obscura 作为有界待验证对象。Provider 在 Profile 创建时确定，后续变更通过迁移完成。每个 Profile 持久化一套自洽的设备环境和独立浏览器存储；WebEnvoy 不承诺不可检测，也不提供绕过平台安全机制的能力。**
+> **Provider 由用户选择；新增 Provider 增加选择，不替换现有 Provider。产品推荐、用户新建默认和 Profile 实际绑定必须分离，显式选择优先，不可用或未授权时局部拒绝且不静默回退。Camoufox 保留首个工程验证对象及已验证范围，Chrome 保留显式兼容选择；Obscura 在当前愿景完成前明确不采用。Provider 在 Profile 创建时确定，后续变更通过迁移完成。WebEnvoy 只管理和调用 Provider 已有浏览器能力，不实现、模拟或长期补偿核心浏览器语义。**
 >
 > **网站知识以 SKILL 为主要载体，AccountSystem 模板等共享知识作为独立资产被多个 SKILL 引用。SKILL 决定 Agent 推荐怎样完成任务，Runtime 决定实际提供哪些操作，授权系统决定当前允许执行什么。没有 SKILL 时，Agent 仍可使用通用浏览器能力；有 SKILL 后，应减少探索、试错和错误，并提高账号、经营对象和结果判断的准确性。**
 >
@@ -2260,7 +2305,9 @@ Lode
 | 显式选择优先，不可用／未授权不静默回退 | 已确认原则 |
 | Camoufox 作为首个工程验证 Provider 及其已验证范围 | 已确认原则 |
 | Camoufox 长期人工使用 | 待原型验证 |
-| Obscura 通过受管 Driver 与正式消费路径完成有界验证 | 待原型验证 |
+| WebEnvoy 不补 Provider 缺失的浏览器核心能力，也不维护浏览器 fork／内核补丁链 | 已确认原则（至少持续到当前愿景完成） |
+| Provider Qualification Gate 先分类、后 spike、再决定是否正式接入 | 已确认原则 |
+| Obscura 在当前愿景完成前不采用；不会因新版本自动重开 | 明确退出当前范围（历史：#511） |
 | 实时多实例交互画面 | 待原型验证 |
 | Agent 直接安装／更新 Provider | 待原型验证 |
 | CloakBrowser BYOL | 待评估 |
@@ -2286,7 +2333,7 @@ Lode
 5. `Profile` 不是网站白名单，账号绑定清单也不是站点访问白名单。没有网站 SKILL 时，Agent 仍可在授权范围内使用通用浏览器能力。
 6. 凭据保护不等于禁止 Agent 读取完成授权业务所必需的内容。凭据、授权业务内容、公开资产和诊断摘要必须按不同风险处理。
 7. SKILL 不授予权限；通用脚本、CDP 或其他协议工具也不能成为受控模式的授权后门。尚未提供的隔离或保证必须如实说明。
-8. Camoufox 是首个工程验证 Provider 并只代表其已有证据范围；Chrome 是显式兼容选择，Obscura 由有界 Work Item 验证。新增 Provider 不替换其他选择，也不得重新引入 ego-lite／ego-browser 或 Wayfern。
+8. Camoufox 是首个工程验证 Provider 并只代表其已有证据范围；Chrome 是显式兼容选择。Obscura 已明确退出当前愿景范围；新增 Provider 必须先通过 Qualification Gate，也不得重新引入 ego-lite／ego-browser 或 Wayfern。
 9. 写入结果未知时禁止重放，但允许对原 operation 做安全查询、对账、人工接管和停止后续执行。新结论追加事实，不抹去历史 unknown。
 10. `AccountSystem` 是可独立复用并由 SKILL 引用的资产，运行时以用户本地定义为准；没有真实消费者时不为文档结构创建脚手架。
 
@@ -2297,7 +2344,7 @@ Lode
 - 每条业务规则只有一个 owner；复用和减法优先，兼容层必须有消费者和退出条件。
 - 正向、必要负向和恢复路径一起验证；真实消费者使用实际 pin 的资产。
 - 研究可用授权探针；正式产品验收走可安装入口。验证强度与风险相称。
-- Provider 低风险原型、正式 Driver、已安装 Plugin、真实人工输入和第三方站点证据分别记录，不互相冒充；未测试不写成 `unsupported`。
+- fixture／mock、真实 Provider、正式安装路径、真实第三方 Agent、真人操作和真实第三方站点分别记录，不互相冒充；`plugin_verified` 只表示已安装 Plugin + 真实 Agent，未测试不写成 `unsupported`。
 - 已可见产品目标完整规划到 Milestone 和 FR，保留 V1、原型与长期目标的决策状态；具体 Work Item 在接近实施时滚动细化，只有真实技术或验收阻塞才建立原生 dependency。
 - Issue 关闭、PR 合并和 checks 通过都不能单独证明业务能力完成。
 

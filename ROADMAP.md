@@ -25,7 +25,7 @@
 
 这些目标可以复用和交叉验证，不要求按 Milestone 编号全串行交付。只在真实技术或验收事实不满足时建立原生 dependency；例如 #454 的 Provider 前置仍由其原生依赖表达。
 
-Provider 策略以用户选择为产品语义：Camoufox 的首个工程验证事实不构成永久默认或其他 Provider 前置；Obscura 的受管 Profile、显式选择和人机共用现场由 [#511](https://github.com/WebEnvoy/WebEnvoy/issues/511) 在 #471 下有界验证。原型、正式可选、用户默认与完整 V1 分别验收。
+Provider 策略以用户选择为产品语义：Camoufox 的首个工程验证事实不构成永久默认或其他 Provider 前置；Obscura 已由 [#511](https://github.com/WebEnvoy/WebEnvoy/issues/511) 明确 `not_planned`，不再验证或跟踪。通用选择与新建默认由 [#516](https://github.com/WebEnvoy/WebEnvoy/issues/516) 承接；Provider 资格和 WebEnvoy 不补浏览器核心能力的边界以 canonical 第 9 章为准。
 
 ## 条件性后续目标
 

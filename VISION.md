@@ -9,7 +9,7 @@ WebEnvoy 是面向矩阵社媒和多店铺运营的 Agent 原生多账号浏览�
 - `WebEnvoy/WebEnvoy` 是产品 monorepo，Core、Desktop App 与 Harbor 保持独立职责和 owner API。
 - `WebEnvoy/Lode` 是独立的 SKILL、AccountSystem 模板和网站知识资产仓。
 - App 与 Agent 使用同一 Runtime；App 是人类管理、观看、授权和接管入口，不建设完整 Agent 规划器。
-- 所有正式 Profile 由 WebEnvoy 管理；Provider 由用户选择，产品推荐、用户新建默认和 Profile 实际绑定相互分离。Camoufox 保留首个工程验证范围，Chrome 保留显式兼容选择，其他 Provider 通过有界正式验证进入支持范围。
+- 所有正式 Profile 由 WebEnvoy 管理；Provider 由用户选择，产品推荐、用户新建默认和 Profile 实际绑定相互分离。Provider 先通过 canonical Qualification Gate；WebEnvoy 不实现或长期补偿缺失的浏览器核心语义。Obscura 在当前愿景完成前明确不采用。
 - SKILL 决定建议怎样做，Runtime 决定实际提供什么，授权系统决定当前允许什么。
 - WebEnvoy 不替用户决定运营策略，不承诺绕过风控、不可检测或不封号。
 

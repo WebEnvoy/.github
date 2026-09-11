@@ -1,6 +1,6 @@
 # WebEnvoy v1 产品与架构方向规范
 
-> **文档状态：** v1.1 产品与架构方向规范（Runtime 完整能力与 Plugin-first 实施基线）
+> **文档状态：** v1.2 产品与架构方向规范（多 Provider 用户选择与 Obscura 有界验证基线）
 > **适用范围：** WebEnvoy 的产品定位、核心对象、权限模型、Profile 与账号管理、Provider 策略、Agent 接入、App、Harbor、Core、Lode／SKILL 的职责边界，以及 V1 实施与验收范围。
 > **不包含：** 对当前仓库实现状态、历史 PR、历史架构质量或完成度的评价。
 > **重要说明：** 本规范描述目标方向与 V1 约束，不表示相关能力已经完成实现。
@@ -107,6 +107,8 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 16. 连接状态、实例状态、控制状态、Run 状态和外部业务结果必须分离。
 17. WebEnvoy 不承诺不可检测、不封号或绕过平台安全机制。
 18. 自然交互必须服务真实任务，不得演变为养号、虚假互动或无意义行为伪装。
+19. Provider 是用户选择：新增 Provider 增加选择，不替换现有 Provider；项目工程优先级、产品推荐、用户新建默认偏好和 Profile 实际绑定必须分离。
+20. Provider 的内核、协议、启动、存储、版本和网站兼容差异必须先记录为适配工作、能力限制或待验证事实，不自动构成拒绝整个 Provider 的理由。
 
 ## 2.2 V1 收敛约束
 
@@ -118,7 +120,7 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 6. 首期优先支持一个主要 Agent 宿主。
 7. App 任务管理收敛为活动监督、待处理事项、人工接管和结果查看，不建设完整任务编排平台。
 8. 多实例界面先实现单实例主视图和多实例概览，再根据原型结果增加分屏或网格。
-9. 默认 Provider 选择以 Camoufox 原型验证结果为前提，不在验证前继续横向集成大量 Provider。
+9. Camoufox 保留首个工程验证对象及其已验证范围；这项工程顺序不阻止由真实 Work Item 约束范围的其他 Provider 验证，也不开放无边界横向集成。
 
 ## 2.3 待原型验证
 
@@ -132,6 +134,7 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 8. CloakBrowser BYOL 是否值得作为长期可选 Provider 维护。
 9. Camoufox 是否适合长时间人工浏览，而不只是短时接管。
 10. 用户自定义 AccountSystem 的身份识别覆盖范围。
+11. Obscura 在固定版本、受管 Driver 和正式消费路径中能否满足身份隔离、人机共用现场、网站操作与可信恢复底线。
 
 ## 2.4 长期目标
 
@@ -879,7 +882,8 @@ SKILL 和 Runtime 必须根据站点实际语义区分：
 ```text
 用户或 Agent 请求创建
 → 检查管理 Grant
-→ 选择 Provider
+→ 解析显式选择／用户新建默认／人类确认的推荐预选
+→ 检查 Provider 可用性与使用授权
 → 选择环境模板和权限模板
 → 创建 WebEnvoy 管理的数据目录
 → 生成并持久化设备环境
@@ -889,6 +893,16 @@ SKILL 和 Runtime 必须根据站点实际语义区分：
 → 显式登记和绑定
 → 正常使用
 ```
+
+创建时的 Provider 选择必须遵守：
+
+- 显式选择优先于用户的新建默认偏好；
+- 两者都必须实际可用并处于有效授权内；
+- 无用户默认时，人类入口可以显示可修改的产品推荐预选，但必须让用户确认最终选择；
+- Agent 既未明确指定、又没有用户默认时，必须返回需要选择，不得暗用项目推荐；
+- 显式选择或用户默认不可用／未获授权时，返回局部诊断和可选处理，不得静默换用其他 Provider。
+
+用户新建默认偏好只影响后续创建，不修改既有 Profile／Instance、环境、账号绑定或 Grant。设置默认不授予安装、使用、迁移、管理或扩大 Grant 的权限；Agent 修改该偏好必须有明确管理授权。
 
 ## 7.2 外部 Profile 导入
 
@@ -977,6 +991,7 @@ Provider 不可用时：
 - 返回明确诊断；
 - 提供修复、更新或迁移选项；
 - 不因 Provider 故障改写已经发生的 ExternalOutcome。
+- 不把不可用的显式选择或用户默认替换为产品推荐；既有 Profile 仍保留原 ProviderBinding。
 
 ---
 
@@ -1024,27 +1039,36 @@ App 和 Agent API 应同时表达：
 
 # 9. Provider 策略
 
-## 9.1 默认 Provider 的筛选标准
+## 9.1 产品接入底线、支持范围与推荐
 
-默认 Provider 应尽可能满足：
+### 产品接入底线
 
-- 免费使用，不按 Profile 或并发会话收费；
-- 浏览器核心和关键环境控制实现开源；
-- 允许 WebEnvoy 自主管理 Profile；
-- 支持多个独立实例；
-- 支持有头运行和人工接管；
-- 支持目标桌面平台；
-- 支持稳定自动化接口；
-- 支持持久化浏览器数据；
-- 支持可固定、可复用的设备环境；
-- 有明确版本、构建和升级路径；
-- 不要求把用户 Profile 托管给第三方。
+一个可选 Provider 必须能通过 WebEnvoy Driver 与既有 owner 路径满足其声明范围内的底线：
+
+- Profile 身份和数据不混淆，不与外部软件并发写同一目录；
+- ProviderBinding、实际可用性和授权可查询，运行中不静默切换；
+- 人与 Agent 观看和操作同一原 Instance，输入服从 ControlLease；
+- 结果、失败和 `unknown` 可信，断连或恢复不自动重复有影响动作；
+- 失败只阻止受影响动作，保留用户 Profile 数据和历史结果；
+- 版本、构建、许可、分发和已知安全边界有可核对事实。
+
+Provider 不必自带 WebEnvoy 的完整 Profile、授权、Grant、Run、恢复或人类控制体系，也不必与其他 Provider 使用相同内核、协议或窗口实现。
+
+### 能力与支持范围
+
+每个 Provider／Driver 必须按版本和平台分别声明 capability 的 `supported`、`limited` 或 `unsupported`，以及 `provider_claim`、`fixture_verified`、`live_verified`、`plugin_verified` 或 `stale` 证据。未测试不等于 `unsupported`。不同 Provider 不要求完全相同的能力等级；V1 必需能力仍须在产品层继续承接，不能因某个 Provider 受限而从 Runtime 基线删除。
+
+人工使用的要求是用户能观看并操作原实例、完成必要浏览与接管。Provider 可以提供原生有头窗口，也可以通过原实例画面与受控输入交付等价体验；只有截图不能证明人工交互通过。
+
+### 产品推荐考虑因素
+
+产品推荐可以综合免费／付费与并发成本、开源和可审计程度、目标平台、资源开销、网站兼容性、环境控制、维护活跃度、版本／构建／升级质量及分发许可。这些是推荐权衡，不机械升级为每个可选 Provider 的同一准入条件；许可和分发事实仍必须单独核实并遵守。
 
 ## 9.2 Camoufox
 
 **[待原型验证]**
 
-Camoufox 是当前默认 Provider 的第一验证对象。
+Camoufox 是 WebEnvoy 的首个工程验证 Provider，并已按其正式证据限定支持范围；它不是产品永久指定默认，也不是其他 Provider 接入的能力模板或统一前置。
 
 目标不是把它称为“完美 Provider”，而是验证它是否能同时满足：
 
@@ -1065,7 +1089,7 @@ Camoufox 默认生成的随机设备配置和 seed 不应每次重新生成。We
 
 **[已确认原则]**
 
-官方 Chrome 作为显式可选的兼容性 Provider。
+官方 Chrome 作为显式可选的兼容性 Provider，与其他满足底线的选择使用相同的绑定、授权、诊断和恢复规则。
 
 用途包括：
 
@@ -1074,7 +1098,7 @@ Camoufox 默认生成的随机设备配置和 seed 不应每次重新生成。We
 - 某些扩展或浏览器行为需求；
 - Provider 对比和诊断。
 
-Chrome 不具备同等级的原生设备环境控制能力，但不得因此被自动判定为不可用。
+Chrome 不具备同等级的原生设备环境控制能力，但不得因此被自动判定为不可用，也不得被固定为只能在故障时使用的次等回退路径。
 
 ## 9.4 CloakBrowser
 
@@ -1096,10 +1120,17 @@ CloakBrowser 不作为免费多实例默认底座，也不作为 WebEnvoy 必需
 
 - ego-lite／ego-browser：仅作为研究对象，不接入，不作为 Provider；
 - Wayfern：不研究、不接入；
-- Camoufox 之外的 Firefox Provider：V1 不横向扩张；
-- 更多 Chromium 指纹浏览器：在 Camoufox 原型完成前不并行集成。
+- 没有真实 Work Item、消费者和有界验收的横向 Provider 集成。
 
-## 9.6 Provider Driver 抽象
+## 9.6 Obscura 有界验证
+
+**[待原型验证]**
+
+Obscura 是本轮可选受管 Provider 验证对象，不表示已经采用、已经正式可选或将替换 Camoufox／Chrome。验证必须固定版本／commit／artifact，经过 Harbor Driver、受管 Profile、owner API、ControlLease、可信恢复和已安装 Plugin；不得让 App／Agent 直接使用 Obscura MCP 或 raw CDP endpoint 另起现场。
+
+低风险场景是验证顺序，不是永久只读／采集定位。发现内核、连接生命周期、存储、画面、输入或网站差异时，应限定到具体版本／平台／动作，先判断 Driver 等价路径；只有身份隔离、授权控制、同现场、结果和 unknown 不重放底线在最小 Driver 后仍不能可靠满足，或需要另行决定的不可维护内核改造，才形成不采用结论。
+
+## 9.7 Provider Driver 抽象
 
 Harbor 的公共浏览器能力不得长期等同于 CDP、Playwright 或 Juggler 的原始协议。
 
@@ -1173,7 +1204,7 @@ Chrome / CDP Driver
 
 不得为了理论通用性提前建设复杂 Provider 插件平台，也不得为了某个站点把站点知识写回 Runtime 公共能力。
 
-## 9.7 Runtime 能力完整性与 Provider 支持状态
+## 9.8 Runtime 能力完整性与 Provider 支持状态
 
 **[已确认原则]**
 
@@ -1362,12 +1393,16 @@ Agent 宿主
 
 - 查询已安装 Provider；
 - 查询版本和能力；
+- 为新 Profile 显式选择获准且可用的 Provider；
+- 查询用户新建默认偏好及项目推荐，但不混淆二者；
 - 诊断启动问题；
 - 查看配置和实际观测；
 - 修改允许的非破坏性环境配置；
 - 发起迁移。
 
 Provider 安装、更新和修复是否允许由 Agent 直接执行，属于待原型验证；至少必须支持查询和发起需要用户处理的操作。
+
+Agent 未明确选择且用户没有新建默认偏好时，创建请求必须返回需要选择。Provider 选择权不授予安装、迁移或偏好管理权；修改用户默认需要独立的明确管理授权。
 
 ### Profile
 
@@ -1462,6 +1497,8 @@ Plugin／宿主可以根据：
 
 选择向 Agent 呈现更小的工具集合或更有界的结果。但工具是否展示不参与权限计算，也不能将 Runtime 缺失的能力伪装成“由 SKILL 实现”。
 
+正式 Plugin 的 Profile 创建必须消费 owner API 已确认的 Provider 选择、支持事实和授权，不在薄层内复制默认规则或静默回退。Provider 差异只改变 capability availability／limitation，不改变 Profile、Instance、ControlLease、Run 和恢复的 owner。
+
 # 13. App 定位
 
 ## 13.1 人类控制台
@@ -1513,6 +1550,8 @@ App 应支持：
 - 归档；
 - 删除；
 - Provider 选择；
+- 用户新建默认偏好；
+- 项目推荐预选与最终用户确认的区分；
 - 代理配置；
 - 环境模板；
 - 权限配置；
@@ -1527,6 +1566,8 @@ App 应支持：
 - 查看能力和限制；
 - 诊断；
 - 发起安装、更新、修复或迁移。
+
+App 必须分别展示产品推荐、用户新建默认和当前 Profile 绑定。实验性／受限 Provider 可以被用户显式选择，但必须准确展示限制；未达到产品接入底线的条目不得包装为可用。修改默认只作用于后续创建。
 
 完整自动修复不属于 V1 必须范围。
 
@@ -1635,6 +1676,7 @@ App 应支持：
 - 旧帧必须标记过期；
 - 观看失败不等于任务失败；
 - 系统文件选择器、扩展弹窗等复杂交互可以转到同一实例原生窗口。
+- 人工使用的验收是观看和输入回到同一原 Instance，不要求底层一定提供原生有头窗口；只有截图或重新加载 URL 均不满足。
 
 ## 14.4 技术路线
 
@@ -1660,6 +1702,8 @@ interactive_view
 ```
 
 App 根据能力降级。
+
+`static_screenshot` 或 `low_frequency_preview` 只证明观看能力；只有原实例画面配合受控点击、滚动、输入和 ControlLease 接管／交还，才能证明 `interactive_view` 或等价人工使用。
 
 ---
 
@@ -2032,6 +2076,8 @@ Agent 请求或用户接管
 
 并行推进 AccountSystem／Account／BusinessTarget、Profile 生命周期和 Provider／Environment；需要真实登录、账号绑定或业务写入的现场验证在取得相应授权后执行，缺授权只暂停相关动作，不把无关 Runtime／环境工作全局停止。
 
+Provider 接入以真实 Work Item 有界推进。Camoufox 的首个工程验证顺序不阻止 Obscura 等明确对象验证；每项验证都必须区分原型、能力交付、正式可选、用户默认与完整 V1，不以某个 Provider 的局部缺口缩减公共能力。
+
 ## 21.3 Plugin 完整资源管理与资产消费
 
 在完整 App 产品化之前，先证明一个主要 Agent 宿主通过 Plugin 可以消费所有 V1 允许委托的 Profile／Instance、Account／AccountSystem／BusinessTarget、Environment／Provider facts、SKILL，以及 Run／结果／恢复能力。Plugin 更新、卸载或 Runtime 重启不得建立第二套现场或丢失长期 Profile。
@@ -2105,6 +2151,9 @@ V1 至少必须证明：
 
 31. V1 Browser Runtime 的主要能力类别有明确公共语义、Provider 支持状态、实际验证和授权边界；基础能力不依赖某个站点 SKILL 才存在。
 32. 一个明确支持的第三方 Agent 宿主通过已安装 Plugin，可以消费所有 V1 允许委托的资源管理、浏览器、SKILL 和结果／恢复能力；App 未启动时普通 Agent 路径仍成立，必要人类决定和同实例接管有可信入口。
+33. 用户可以为新 Profile 显式选择获准且可用的 Provider；显式选择优先于用户新建默认，用户默认与项目推荐分离，不可用时不静默回退。
+34. 修改用户新建默认不改变既有 Profile／Instance、环境、账号绑定或 Grant；既有 Profile 始终按其持久 ProviderBinding 运行，跨 Provider 走显式迁移。
+35. Provider 的人工使用可以采用不同窗口／画面实现，但必须证明观看、输入、接管和交还都作用于同一原 Instance。
 
 # 23. 待原型验证清单
 
@@ -2114,6 +2163,7 @@ V1 至少必须证明：
 - Camoufox 多实例资源成本；
 - Camoufox 与目标社媒、店铺站点兼容性；
 - Camoufox 配置跨版本稳定性；
+- Obscura 固定版本的受管 Profile、连接与页面生命周期、存储连续性、人工交互、网站能力和恢复；
 - macOS 实例画面流；
 - Playwright Firefox 的实时画面和输入能力；
 - 系统文件选择器与原生弹窗边界；
@@ -2136,7 +2186,7 @@ V1 至少必须证明：
 >
 > **App 可以切换和同时展示多个真实浏览器 Instance。画面必须来自原实例，不得通过重新加载 URL 创建第二个会话。观看与控制分离，输入必须持有 ControlLease；复杂交互可以打开同一实例的原生窗口。实时观看默认不等于录制。**
 >
-> **Camoufox 是默认 Provider 的第一验证对象，官方 Chrome 是显式兼容性 Provider。Provider 在 Profile 创建时确定，后续变更通过迁移完成，不得静默替换。每个 Profile 持久化一套自洽的设备环境和独立浏览器存储，并减少由驱动和运行环境不必要暴露的自动化特征；WebEnvoy 不承诺不可检测，也不提供绕过平台安全机制的能力。**
+> **Provider 由用户选择；新增 Provider 增加选择，不替换现有 Provider。产品推荐、用户新建默认和 Profile 实际绑定必须分离，显式选择优先，不可用或未授权时局部拒绝且不静默回退。Camoufox 保留首个工程验证对象及已验证范围，Chrome 保留显式兼容选择，Obscura 作为有界待验证对象。Provider 在 Profile 创建时确定，后续变更通过迁移完成。每个 Profile 持久化一套自洽的设备环境和独立浏览器存储；WebEnvoy 不承诺不可检测，也不提供绕过平台安全机制的能力。**
 >
 > **网站知识以 SKILL 为主要载体，AccountSystem 模板等共享知识作为独立资产被多个 SKILL 引用。SKILL 决定 Agent 推荐怎样完成任务，Runtime 决定实际提供哪些操作，授权系统决定当前允许执行什么。没有 SKILL 时，Agent 仍可使用通用浏览器能力；有 SKILL 后，应减少探索、试错和错误，并提高账号、经营对象和结果判断的准确性。**
 >
@@ -2206,8 +2256,11 @@ Lode
 | 普通复制不复制登录状态 | V1 收敛约束 |
 | 首期支持一个 Agent 宿主 | V1 收敛约束 |
 | 控制权按 Instance 管理 | V1 收敛约束 |
-| Camoufox 成为默认 Provider | 待原型验证 |
+| Provider 由用户选择；项目推荐、用户新建默认和 Profile 绑定分离 | 已确认原则 |
+| 显式选择优先，不可用／未授权不静默回退 | 已确认原则 |
+| Camoufox 作为首个工程验证 Provider 及其已验证范围 | 已确认原则 |
 | Camoufox 长期人工使用 | 待原型验证 |
+| Obscura 通过受管 Driver 与正式消费路径完成有界验证 | 待原型验证 |
 | 实时多实例交互画面 | 待原型验证 |
 | Agent 直接安装／更新 Provider | 待原型验证 |
 | CloakBrowser BYOL | 待评估 |
@@ -2233,7 +2286,7 @@ Lode
 5. `Profile` 不是网站白名单，账号绑定清单也不是站点访问白名单。没有网站 SKILL 时，Agent 仍可在授权范围内使用通用浏览器能力。
 6. 凭据保护不等于禁止 Agent 读取完成授权业务所必需的内容。凭据、授权业务内容、公开资产和诊断摘要必须按不同风险处理。
 7. SKILL 不授予权限；通用脚本、CDP 或其他协议工具也不能成为受控模式的授权后门。尚未提供的隔离或保证必须如实说明。
-8. Camoufox 是默认 Provider 的首个验证目标，不是已经通过的结论；Chrome 是显式兼容 Provider。不得重新引入 ego-lite／ego-browser 或 Wayfern。
+8. Camoufox 是首个工程验证 Provider 并只代表其已有证据范围；Chrome 是显式兼容选择，Obscura 由有界 Work Item 验证。新增 Provider 不替换其他选择，也不得重新引入 ego-lite／ego-browser 或 Wayfern。
 9. 写入结果未知时禁止重放，但允许对原 operation 做安全查询、对账、人工接管和停止后续执行。新结论追加事实，不抹去历史 unknown。
 10. `AccountSystem` 是可独立复用并由 SKILL 引用的资产，运行时以用户本地定义为准；没有真实消费者时不为文档结构创建脚手架。
 
@@ -2244,6 +2297,7 @@ Lode
 - 每条业务规则只有一个 owner；复用和减法优先，兼容层必须有消费者和退出条件。
 - 正向、必要负向和恢复路径一起验证；真实消费者使用实际 pin 的资产。
 - 研究可用授权探针；正式产品验收走可安装入口。验证强度与风险相称。
+- Provider 低风险原型、正式 Driver、已安装 Plugin、真实人工输入和第三方站点证据分别记录，不互相冒充；未测试不写成 `unsupported`。
 - 已可见产品目标完整规划到 Milestone 和 FR，保留 V1、原型与长期目标的决策状态；具体 Work Item 在接近实施时滚动细化，只有真实技术或验收阻塞才建立原生 dependency。
 - Issue 关闭、PR 合并和 checks 通过都不能单独证明业务能力完成。
 

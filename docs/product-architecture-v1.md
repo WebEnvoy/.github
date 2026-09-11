@@ -124,7 +124,7 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 
 ## 2.3 待原型验证
 
-1. Camoufox 是否达到默认 Provider 的稳定性和人工使用标准。
+1. Camoufox 是否达到推荐 Provider 的稳定性和人工使用标准。
 2. Camoufox 多实例的 CPU、内存和长期稳定性。
 3. Camoufox Profile 环境配置跨重启、跨版本是否保持一致。
 4. Playwright Firefox 驱动是否满足首批社媒和店铺场景。

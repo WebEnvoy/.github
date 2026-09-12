@@ -1273,7 +1273,7 @@ Chrome / CDP Driver
 - Viewer 必须展示明确选择的原 Instance／任务页，不冒称该页是 OS 前台。仅依赖 OS 窗口、屏幕坐标或原生键盘路由的输入，必须证明可靠窗口与画面对应，否则拒绝输入；供应方 Page／Element 对象级的 `click`、`fill`、`press` 等输入只需核验 Page／document、target/actionability、授权和 ControlLease，不额外要求全局选中或 OS 前台。
 - 人类接管任务页 A 后可以修改 A、观看同一 Instance 的帮助或其他页面 B；用户明确交还后，Agent 默认重新观察 A，不自动跟随 B，也不要求先证明 A 仍是原生选中标签。
 - A 关闭、失联、替换或出现身份歧义时，必须准确停止依赖 A 的动作；只有供应方可信关系，或用户明确选择且仍可验证的真实 Page，才可继续。URL、标题、内容、创建顺序或“看起来相同”不得自动认领；不得复制、reload／reopen URL、重建 Instance 或重放操作冒充恢复。
-- 原生选中／前台关系未知但 Page／document、target/actionability、授权和 ControlLease 仍可验证时，可以继续 Page／Element 对象级读取或输入；只有依赖 OS 窗口、屏幕坐标或原生键盘路由的输入才要求可靠窗口与画面对应。任一必要事实不可靠时，只拒绝相关动作，必要时暂停该上下文，不扩大为无关资源的全局失败。
+- 原生选中／前台关系未知但 Page／document 归属和读取授权仍可验证时，可以继续 Page／Element 对象级读取或诊断；对象级输入另需核验 target/actionability、授权和 ControlLease。只有依赖 OS 窗口、屏幕坐标或原生键盘路由的输入才要求可靠窗口与画面对应。任一必要事实不可靠时，只拒绝相关动作，必要时暂停该上下文，不扩大为无关资源的全局失败。
 
 不要求所有 Provider 都支持同窗后台创建、关闭后焦点一致、完整原生窗口／选中关系或搬页后保留内部编号；这些未证事实不得被伪造。可选焦点未知不是可验证 Page 的全局失败条件。
 

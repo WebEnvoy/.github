@@ -1,10 +1,11 @@
 # WebEnvoy v1 产品与架构方向规范
 
-> **文档状态：** v1.4 产品与架构方向规范（上游原版组合、任务页协作与私有补丁退役）
+> **文档状态：** v1.5 产品与架构方向规范（实施基线、上游原版组合、任务页协作与私有补丁退役）
 > **适用范围：** WebEnvoy 的产品定位、核心对象、权限模型、Profile 与账号管理、Provider 策略、Agent 接入、App、Harbor、Core、Lode／SKILL 的职责边界，以及 V1 实施与验收范围。
 > **不包含：** 对当前仓库实现状态、历史 PR、历史架构质量或完成度的评价。
 > **重要说明：** 本规范描述目标方向与 V1 约束，不表示相关能力已经完成实现。
 > **2026-09-12 修订：** 在 v1.3 的 Provider Qualification Gate、用户选择和职责边界上，冻结供应方原版浏览器／驱动组合、任务页与原生焦点分离、人机交还后的可信重观察，以及旧私有补丁绑定退役规则。WebEnvoy 不改写供应方程序、资源、驱动 bundle 或行为；v1.3 及更早附件只作历史背景。
+> **2026-09-14 实施基线对齐：** V1 Browser Runtime 的十二类最低结果及其规范来源由 WebEnvoy [Browser Runtime 能力规格第 4 节](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/browser-runtime-capabilities-v1.md#4-v1-十二类能力最低结果矩阵)提供执行索引；它不替代本规范、FR、Work Item 或验证证据，也不把当前未验 Provider／平台升级为支持。
 
 ---
 
@@ -2177,6 +2178,14 @@ Agent 请求或用户接管
 
 > 先明确 V1 Browser Runtime 的主要能力类别，并通过一个已安装 Plugin 在真实第三方 Agent 中持续消费；每个交付单元仍以“用户或 Agent 能完整做成一件事”为边界，贯穿必要模块。不得先封闭建设一个无人消费的大 Runtime，也不得等待某个站点需要时才决定基础浏览器能力是否存在。
 
+## 21.0 实施基线与获批执行门
+
+V1 的十二类 Browser Runtime 最低结果（Instance、Page／Tab／Window、Navigation、Observation、Interaction／Wait、Files／Dialog、Network、Console／Page errors、Controlled evaluation、Screenshot／Frame、Storage／Permissions、Control／Recovery）必须先有公共语义和来源映射，再按完整用户结果滚动交付。执行索引见 WebEnvoy [Browser Runtime 能力规格第 4 节](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/browser-runtime-capabilities-v1.md#4-v1-十二类能力最低结果矩阵)；当前状态和证据仍由对应 Issue、PR、checks、review、安装记录及 verification 事实承载。
+
+进入实现前，Work Item／PR 必须具备可回读的原生 parent、Milestone、范围和完成标准，并逐项声明适用的 Design Obligation。获批执行只覆盖已确认的用户结果、文件和授权边界：Provider 必须使用来源可核对的正式组合，不能换 Provider、放宽 Grant、恢复私有补丁或以 fallback／猜测补齐缺失能力；高影响外部动作需明确 owner 授权。未派发失败和已派发 unknown 必须分别记录，后者只能查询、对账、接管或停止后续动作，不得换 key 重放。
+
+文档、实现和验证必须保持三层边界：canonical／ADR 定义方向与架构，spec／contract 定义公共语义，Issue／PR／verification 记录当前交付和证据。安装器、脚本、独立客户端、CI 或 PR review 不能冒充真实第三方 Agent；只有实际安装 Plugin 被真实 Agent 消费的证据才可标记 `plugin_verified`。
+
 ## 21.1 Runtime 能力与 Plugin 主入口
 
 优先：
@@ -2184,7 +2193,8 @@ Agent 请求或用户接管
 - 建立 V1 Browser Runtime capability plane 的完整能力基线；
 - 逐步交付 Page／Window、Observation、Interaction、Files、Network、Console／Errors、受控脚本、Screenshot／Frame、Control 和 Recovery；
 - 每项能力同时给出 Provider 支持状态、验证证据和授权边界；
-- 一个明确支持的第三方 Agent 宿主通过已安装 Plugin 持续消费这些能力；
+- 可以先用一个明确支持的第三方 Agent 宿主和单个有界真实用户结果验证已安装 Plugin 的正式入口；该早期消费者只证明声明的能力子集，不提前声称完整 Runtime 或完整 Plugin 检查点；
+- 完成 §21.4 检查点时，一个已安装 Plugin 必须在真实第三方 Agent 中按十二类能力矩阵逐项呈现允许委托的结果、必要拒绝和恢复，不把单个早期闭环升级为全量通过；
 - 没有网站 SKILL 时仍可完成通用浏览器操作。
 
 ## 21.2 长期 Profile、身份与设备环境并行成熟
@@ -2195,11 +2205,11 @@ Provider 接入按 9.1 的 Qualification Gate 有界推进；当前不启动新 
 
 ## 21.3 Plugin 完整资源管理与资产消费
 
-在完整 App 产品化之前，先证明一个主要 Agent 宿主通过 Plugin 可以消费所有 V1 允许委托的 Profile／Instance、Account／AccountSystem／BusinessTarget、Environment／Provider facts、SKILL，以及 Run／结果／恢复能力。Plugin 更新、卸载或 Runtime 重启不得建立第二套现场或丢失长期 Profile。
+在完整 App 产品化之前，先证明一个主要 Agent 宿主通过 Plugin 可以消费所有 V1 允许委托的 Profile／Instance、Account／AccountSystem／BusinessTarget、Environment／Provider facts、SKILL，以及 Run／结果／恢复能力。Plugin 更新、卸载或 Runtime 重启不得建立第二套现场或丢失长期 Profile。单个早期真实消费者可以先验证其中一个有界结果，但不替代本项完整资源消费门。
 
 ## 21.4 Plugin 完整体验检查点
 
-在进入第二网站 SKILL 扩展和完整 App 产品化前，至少证明：
+作为 V1 必须完成、且位于完整 App 产品化之前的检查点，至少证明：
 
 ```text
 安装第三方 Agent 接入口
@@ -2212,11 +2222,11 @@ Provider 接入按 9.1 的 Qualification Gate 有界推进；当前不启动新 
 → 更新 / 重启 / 卸载边界不丢长期数据
 ```
 
-该检查点证明 Agent-native 主入口成立，不等于完整 V1 已验收。
+同时逐项回读十二类能力的公共语义、当前 Provider 状态、Plugin 暴露／不暴露原因、Grant／ControlLease、成功／必要拒绝／恢复证据，并确认真实第三方 Agent 实际消费了安装后的 Plugin。该检查点证明 Agent-native 主入口成立，不等于完整 V1 已验收；任一早期有界消费者或单个文件/站点闭环都不能替代它。
 
 ## 21.5 第二网站 SKILL 扩展验证
 
-基础能力和正式资产消费达到明确门槛后，选择一个真实用户目标和不同网站／场景，主要通过 SKILL／AccountSystem 共享资产交付站点知识；真正的公共能力缺口归入既有 Runtime capability，不为站点增加旁路。
+目标任务所需的 Runtime 能力、正式 Plugin 入口、实际资产和授权条件具备时，可以先做一次有界的真实消费者验证；不以整个 #497、#474、#475 或 §21.4 作为所有任务的统一前置。完整 Plugin checkpoint 仍须按 §21.4 完成后，才可把第二个真实用户目标和不同网站／场景作为 V1 汇合证据，验证跨网站复用、扩展成本和失败边界；简单任务的提前验证不能替代该完整 checkpoint，也不能把一个局部成功误认为产品完成。真正的公共能力缺口归入既有 Runtime capability，不为站点增加旁路。
 
 ## 21.6 完整 App 产品化与多实例监督
 
@@ -2225,6 +2235,8 @@ Plugin 完整体验检查点后，再集中完善 Agent 接入、AccountSystem�
 ## 21.7 V1 产品交付与最终验收
 
 持续回读 V1 验收项，不在末期第一次集成。最终同时核对 Plugin 完整体验、完整 App／Viewer 产品路径、Provider／Profile／身份／环境长期一致性、SKILL 扩展成本、安装升级卸载恢复，以及 Run／ExternalOutcome、权限、隐私与失败边界。
+
+近期执行先完成本次规则、文档和 GitHub 对齐，再核验原 Instance 在 Agent 空闲与人工接管期间能否持续处理已获准页面事件；同期准备现有身份／经营对象主线的授权和材料。此后按目标任务优先补普通交互缺口，真实消费者在自身能力、Plugin、资产和授权条件具备时进入，不因刚完成 Files 自动继续扩建 Files，也不把各 Milestone 重排为瀑布依赖。最多并行两个有界交付单元；涉及正式安装或浏览器现场时由一个集成人协调。
 
 # 22. V1 验收标准
 

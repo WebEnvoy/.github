@@ -21,7 +21,9 @@
 | App 未启动时也可使用正式 Runtime，并按版本扩展网站知识 | [Agent 正式接入与 SKILL 扩展 #23](https://github.com/WebEnvoy/WebEnvoy/milestone/23) | [单宿主正式入口 #474](https://github.com/WebEnvoy/WebEnvoy/issues/474)、[SKILL 与共享知识 #475](https://github.com/WebEnvoy/WebEnvoy/issues/475)、[不同网站场景验证 #476](https://github.com/WebEnvoy/WebEnvoy/issues/476) |
 | 从安装产物开始长期使用，完整证明 V1 产品能力 | [V1 产品交付与完整验收 #24](https://github.com/WebEnvoy/WebEnvoy/milestone/24) | [安装升级与恢复 #477](https://github.com/WebEnvoy/WebEnvoy/issues/477)、[完整 V1 验收 #482](https://github.com/WebEnvoy/WebEnvoy/issues/482) |
 
-[#482](https://github.com/WebEnvoy/WebEnvoy/issues/482) 将规范第 22 章的 35 条验收映射到成果入口，同时覆盖账号/Profile 生命周期、产品安装、资产和原型决策。它是最终验收 FR，不复制各 FR 的实时状态或以主观百分比计量完成度。
+[#482](https://github.com/WebEnvoy/WebEnvoy/issues/482) 将规范第 22 章的现行验收项映射到成果入口，同时覆盖账号/Profile 生命周期、产品安装、资产和原型决策。它是最终验收 FR，不复制各 FR 的实时状态或以主观百分比计量完成度。
+
+近期先完成实施基线对齐，再核验原 Instance 在 Agent 空闲与人工接管期间的持续工作；身份／经营对象主线并行准备授权材料。真实消费者在目标任务所需 Runtime、正式 Plugin、实际资产和授权齐备时可以提前有界验证，不以整个 Runtime／Plugin／SKILL 目录完成为统一前置；完整 Plugin 检查点仍是 V1 必须完成的独立门。
 
 这些目标可以复用和交叉验证，不要求按 Milestone 编号全串行交付。只在真实技术或验收事实不满足时建立原生 dependency；例如 #454 的 Provider 前置仍由其原生依赖表达。
 

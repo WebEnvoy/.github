@@ -783,7 +783,7 @@ Cookie 原文、密码、验证码、token、未脱敏凭据和 raw DevTools／C
 
 默认授权不承诺全浏览器生命周期、全部后台活动和异常断连后的持续网络封锁。请求观察、拦截和修改仍是独立 Browser Runtime 能力并分别授权；声明增强隔离时必须按其实际保证单独验收，既有局部 request guard 证据不得冒称完整网络沙箱。
 
-既有授权缺少语义标识时只按 `legacy_request_guard_v1` 解释；新 `agent_operations_v2` 只能由可信 owner 对已停止的选定 Profile 明确确认，且不得扩大网站、操作、文件或期限。Grant 与 Profile policy 语义不匹配时拒绝网页派发；活动 Instance 固定创建时语义，不热切换。旧 Grant、撤销、Run、receipt 和材料不原地改义或迁移，旧 reader 不认识新格式时必须拒绝。
+既有授权缺少语义标识时只按 `legacy_request_guard_v1` 解释。首次从 legacy 转为 `agent_operations_v2` 只能由可信 owner 对已停止的选定 Profile 明确确认，且不得扩大当次确认的网站、操作、文件或期限。Profile 已启用 v2 后，owner 可以按相同语义签发、续发或替换 Grant；Profile policy 未改变时不要求停止浏览器，修改 policy 上限仍要求 Profile 已停止。Grant 与 Profile policy 语义不匹配时拒绝网页派发；活动 Instance 固定创建时语义，不热切换。旧 Grant、撤销、Run、receipt 和材料不原地改义或迁移，旧 reader 不认识新格式时必须拒绝。
 
 # 5. 账号、Profile 和经营对象规则
 

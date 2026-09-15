@@ -6,6 +6,7 @@
 > **重要说明：** 本规范描述目标方向与 V1 约束，不表示相关能力已经完成实现。
 > **2026-09-12 修订：** 在 v1.3 的 Provider Qualification Gate、用户选择和职责边界上，冻结供应方原版浏览器／驱动组合、任务页与原生焦点分离、人机交还后的可信重观察，以及旧私有补丁绑定退役规则。WebEnvoy 不改写供应方程序、资源、驱动 bundle 或行为；v1.3 及更早附件只作历史背景。
 > **2026-09-14 实施基线对齐：** V1 Browser Runtime 的十二类最低结果及其规范来源由 WebEnvoy [Browser Runtime 能力规格第 4 节](https://github.com/WebEnvoy/WebEnvoy/blob/main/docs/specs/browser-runtime-capabilities-v1.md#4-v1-十二类能力最低结果矩阵)提供执行索引；它不替代本规范、FR、Work Item 或验证证据，也不把当前未验 Provider／平台升级为支持。
+> **2026-09-15 授权边界修订：** Browser Runtime 能力、默认 Agent 操作授权与增强网络隔离分层验收。默认 V1 继续严格控制 Agent 可使用的 Profile、Page、操作、文件和结果，但不承诺浏览器从启动到退出的全部联网活动均被隔离；既有请求保护按版本化语义兼容。
 
 ---
 
@@ -113,6 +114,9 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 20. Provider 的协议、启动和可接受能力差异可以由 Driver 适配或准确展示；核心浏览器能力缺失不得包装为普通兼容任务。
 21. WebEnvoy 可以适配、管理、约束、组合、观察和验证 Provider 已经具备的浏览器能力，但“适配”只包括供应方正式配置、参数和协议的调用、WebEnvoy 自有 Driver 的协议／语义转换、权限检查、环境 bundle 选择、生命周期、等待、结果与恢复；不得改写供应方程序、资源、驱动实现或 bundle，也不得通过 Harbor、Driver、App、Plugin、SKILL、安装脚本或站点脚本实现、模拟或长期补偿 Provider 缺失的浏览器核心语义。只改 JS、只读路径、复制后改写、副本 bundle、安装时补丁和运行时 monkey-patch 同样属于改写，不因范围很小或不改变页面表面而获准；也不得以自维护浏览器 fork 或内核补丁链作为当前愿景的交付路线。供应方正式发布的浏览器／驱动组合是该供应方的正式组合，不得冒称为未经供应方支持的通用 Mozilla 浏览器。
 22. 官方 Chrome 是 V1 核心支持 Provider 之一；约定的通用用户结果固定，启动与连接适配可以根据 Qualification Gate 的证据改用供应方公开接口。接口调整不得形成静默 fallback、允许活动 Instance 热切换后端、复制 Page／Files／诊断／恢复实现，或修改供应方程序与协议实现；共同代码存在也不替代 Chrome 自身的 Profile、权限、文件、控制和恢复验收。
+23. Browser Runtime 能力存在、当前 Agent 获准使用该能力和全浏览器生命周期网络隔离是三个不同事实；增强隔离未实现不得自动删除基础能力，能力存在也不得扩大 Agent 权限。
+24. 默认 Agent 授权控制 Agent 可读写的 Profile、Page／document、明确导航、操作、文件和结果，不把网站依赖、Service Worker、人工浏览或浏览器后台活动自动解释为 Agent 获得的新权限，也不承诺对其实施完整出站隔离。
+25. 撤权阻止主体的新派发，断连停止连接的新派发，停止由生命周期 owner 关闭指定 Instance；三者不得互相冒充。已派发外部效果不自动回滚，unknown 写入不重放。
 
 ## 2.2 V1 收敛约束
 
@@ -769,6 +773,18 @@ Cookie 原文、密码、验证码、token、未脱敏凭据和 raw DevTools／C
 
 底层协议可以由 WebEnvoy 自有 Driver 做有界转换，并继续经过授权、Profile、环境和 ControlLease 检查；协议转换不授权修改供应方程序、资源或驱动，也不构成绕过供应方原生能力的后门。
 
+## 4.6 默认 Agent 操作范围与增强网络隔离
+
+**[已确认原则]**
+
+默认网站范围限定 Agent 可以读取和操作的 Page／document，以及 Agent 明确提交的导航目标；它不是浏览器所有资源、跳转、下载交付节点和后台活动的全局出站白名单。明确越界导航必须在派发前拒绝。获准页面上的合法操作发生自然跳转或打开新 Page 后，Runtime 必须重新核对真实 Page、document 和 origin；未获准页面只能返回脱敏 origin 与不透明 Page 引用，不得返回 URL 参数、标题、正文、DOM、截图或继续输入。原操作的已派发事实和真实结果保持，不能因后检越界而重放。
+
+上传仍只把 owner 登记的不可变文件材料交给获准网页中的新鲜目标控件。下载仍须在明确触发前监听浏览器下载事件，并可信关联发起 Page、已观察目标和本次操作；普通 HTTP(S) redirect 或 CDN 交付不要求把最终文件主机授予为可读写页面，但竞争或归属不清的下载不得认领。文件经类型、大小和摘要校验后才发布受管引用，不扫描系统 Downloads，不自动打开或向 Agent 暴露正文。
+
+默认授权不承诺全浏览器生命周期、全部后台活动和异常断连后的持续网络封锁。请求观察、拦截和修改仍是独立 Browser Runtime 能力并分别授权；声明增强隔离时必须按其实际保证单独验收，既有局部 request guard 证据不得冒称完整网络沙箱。
+
+既有授权缺少语义标识时只按 `legacy_request_guard_v1` 解释；新 `agent_operations_v2` 只能由可信 owner 对已停止的选定 Profile 明确确认，且不得扩大网站、操作、文件或期限。Grant 与 Profile policy 语义不匹配时拒绝网页派发；活动 Instance 固定创建时语义，不热切换。旧 Grant、撤销、Run、receipt 和材料不原地改义或迁移，旧 reader 不认识新格式时必须拒绝。
+
 # 5. 账号、Profile 和经营对象规则
 
 ## 5.1 一账号一 Profile
@@ -1155,6 +1171,8 @@ Camoufox 默认生成的随机设备配置和 seed 不应每次重新生成。We
 - Provider 对比和诊断。
 
 Chrome 不具备同等级的原生设备环境控制能力，但不得因此被自动判定为不可用，也不得被固定为只能在故障时使用的次等回退路径。
+
+Chrome 的普通 Page、标准文件、控制和恢复资格按默认 Agent 操作授权与真实稳定性验收；不再以“启动前所有后台流量零派发”或“断连后整个浏览器持续断网”作为统一前置。真实程序／Profile 绑定、Agent 操作在授权、归属与执行准备完成前零派发、文件与 Page 归属、ControlLease、正常停止、长期数据和 unknown 不重放仍是完成门。通过公开接口连接受管 Chrome 属于允许的 Driver 适配，不构成 fallback；端点必须私有、仅关联任务拥有的确切进程且不得暴露给 Agent。
 
 ## 9.4 CloakBrowser
 
@@ -2186,6 +2204,8 @@ V1 的十二类 Browser Runtime 最低结果（Instance、Page／Tab／Window、
 进入实现前，Work Item／PR 必须具备可回读的原生 parent、Milestone、范围和完成标准，并逐项声明适用的 Design Obligation。获批执行只覆盖已确认的用户结果、文件和授权边界：Provider 必须使用来源可核对的正式组合，不能换 Provider、放宽 Grant、恢复私有补丁或以 fallback／猜测补齐缺失能力；高影响外部动作需明确 owner 授权。未派发失败和已派发 unknown 必须分别记录，后者只能查询、对账、接管或停止后续动作，不得换 key 重放。
 
 文档、实现和验证必须保持三层边界：canonical／ADR 定义方向与架构，spec／contract 定义公共语义，Issue／PR／verification 记录当前交付和证据。安装器、脚本、独立客户端、CI 或 PR review 不能冒充真实第三方 Agent；只有实际安装 Plugin 被真实 Agent 消费的证据才可标记 `plugin_verified`。
+
+默认 Agent 操作授权和 legacy 请求保护兼容可作为独立交付先行合并；Chrome 对共同执行的正式消费另按 Provider 稳定性、长期 Profile、文件、控制、恢复、安装和真实 Agent 证据验收。前者完成不得冒称 Chrome 已交付，后者受阻也不得回滚已合格的公共授权边界。
 
 ## 21.1 Runtime 能力与 Plugin 主入口
 

@@ -1,6 +1,6 @@
-# WebEnvoy v1 产品与架构方向规范
+# WebEnvoy v1.6 产品与架构方向规范
 
-> **文档状态：** v1.5 产品与架构方向规范（实施基线、上游原版组合、任务页协作与私有补丁退役）
+> **文档状态：** v1.6 修订；在 [S0 #561](https://github.com/WebEnvoy/WebEnvoy/issues/561) 对应组织 PR 合并前为待生效提案，合并至 `main` 后成为实施基线。
 > **适用范围：** WebEnvoy 的产品定位、核心对象、权限模型、Profile 与账号管理、Provider 策略、Agent 接入、App、Harbor、Core、Lode／SKILL 的职责边界，以及 V1 实施与验收范围。
 > **不包含：** 对当前仓库实现状态、历史 PR、历史架构质量或完成度的评价。
 > **重要说明：** 本规范描述目标方向与 V1 约束，不表示相关能力已经完成实现。
@@ -9,6 +9,7 @@
 > **2026-09-15 授权边界修订：** Browser Runtime 能力、默认 Agent 操作授权与增强网络隔离分层验收。默认 V1 继续严格控制 Agent 可使用的 Profile、Page、操作、文件和结果，但不承诺浏览器从启动到退出的全部联网活动均被隔离；既有请求保护按版本化语义兼容。
 
 > **2026-09-17 可选模型辅助修订：** 在不改变产品定位和既有 V1 完成门的前提下，定义用户可关闭的模型辅助、通用 Model Provider 术语，以及独立授权、外发、控制和结果边界；Jev 的接入与收益仍待有界验证。
+> **2026-09-18 基础设施定位修订：** WebEnvoy 定位为第三方 Agent 和上游系统的浏览器基础设施；Desktop App 专属产品化冻结，CLI 优先，可信用户控制不冻结；站点 SKILL、受控视觉、主动 Network 与长期环境／隐身质量进入修订后 V1。现有 wire 与实现不因本修订自动改变，分别等待 S1—S6 正式规格和实施证据。
 
 ---
 
@@ -44,39 +45,41 @@
 
 ## 1.1 一句话定位
 
-> **WebEnvoy 是面向矩阵社媒和多店铺运营的 Agent 原生多账号浏览器平台。它统一管理长期隔离的浏览器 Profile、设备环境、账号身份、经营对象、浏览器实例和网站 SKILL，让 Agent 与人类在同一真实浏览器现场中完成可观察、可接管、可核验的网站运营任务。**
+> **WebEnvoy 是面向第三方 Agent 和上游自动化系统的浏览器基础设施。它以长期受管身份、隔离环境和可验证的隐身质量为基础，提供可集成的浏览器管理、页面语义、受控视觉与网络操作、人工介入、结果核验和恢复能力，并通过站点 SKILL 复用网站知识与确定性执行。**
 
-WebEnvoy 不是单纯的指纹浏览器，也不是单纯的浏览器自动化框架。它由四部分共同构成：
+矩阵社媒、多店铺是优先验证场景，不是要求 WebEnvoy 承接完整经营业务。上游负责业务目标、经营策略、内容排期和跨系统编排；WebEnvoy 负责正确身份、正确操作目标、受控执行、真实结果与恢复。
+
+WebEnvoy 不是单纯的指纹浏览器，也不是完整运营平台。它由四部分共同构成：
 
 ```text
 WebEnvoy
   = 长期受管的浏览器身份与 Profile
-  + Agent 可调用的浏览器及环境管理能力
-  + 可复用的网站 SKILL 与共享知识资产
-  + 人类可管理、观看、授权和接管的 App
+  + 上游可调用的浏览器、页面、视觉与网络能力
+  + 统一承载知识和确定性执行的站点 SKILL
+  + 不依赖 Desktop App 的可信用户授权、监督、接管和恢复
 ```
 
 ## 1.2 目标用户
 
-WebEnvoy 主要服务以下用户：
+WebEnvoy 主要服务以下消费者：
 
-- 需要运营多个社媒账号、创作者账号、店铺账号的个人或团队；
-- 需要使用真实登录状态完成网站任务的 Agent；
+- 需要使用真实登录状态完成网站任务的第三方 Agent 和上游自动化系统；
+- 需要把多个受管浏览器身份接入自身业务编排的个人或团队；
 - 需要长期维护账号环境，而不是每次创建一次性浏览器会话的用户；
-- 需要同时运行多个隔离账号环境，并能随时查看、暂停和人工接管的运营人员；
+- 需要同时运行多个隔离账号环境，并能随时监督、停止和人工接管的可信用户；
 - 需要把网站经验沉淀为可安装、可版本化、可修复 SKILL 的开发者和维护者。
 
 ## 1.3 核心场景
 
 V1 重点围绕以下场景设计：
 
-- 管理多个社媒、店铺、创作者后台账号；
+- 管理多个长期浏览器身份及其账号和操作目标；
 - 为每个账号维护长期、独立、可复用的浏览器环境；
 - Agent 在指定 Profile 中使用真实登录态完成读取、编辑、上传、发布、修改等运营工作；
-- 人类在 App 中查看 Agent 正在使用哪个账号、Profile、经营对象和实例；
+- 可信用户不依赖 Desktop App 即可查看 Agent 正在使用哪个账号、Profile、操作目标和实例；
 - 用户在必要时接管同一实例，处理登录、验证码、复杂编辑或异常；
 - 将网站入口、账号识别、经营对象识别、页面语义、操作流程、验证方式和恢复方式沉淀为 SKILL；
-- 从账号、Profile、实例和活动四个角度管理运营资源。
+- 通过 CLI、API、Plugin、站点脚本和可信用户入口消费同一授权、实例、Run 与结果事实。
 
 ## 1.4 核心价值
 
@@ -86,15 +89,16 @@ WebEnvoy 的差异化不应停留在“可以启动多个浏览器”或“提�
 
 1. **长期身份连续性**：同一 Profile 跨重启继续使用同一套环境、存储和账号身份。
 2. **明确隔离**：不同 Profile 的 Cookie、存储、下载、设备环境和控制权不会混淆。
-3. **Agent 原生管理**：Agent 不仅能操作网页，还能在授权范围内管理环境、Profile、账号体系、实例和 SKILL。
-4. **网站知识复用**：同一个网站和场景不需要每次重新探索。
+3. **全能力可集成**：进入产品范围的能力都有不依赖 Desktop App 的正式路径，并复用同一事实与授权。
+4. **网站知识与执行复用**：同一个网站和场景不需要每次重新探索，固定任务正常路径尽量不调用模型。
 5. **人机共用现场**：人和 Agent 使用的是同一个真实实例，不是两份相似但独立的页面。
 6. **结果可信**：系统能区分成功、失败、尚未完成和结果未知，不因断线或重连重复写入。
 7. **本地资源所有权**：用户的 Profile、登录状态和浏览器数据由 WebEnvoy 在本地管理，不依赖外部托管 Profile。
+8. **质量与成本可判断**：隔离、连续性、隐身、任务成功率、等待、输出完整性、模型使用与维护成本分别有证据。
 
 ## 1.5 可选模型辅助
 
-**[已确认原则]** WebEnvoy 可以在用户明确启用和授权的范围内，使用模型辅助完成网页任务。模型可以从可信、有限的已有操作和目标中连续选择下一步，也可以决定结束或暂停一段有界任务；它不拥有长期 Profile、浏览器现场、授权、控制权或外部结果真相。该能力不改变第 1.1 节的多账号浏览器平台定位。
+**[已确认原则]** WebEnvoy 可以在用户明确启用和授权的范围内，使用模型辅助完成网页任务。模型可以从可信、有限的已有操作和目标中连续选择下一步，也可以决定结束或暂停一段有界任务；它不拥有长期 Profile、浏览器现场、授权、控制权或外部结果真相。该能力不改变第 1.1 节的浏览器基础设施定位。
 
 模型辅助既可以承接 Host Agent 委托的局部任务，也可以在明确目标、必要输入、操作范围和停止条件下完成整个短循环；不强制每一步或每次模型判断结束都再调用通用大模型。未启用、未配置或模型服务不可用时，原有 Agent 与人类使用路径、长期环境和历史结果仍须可用。
 
@@ -136,9 +140,9 @@ Model Provider 与 Browser Provider 分开。模型不绑定长期 Profile；更
 7. Provider 程序的来源与 Profile 数据的所有权是两回事。
 8. Profile 创建时绑定 Provider；运行时不得静默切换 Provider。
 9. 跨 Provider 或不兼容版本变更必须通过显式迁移完成。
-10. App 展示和操作的必须是原浏览器实例，不得重新加载 URL 冒充镜像。
-11. App 与 Agent 必须使用同一套 Runtime、管理接口和状态。
-12. Agent 必须能够在授权范围内管理环境，而不只是操作网页。
+10. 可信用户看到和操作的必须是原浏览器实例，不得重新加载 URL 冒充镜像。
+11. CLI、API、Plugin、受管站点脚本和可信用户入口必须使用同一套 Runtime、管理接口、授权和结果事实。
+12. Agent 必须能够在授权范围内管理环境，而不只是操作网页；Desktop App 不得成为正式能力的隐藏前提。
 13. 网站知识以标准 Agent SKILL 为主要载体。
 14. AccountSystem 等跨 SKILL 共享资产必须独立复用，不能埋在单个任务 SKILL 内形成多份真相。
 15. SKILL、Runtime 能力和授权必须是三个不同层次。
@@ -151,7 +155,10 @@ Model Provider 与 Browser Provider 分开。模型不绑定长期 Profile；更
 22. 官方 Chrome 是 V1 核心支持 Provider 之一；约定的通用用户结果固定，启动与连接适配可以根据 Qualification Gate 的证据改用供应方公开接口。接口调整不得形成静默 fallback、允许活动 Instance 热切换后端、复制 Page／Files／诊断／恢复实现，或修改供应方程序与协议实现；共同代码存在也不替代 Chrome 自身的 Profile、权限、文件、控制和恢复验收。
 23. Browser Runtime 能力存在、当前 Agent 获准使用该能力和全浏览器生命周期网络隔离是三个不同事实；增强隔离未实现不得自动删除基础能力，能力存在也不得扩大 Agent 权限。
 24. 默认 Agent 授权控制 Agent 可读写的 Profile、Page／document、明确导航、操作、文件和结果，不把网站依赖、Service Worker、人工浏览或浏览器后台活动自动解释为 Agent 获得的新权限，也不承诺对其实施完整出站隔离。
-25. 撤权阻止主体的新派发，断连停止连接的新派发，停止由生命周期 owner 关闭指定 Instance；三者不得互相冒充。已派发外部效果不自动回滚，unknown 写入不重放。
+25. 撤权阻止主体的新派发，断连停止连接的新派发，停止由生命周期 owner 关闭指定 Instance；三者不得互相冒充。已派发外部效果不自动回滚，unknown 写入不得跨 UI、API、脚本、模型或新 key 重放。
+26. Desktop App 专属工作台、配置页、布局和独立发行产品化冻结；冻结不取消可信用户的授权、监督、接管、交还、撤权、停止和恢复。
+27. 页面语义、受控视觉和主动 Network 是正式产品能力，但新执行语义必须分别经正式 Spec 接受，不能以产品规划直接放宽现有 wire。
+28. 站点 SKILL 统一承载 references、scripts、assets、任务分流、输入输出、验证与修复；纯知识可用但不得冒充正式可执行任务支持。
 
 ## 2.2 V1 收敛约束
 
@@ -161,8 +168,8 @@ Model Provider 与 Browser Provider 分开。模型不绑定长期 Profile；更
 4. 新发现账号不会自动建立正式绑定。
 5. 控制权先按实例粒度管理，不在 V1 引入标签页级复杂租约。
 6. 首期优先支持一个主要 Agent 宿主。
-7. App 任务管理收敛为活动监督、待处理事项、人工接管和结果查看，不建设完整任务编排平台。
-8. 多实例界面先实现单实例主视图和多实例概览，再根据原型结果增加分屏或网格。
+7. CLI 是首个正式用户、Agent 和脚本入口；API 与已安装 Plugin 继续作为同一事实的正式消费者。
+8. 不依赖 App 的可信用户控制先满足多实例监督、待处理事项、人工接管、交还、撤权、停止和恢复；不建设第二 Runtime 或授权库。
 9. Camoufox 保留首个工程验证对象及其已验证范围；这项工程顺序不阻止由真实 Work Item 约束范围的其他 Provider 验证，也不开放无边界横向集成。
 10. 任务页引用与原生选中／前台焦点事实分离；读、列举和诊断不得为了补焦点事实而激活页面，人机交还后默认回到交还前的可信任务页重新观察。
 
@@ -185,11 +192,10 @@ Model Provider 与 Browser Provider 分开。模型不绑定长期 Profile；更
 - 完整 Provider 检测、安装、更新、修复和回滚体验；
 - 多 Agent 宿主的统一安装与连接；
 - SKILL overlay、fork、修复草稿和贡献流程；
-- 更丰富的多实例布局；
-- 团队协作、排期和批量运营能力；
+- 真实需求驱动的更多宿主适配与协作控制；
 - 在满足严格约束后，重新评估同一账号多 Profile；
 - 可配置的新账号自动登记策略；
-- 更完整的 Library 工作台。
+- 经新产品决定重启的 App 专属体验。
 
 ## 2.5 明确非目标
 
@@ -213,6 +219,7 @@ V1 不以以下内容为目标：
 - 为规避平台规则而自动轮换指纹、代理或身份环境。
 - 修改供应方浏览器或驱动程序、资源、CSS／Juggler／JS、副本 bundle，或以安装时补丁、运行时 monkey-patch 维持核心语义。
 - 本轮纠偏不建立无补丁移植的自动升级或自动下载更新平台；跨窗口无缝续接、统一拖放等未有界的现场编排也不构成本轮验收。
+- Desktop App 专属资源／配置工作台、Library／Activity、官方多实例布局和独立发行产品化；后续重启需要新的限定范围和产品决定。
 
 上述“通用自主 Browser Agent”“自建大模型对话产品”和编排平台非目标，不排除第 1.5 节中由用户明确启用、目标与授权范围有界、控制及结果职责不转移的可选模型辅助；允许有界连续任务不表示启动开放式自主 Agent 平台。
 
@@ -670,7 +677,7 @@ unknown
 
 ## 3.14 `Activity`
 
-Activity 是面向 App 的人类可理解工作摘要，可以聚合一个或多个 Run。
+Activity 是面向可信用户入口的人类可理解工作摘要，可以聚合一个或多个 Run。它不要求 Desktop App。
 
 例如：
 
@@ -1106,11 +1113,11 @@ Provider 不可用时：
 - Provider；
 - Account 绑定。
 
-App 保存配置成功，不等于当前 Instance 已经应用。
+任一管理入口保存配置成功，不等于当前 Instance 已经应用。
 
 ## 8.3 配置展示
 
-App 和 Agent API 应同时表达：
+CLI、API、Plugin 与可信用户入口应基于同一事实表达：
 
 - configured；
 - effective；
@@ -1533,16 +1540,16 @@ Agent 宿主
         WebEnvoy Runtime
 ```
 
-## 12.2 Runtime 独立于 App
+## 12.2 Runtime 与入口解耦
 
 **[已确认原则]**
 
 - 不启动 App 也能使用 Runtime；
-- App 可以启动、连接、监控 Runtime，但不是唯一宿主；
-- Plugin 与 App 使用同一 Runtime；
+- CLI、API、Plugin 与可信用户入口使用同一 Runtime；
+- App 仅保留为冻结的可选历史消费者；
 - Profile 数据不属于插件目录；
 - 插件更新或卸载不得丢失 Profile；
-- App 和 Agent 不得各自管理一套浏览器实例。
+- 任何入口不得各自管理一套浏览器实例。
 
 ## 12.3 Agent 管理能力
 
@@ -1624,23 +1631,23 @@ Agent 未明确选择且用户没有新建默认偏好时，创建请求必须�
 ---
 
 
-## 12.5 Plugin-first 的 V1 实施优先级
+## 12.5 CLI 优先与正式集成入口
 
 **[V1 收敛约束]**
 
-> 在完整 App 产品化之前，先让一个明确支持的第三方 Agent 宿主通过已安装 WebEnvoy Plugin，完整消费 V1 中允许委托给 Agent 的管理和浏览器能力。
+> CLI、API 和已安装 Plugin 是 V1 的正式集成入口；CLI 优先补齐从首次信任、配置、运行、查询到恢复的无 App 路径，真实第三方 Agent 通过已安装 Plugin 的独立验收继续保留。
 
-这意味着第一完整消费端应能够在有效 Grant 范围内：
+这意味着正式消费者应能够在有效 Grant 范围内：
 
 - 管理和使用 Profile、Instance、Account／AccountSystem、BusinessTarget、Environment、Provider facts、SKILL 和 Run／结果；
 - 使用没有网站 SKILL 时的通用 Browser Runtime capability；
 - 加载并使用版本化网站 SKILL，提高特定网站任务的效率和准确性；
-- 在 App 未启动时连接独立 Runtime，并在需要用户处理时进入可信的人类确认或同实例接管路径；
+- 在没有 Desktop App 的情况下连接独立 Runtime，并在需要用户处理时进入可信的人类确认或同实例接管路径；
 - 不依赖开发 worktree、内部数据库写入、复制 supervisor／owner 凭据或手工调试端口。
 
-Plugin 必须保持薄层：负责宿主适配、能力呈现、SKILL 分发和工具接入；不得拥有第二套 Profile、账号、权限、Run、恢复或浏览器状态真相。
+CLI、Plugin 和其他入口都必须保持薄层：负责参数／宿主适配、能力呈现、SKILL 分发和正式调用；不得拥有第二套 Profile、账号、权限、Run、恢复或浏览器状态真相。
 
-首期只要求一个主要 Agent 宿主完成该完整消费检查点，不因此提前建设多宿主注册平台。
+首期仍要求一个主要 Agent 宿主完成已安装 Plugin 的真实消费检查点，不以 CLI 检查冒充 `plugin_verified`，也不因此提前建设多宿主注册平台。
 
 ## 12.6 Runtime 能力与 Agent 工具暴露
 
@@ -1658,228 +1665,57 @@ Plugin／宿主可以根据：
 
 正式 Plugin 的 Profile 创建必须消费 owner API 已确认的 Provider 选择、支持事实和授权，不在薄层内复制默认规则或静默回退。Provider 差异只改变 capability availability／limitation，不改变 Profile、Instance、ControlLease、Run 和恢复的 owner。
 
-# 13. App 定位
+# 13. Desktop App 冻结与可信用户控制
 
-## 13.1 人类控制台
+## 13.1 App 专属产品化冻结
 
-App 是人类资源管理和运行控制台，不是完整 Agent 工作台。
-
-核心区域包括：
-
-1. Agent 接入；
-2. AccountSystem；
-3. Account；
-4. Profile 与环境；
-5. Provider；
-6. SKILL；
-7. Instance；
-8. Activity 与待处理事项。
+**[已确认原则]** Desktop App 专属资源／配置工作台、Library／Activity、官方多实例布局和独立发行产品化当前冻结。既有代码、历史设计和已经取得的证据保留，不表示完成，也不因 Plugin 检查点、底层能力成熟或旧路线图存在而自动恢复。重启需要新的明确用户需求、限定范围和产品决定。
 
-## 13.2 Agent 接入管理
+冻结不授权删除 App、重构 Runtime 或回退历史成果。为维持现有安全、修复缺陷或解除无 App 正式路径的必要依赖，可以在明确 Work Item 中做最小维护；不得借此继续扩展 App 产品面。
 
-App 必须能够：
+## 13.2 可信用户控制不冻结
 
-- 查看 AgentPrincipal；
-- 查看当前和历史 AgentConnection；
-- 查看 Grant；
-- 修改或撤销 Grant；
-- 查看最近活动；
-- 处理重连和失效连接；
-- 区分本地与远程连接。
+所有正式能力必须保留不依赖 Desktop App 的可信用户路径，至少覆盖：
 
-## 13.3 Account 与 AccountSystem
+- 首次信任、授权查看／收紧／撤销和敏感决定；
+- 区分多个原 Profile／Instance、当前控制者、待处理事项与更新时间；
+- 观看或打开同一原 Instance，接管指定实例且不影响其他实例；
+- 明确交还后重新观察原任务页；
+- 停止指定实例、在宿主失联时恢复或对账；
+- 保留历史 Run、receipt 和已经发生或未知的外部结果。
 
-App 应支持：
+这些入口可以由 CLI、宿主界面、原受管浏览器窗口或其他正式可信表面承载，但必须复用 Core／Harbor 的 owner facts，不建立第二 Runtime、授权库或状态机。关闭 CLI、Plugin、宿主或观看表面不等于停止 Instance。
 
-- 管理公共模板导入；
-- 创建和编辑本地 AccountSystem；
-- 从 Account 角度查看唯一归属 Profile；
-- 查看身份验证状态；
-- 查看 BusinessTarget；
-- 处理身份冲突；
-- 迁移 Account 归属。
+## 13.3 App 历史设计的解释
 
-## 13.4 Profile 与环境
+此前 Work、Library、Browser、Activity、多实例概览、分屏和网格等设计仅作历史和未来候选参考，不再构成当前 V1 或默认下一批完成门。App 内已经存在的真实消费者和历史证据仍按原适用范围读取，不能改写成 CLI／Plugin 证据；新功能也不能以历史 App 设计替代正式无 App 验收。
 
-App 应支持：
+`DO-APP-IA` 保留：只有新的明确 App 重启决定触发完整工作台／导航／布局设计义务。补齐可信确认、CLI 或宿主控制路径不等于重启整个 Desktop App 产品化。
 
-- 创建；
-- 导入；
-- 迁移；
-- 归档；
-- 删除；
-- Provider 选择；
-- 用户新建默认偏好；
-- 项目推荐预选与最终用户确认的区分；
-- 代理配置；
-- 环境模板；
-- 权限配置；
-- configured／effective／pending／drift 状态。
+# 14. 无 App 的多实例监督与人工接管
 
-## 13.5 Provider
+## 14.1 产品结果
 
-App 应支持：
+获准用户或上游必须能够：
 
-- 检测；
-- 查看版本；
-- 查看能力和限制；
-- 诊断；
-- 发起安装、更新、修复或迁移。
+- 区分多个原 Profile／Instance 的身份、状态、画面来源、控制者与待处理事项；
+- 切换当前查看和人工操作目标，但不创建替代会话或混淆任务页；
+- 接管 A 后阻止 Agent 继续输入 A，同时不打乱 B；
+- 交还后从 A 的新观察继续，不跟随最后观看的 B；
+- 在宿主故障时独立撤权、停止或恢复指定实例。
 
-App 必须分别展示产品推荐、用户新建默认和当前 Profile 绑定。实验性／受限 Provider 可以被用户显式选择，但必须准确展示限制；未达到产品接入底线的条目不得包装为可用。修改默认只作用于后续创建。
+官方分屏、网格或 App 工作台不属于当前要求。原浏览器窗口、受控截图／画面和宿主表面可按实际能力组合；只有截图不能证明输入、接管或零干扰。
 
-完整自动修复不属于 V1 必须范围。
+## 14.2 画面与控制约束
 
-## 13.6 SKILL
+- 画面必须绑定原 Profile、Instance、Page、时间、视窗／缩放和控制状态；旧帧明确过期。
+- 观看不取得 ControlLease，关闭观看表面不停止 Instance。
+- 输入必须作用于获准原 Page；依赖 OS 窗口、屏幕坐标或原生键盘路由时，必须证明窗口与画面对应，否则拒绝。
+- Page／Element 对象级操作继续按 Page／document、target/actionability、授权和 ControlLease 核验。
+- 人工接管、交还、撤权、停止和宿主断连分别表达，不互相冒充。
+- 已派发且结果未知的写入只查询／对账／人工处理，不因入口或执行路径变化重放。
 
-App 应支持：
-
-- 查看；
-- 安装；
-- 更新；
-- 禁用；
-- 查看来源和版本；
-- 查看依赖的 AccountSystem 和 Runtime 能力；
-- 管理本地草稿和 overlay。
-
-## 13.7 任务管理收敛
-
-App 中的任务管理收敛为：
-
-```text
-正在运行
-需要我处理
-最近完成
-```
-
-每条 Activity 优先展示：
-
-- 目标摘要；
-- 发起 Agent；
-- Account；
-- Profile；
-- Instance；
-- 任务页及其 Page／document 新鲜度；
-- SKILL；
-- BusinessTarget；
-- 当前状态；
-- 待处理事项；
-- 最终业务结果或失败原因。
-
-任务页是工作目标的引用；Viewer 的选中页和 OS 前台焦点是独立的现场事实，不能互相冒充。
-
-App 不接管外部 Agent 的完整计划、聊天记录和文档工作流。
-
----
-
-
-## 13.8 V1 实施优先级
-
-**[V1 收敛约束]**
-
-完整 App 资源工作台、Library、Activity 工作台和高级管理体验在 Plugin 完整体验检查点之后集中产品化。该后置不取消本章的完整 V1 产品要求。
-
-Plugin-first 阶段 App 或其他可信 owner 入口必须继续提供完成真实闭环所需的最小人类控制面，包括：
-
-- AgentPrincipal／Grant 的建立、查看、收紧和撤销；
-- 首次信任、权限扩大和其他必须由人作出的敏感决定；
-- 身份冲突、迁移、删除等需要用户处理的明确入口；
-- 同一原 Instance 的接管和交还；
-- 当前 Profile／Instance／控制者和“需要我处理”状态的最小可理解展示。
-
-已经在有效授权内明确允许的 Agent 管理意图，不应被强制重复到 App 中再次批准同一意图。App 不得成为 Runtime 生命周期或普通 Agent 操作的隐藏硬依赖。
-
-# 14. 多实例现场视图
-
-## 14.1 产品能力
-
-App 应支持：
-
-- 多个 Profile 的 Instance 同时运行；
-- 在不同 Instance 画面间切换；
-- 同时展示多个 Instance；
-- 不同 Instance 使用不同 Provider；
-- 从画面直接查看账号、Profile、经营对象和控制者。
-
-## 14.2 展示模式
-
-### 单实例主视图
-
-左侧实例列表，右侧显示当前选中实例。
-
-### 多实例概览
-
-多个低刷新率缩略图，展示：
-
-- Account；
-- Profile；
-- 当前页面；
-- 当前 Agent；
-- 控制者；
-- 是否等待处理；
-- 最后更新时间。
-
-### 分屏和网格
-
-**[V1 UI 建议]**
-
-先验证两实例分屏，再决定是否交付四实例网格。布局数量不是长期架构限制。
-
-## 14.3 硬约束
-
-- 必须显示原实例；
-- 不得重新加载 URL；
-- 切换画面不得创建新会话；
-- 关闭面板不得停止 Instance；
-- 查看不得自动取得 ControlLease；
-- 只有持有 Lease 的主体可以输入；
-- 接管一个 Instance 不影响其他 Instance；
-- App 布局不得修改设备环境；
-- 旧帧必须标记过期；
-- 观看失败不等于任务失败；
-- 系统文件选择器、扩展弹窗等复杂交互可以转到同一实例原生窗口；
-- Page 关闭只能作用于获准目标，不得借邻页补焦点或隐式结束 Instance；最后一个可用 Page 无法确认时必须拒绝；
-- Viewer 的明确选中页不等于 OS 前台页；只读查看不得主动激活。依赖 OS 窗口、屏幕坐标或原生键盘路由的输入若无法证明窗口与画面对应必须拒绝，Page／Element 对象级输入按 Page／document、target/actionability、授权和 ControlLease 核验。
-- 人工使用的验收是观看和输入回到同一原 Instance，不要求底层一定提供原生有头窗口；只有截图或重新加载 URL 均不满足。
-
-## 14.4 技术路线
-
-采用：
-
-> 浏览器独立运行，App 获取同一 Instance 的截图或画面流，并将受控输入发送回该 Instance。
-
-任务页引用、Viewer 的当前选择和原生窗口／OS 前台关系分别表达。画面切换不等于切换任务目标；人类交还后，Agent 依据可信 Page 引用重新观察原任务页。
-
-不采用：
-
-- 用 Electron WebContents 重新加载站点；
-- 把任意浏览器内核真正嵌入 App；
-- 强行把所有外部窗口变成跨平台子窗口；
-- 要求所有 Provider 具备同等级内嵌能力。
-
-Provider 可以声明：
-
-```text
-native_window
-static_screenshot
-low_frequency_preview
-live_frame_stream
-interactive_view
-```
-
-App 根据能力降级。
-
-`static_screenshot` 或 `low_frequency_preview` 只证明观看能力；只有原实例画面配合受控点击、滚动、输入和 ControlLease 接管／交还，才能证明 `interactive_view` 或等价人工使用。
-
----
-
-
-## 14.5 Runtime 画面能力与 App 布局分离
-
-原页面截图、基础画面获取、Page 引用和 Provider 对画面能力的事实属于 Browser Runtime capability plane，不应因为完整 App 多实例布局后置而一起延期。原生选中／前台关系是可选事实；只读获取不得为了补它而激活页面。
-
-App 的单实例主视图、多实例概览、分屏、旧帧展示和留存体验仍由本章负责。Runtime 提供画面能力不等于默认录制，也不授予 ControlLease。
-
+受控视觉操作的新增公共语义由 [S5 #566](https://github.com/WebEnvoy/WebEnvoy/issues/566) 冻结；本章不直接开放坐标、桌面控制或模型外发。
 # 15. 现场画面和数据留存
 
 ## 15.1 临时观看与持久化分离
@@ -1911,13 +1747,13 @@ App 的单实例主视图、多实例概览、分屏、旧帧展示和留存体�
 
 ## 16.1 Lode 定位
 
-> **Lode 是网站 SKILL、AccountSystem 模板及其配套资源的版本化资产库。**
+> **Lode 是站点 SKILL、AccountSystem 模板及其配套资源的版本化资产库。**
 
 SKILL 是主要产品资产，但不是所有共享知识的唯一容器。
 
-## 16.2 资产结构
+## 16.2 站点 SKILL 结构
 
-建议：
+默认一个站点 SKILL 作为入口，通过任务目录和按需 references 分流；可因商家端／消费者端、维护者、权限或版本边界合理拆分。当前只冻结职责，不冻结 S2 尚未核验的 manifest 字段或完整文件清单。
 
 ```text
 Lode
@@ -1928,11 +1764,11 @@ Lode
 │   └── meta/
 │       └── manifest.yaml
 ├── skills/
-│   ├── youtube-publish/
+│   ├── youtube/
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   ├── scripts/
-│   │   └── tests/
+│   │   └── assets/
 │   └── store-update-product/
 │       └── ...
 └── shared/
@@ -1942,7 +1778,7 @@ Lode
 
 ## 16.3 SKILL 包含内容
 
-网站 SKILL 可以包含：
+站点 SKILL 统一承载：
 
 - 网站入口；
 - AccountSystem 引用；
@@ -1956,8 +1792,11 @@ Lode
 - 结果验证；
 - 异常分类；
 - 恢复方式；
-- 确定性辅助脚本；
-- 脱敏测试样例。
+- 确定性执行与数据处理脚本；
+- 输入输出约定、脱敏样例和验证材料；
+- 版本、来源、适用任务和修复说明。
+
+正式支持按具体任务声明：输入、适用身份与目标、执行方式、输出、验证和失败路径明确且可重复。纯知识、指导或草稿可以引入，但不得冒充正式可执行任务支持。包安装、代码准入、运行授权、数据外发和业务结果是不同事实。
 
 ## 16.4 粒度
 
@@ -1975,20 +1814,22 @@ SKILL 应围绕用户目标，例如：
 
 必须使用以下定义：
 
-> **SKILL 决定 Agent 推荐怎样完成任务。**
+> **SKILL 决定某项站点任务已知怎样完成，并可包含获准的确定性执行。**
 > **Runtime 决定系统实际提供哪些操作。**
 > **授权系统决定当前主体允许执行什么。**
 
 由此：
 
-- SKILL.md 不是确定性程序；
+- SKILL.md 是范围、任务目录和分流入口，不因文字存在自动成为可信程序；
 - Core 不自动把自然语言编译成可信执行代码；
 - 非 Agent API 调用方不能仅凭 SKILL.md 获得执行能力；
-- 确定性操作必须由 Runtime API、工具或脚本提供；
+- 确定性操作必须由受管脚本通过正式 Runtime API／工具提供；
 - allowed-tools 等元数据不能替代 Runtime 权限；
-- 附带脚本必须有来源、版本、完整性和执行范围；
+- 附带脚本必须有来源、版本、完整性、执行位置、输入输出和准许运行范围；外部代码不默认进入 Core／Harbor 进程，也不因包安装自动执行；
 - SKILL 不得绕过失败的授权检查；
 - SKILL 更新不得静默修改用户本地 AccountSystem 或 Profile 权限。
+
+包内脚本可以按已定义规则重新观察并在新观察中取得新目标；引用失效不等于整个 Grant 失效，也不强制调用模型或重新授权。旧引用不得静默重绑到相似元素，已派发且结果未知的动作不得重放。具体包合同与执行合同分别由 [S2 #563](https://github.com/WebEnvoy/WebEnvoy/issues/563) 在 Lode／主仓库冻结。
 
 ## 16.6 没有 SKILL 时
 
@@ -2090,7 +1931,7 @@ ConnectionState
 Agent 请求或用户接管
 → Runtime 停止该 Instance 的新 Agent 输入
 → ControlLease 转给 Human
-→ App 展示同一真实现场
+→ 可信用户入口或原浏览器展示同一真实现场
 → 用户完成操作
 → 用户明确交还
 → ControlLease 转给 Agent
@@ -2106,11 +1947,12 @@ Agent 请求或用户接管
 
 | 模块 | 核心职责 |
 |---|---|
-| **App** | 人类管理 Agent 接入、AccountSystem、Account、Profile、环境、Provider、SKILL、Instance、Activity、观看和接管 |
-| **Plugin** | 将 WebEnvoy 接入现有 Agent 宿主 |
+| **CLI／API／Plugin** | 将同一正式能力、授权、Run、结果和恢复投影给用户、脚本、第三方 Agent 与上游系统 |
+| **可信用户入口** | 人类授权、监督、接管、交还、撤权、停止和恢复；不限定为 Desktop App |
+| **App** | 冻结的可选历史人类控制台代码与设计；不再是正式能力的运行前提或当前产品化目标 |
 | **Core** | 主体授权、业务任务、Run、结果、幂等、失败、ExternalOutcome 和恢复 |
 | **Harbor** | Profile、Provider、Environment、Instance、页面操作、画面、ControlLease 和运行观测 |
-| **Lode** | SKILL、AccountSystem 模板、站点知识、脚本、测试和版本 |
+| **Lode** | 站点 SKILL、AccountSystem 模板、references、scripts、assets、验证材料和版本 |
 | **Provider** | 浏览器内核、原生设备环境能力和底层运行 |
 
 职责边界按实际承担的能力判断：Harbor、Driver、App、Plugin 或 Lode 都不得实现、模拟或长期补偿 Provider 缺失的浏览器渲染／命中、键盘／IME、窗口／弹窗／对话框、下载、Web Storage／IndexedDB、站点权限或浏览器级设备身份，也不得改写供应方程序、资源、驱动 bundle 或注入安装／运行时补丁。WebEnvoy 管理既有能力的正式配置／协议、生命周期、授权、Driver 转换、环境 bundle、调用、观察、恢复和证据；Provider 负责浏览器内核及其核心语义。
@@ -2131,13 +1973,15 @@ Agent 请求或用户接管
 - 修改 Principal Grant；
 - 替用户选择经营策略。
 
-## 19.3 App 不应做
+## 19.3 任何可信用户入口不应做
 
 - 复制 Core 状态机；
 - 直接修改 Profile 数据目录；
 - 绕过 Harbor 控制 Instance；
 - 实现另一套 Agent 规划器；
 - 维护独立授权真相。
+
+Desktop App 冻结期间还不得把已有历史设计解释为自动恢复产品化的依据。
 
 ## 19.4 Lode 不应做
 
@@ -2245,59 +2089,50 @@ V1 的十二类 Browser Runtime 最低结果（Instance、Page／Tab／Window、
 
 默认 Agent 操作授权和 legacy 请求保护兼容可作为独立交付先行合并；Chrome 对共同执行的正式消费另按 Provider 稳定性、长期 Profile、文件、控制、恢复、安装和真实 Agent 证据验收。前者完成不得冒称 Chrome 已交付，后者受阻也不得回滚已合格的公共授权边界。
 
-## 21.1 Runtime 能力与 Plugin 主入口
+## 21.1 无 App 的正式入口与可信控制
 
-优先：
+优先冻结并交付 [S1 #562](https://github.com/WebEnvoy/WebEnvoy/issues/562) 所需的正式 CLI、API／Plugin 映射、首次信任和可信用户控制语义。CLI 既服务人类，也服务脚本和 SKILL；它不能绕过 Core／Harbor owner，也不能成为第二能力注册表。一个真实第三方 Agent 通过已安装 Plugin 的验收继续独立保留。
 
-- 建立 V1 Browser Runtime capability plane 的完整能力基线；
-- 逐步交付 Page／Window、Observation、Interaction、Files、Network、Console／Errors、受控脚本、Screenshot／Frame、Control 和 Recovery；
-- 每项能力同时给出 Provider 支持状态、验证证据和授权边界；
-- 可以先用一个明确支持的第三方 Agent 宿主和单个有界真实用户结果验证已安装 Plugin 的正式入口；该早期消费者只证明声明的能力子集，不提前声称完整 Runtime 或完整 Plugin 检查点；
-- 完成 §21.4 检查点时，一个已安装 Plugin 必须在真实第三方 Agent 中按十二类能力矩阵逐项呈现允许委托的结果、必要拒绝和恢复，不把单个早期闭环升级为全量通过；
-- 没有网站 SKILL 时仍可完成通用浏览器操作。
+## 21.2 Runtime、页面、视觉与 Network
 
-## 21.2 长期 Profile、身份与设备环境并行成熟
+十二类 Browser Runtime 基线继续保留；在现有页面、文件、诊断和控制能力上，后续由 [S4 #565](https://github.com/WebEnvoy/WebEnvoy/issues/565) 冻结主动 Network，由 [S5 #566](https://github.com/WebEnvoy/WebEnvoy/issues/566) 冻结视觉补充理解与受控操作。现有 wire 在对应 Spec 接受前不放宽；普通 Agent 不获得 raw CDP、Cookie、任意脚本或任意屏幕坐标。
 
-并行推进 AccountSystem／Account／BusinessTarget、Profile 生命周期和 Provider／Environment；需要真实登录、账号绑定或业务写入的现场验证在取得相应授权后执行，缺授权只暂停相关动作，不把无关 Runtime／环境工作全局停止。
+## 21.3 可执行站点 SKILL
 
-Provider 接入按 9.1 的 Qualification Gate 有界推进；当前不启动新 Provider 研究。每项验证必须区分原型、能力交付、正式可选、用户默认与完整 V1；某个 Provider 的局部缺口不缩减公共能力，需要 WebEnvoy 补浏览器核心语义的候选停止采用。
+由 [S2 #563](https://github.com/WebEnvoy/WebEnvoy/issues/563) 冻结统一包与确定性执行合同，由 [S3 #564](https://github.com/WebEnvoy/WebEnvoy/issues/564) 冻结探索、导入、OpenCLI 转化、验证与修复流程。先以一个经授权的非首站真实任务证明固定版本、稳定输出和正常路径尽量无模型；不预建全部站点、Marketplace、第二 Adapter Runtime 或通用不可信代码沙箱。
 
-## 21.3 Plugin 完整资源管理与资产消费
+## 21.4 长期环境与隐身质量
 
-在完整 App 产品化之前，先证明一个主要 Agent 宿主通过 Plugin 可以消费所有 V1 允许委托的 Profile／Instance、Account／AccountSystem／BusinessTarget、Environment／Provider facts、SKILL，以及 Run／结果／恢复能力。Plugin 更新、卸载或 Runtime 重启不得建立第二套现场或丢失长期 Profile。单个早期真实消费者可以先验证其中一个有界结果，但不替代本项完整资源消费门。
+Account／Profile／Provider／Environment 继续并行成熟；[S6 #567](https://github.com/WebEnvoy/WebEnvoy/issues/567) 定义隔离、连续性、隐身、语义、性能和操作质量的证据标准，[W3 #570](https://github.com/WebEnvoy/WebEnvoy/issues/570) 只对正式声明组合建立有界基线。Camoufox 历史采用原因与当前支持证据分开，不恢复私有补丁、Obscura 或随机设备身份路线。
 
-## 21.4 Plugin 完整体验检查点
+## 21.5 修订后 V1 汇合
 
-作为 V1 必须完成、且位于完整 App 产品化之前的检查点，至少证明：
+V1 汇合不按架构层或 Milestone 编号串行。当前计划至少包括：
 
-```text
-安装第三方 Agent 接入口
-→ 完成必要 owner 授权
-→ App 可完全退出
-→ Agent 管理长期 Profile / 身份 / 环境 / SKILL
-→ 使用完整 V1 浏览器能力完成通用任务
-→ 人类按需接管同一实例并交还
-→ 结果、拒绝、unknown 和恢复可信
-→ 更新 / 重启 / 卸载边界不丢长期数据
-```
+- [W1 #568](https://github.com/WebEnvoy/WebEnvoy/issues/568)：从正式安装完成无 App 配置、授权、任务和结果查询；
+- [W2 #569](https://github.com/WebEnvoy/WebEnvoy/issues/569)：无 App 监督两个实例并独立接管、交还和停止；
+- 一个非首站可执行 SKILL，可同时证明代表性 OpenCLI 转化；
+- 一个有界主动 Network 读写结果；
+- 一个语义不足场景的受控视觉操作；
+- 一个声明组合的环境与隐身质量基线。
 
-同时逐项回读十二类能力的公共语义、当前 Provider 状态、Plugin 暴露／不暴露原因、Grant／ControlLease、成功／必要拒绝／恢复证据，并确认真实第三方 Agent 实际消费了安装后的 Plugin。该检查点证明 Agent-native 主入口成立，不等于完整 V1 已验收；任一早期有界消费者或单个文件/站点闭环都不能替代它。
+这些是显式 V1 范围修订，不是历史一直存在的要求，也不因文档接受推导功能已经实现。#555/#556 不扩围、不成为全局前置；#558/#559 保持条件性后续。
 
-## 21.5 第二网站 SKILL 扩展验证
+## 21.6 App 冻结
 
-目标任务所需的 Runtime 能力、正式 Plugin 入口、实际资产和授权条件具备时，可以先做一次有界的真实消费者验证；不以整个 #497、#474、#475 或 §21.4 作为所有任务的统一前置。完整 Plugin checkpoint 仍须按 §21.4 完成后，才可把第二个真实用户目标和不同网站／场景作为 V1 汇合证据，验证跨网站复用、扩展成本和失败边界；简单任务的提前验证不能替代该完整 checkpoint，也不能把一个局部成功误认为产品完成。真正的公共能力缺口归入既有 Runtime capability，不为站点增加旁路。
-
-## 21.6 完整 App 产品化与多实例监督
-
-Plugin 完整体验检查点后，再集中完善 Agent 接入、AccountSystem／Account、Profile／Environment、Provider、SKILL、Instance／Activity、多实例切换与概览。Plugin-first 阶段已经需要的授权、人工接管、交还和敏感决定入口不得等待到此阶段才首次实现。
-
-## 21.7 V1 产品交付与最终验收
-
-持续回读 V1 验收项，不在末期第一次集成。最终同时核对 Plugin 完整体验、完整 App／Viewer 产品路径、Provider／Profile／身份／环境长期一致性、SKILL 扩展成本、安装升级卸载恢复，以及 Run／ExternalOutcome、权限、隐私与失败边界。
-
-近期执行先完成本次规则、文档和 GitHub 对齐，再核验原 Instance 在 Agent 空闲与人工接管期间能否持续处理已获准页面事件；同期准备现有身份／经营对象主线的授权和材料。此后按目标任务优先补普通交互缺口，真实消费者在自身能力、Plugin、资产和授权条件具备时进入，不因刚完成 Files 自动继续扩建 Files，也不把各 Milestone 重排为瀑布依赖。最多并行两个有界交付单元；涉及正式安装或浏览器现场时由一个集成人协调。
-
+#472、#481 及 App 专属 #536 保持 open／Backlog、退出活动 Milestone并带冻结标记；历史设计和完成事实保留。公共授权、监督、接管、交还、撤权、停止与恢复由 #474/#473/#477 和 S1/W1/W2 承接。任何 App 产品化重启都需要新的限定产品决定。
 # 22. V1 验收标准
+
+以下 V1-A—F 是 2026-09-18 的显式范围修订；在本规范修订接受前为待生效目标，不能称为历史要求或已交付能力。它们补充并定向替代 App 专属门，不静默删除其他仍适用的账号、Profile、文件、页面、控制、恢复和十二类 Runtime 要求。
+
+| ID | 最低结果 | 主要归口 |
+|---|---|---|
+| V1-A | 不依赖 App 的安装、首次信任、配置、运行、查询、人工控制与恢复；CLI 和正式 Agent 路径可用 | #474、#473、#477、S1/W1/W2 |
+| V1-B | 至少一个非首站真实任务由统一站点 SKILL 交付，有确定性执行、稳定输出、固定版本和验证；基本导入、本地覆盖和修复链成立 | #475、#476、S2/S3 |
+| V1-C | 一个代表性 OpenCLI Adapter 被可验证转化，说明兼容范围及转化方法；可与 V1-B 复用同一任务 | #475、#476、S3 |
+| V1-D | 在原 Network 目标外，补齐有界主动请求语义，验证代表性读取与受控写入，说明真实路径和身份来源 | #497、S4 |
+| V1-E | 原页面截图可供上游使用，并有一个语义不足场景的受控视觉操作闭环 | #497、#473、S5 |
+| V1-F | 已声明组合有环境、隐身、操作方式和版本变化质量基线；语义／性能缺口有实际任务证据 | #471、#497、S6/W3；复用 #555/#556 |
 
 V1 至少必须证明以下用户结果，并按 9.9 的证据类型记录实际消费者、固定源码／构建、平台／原实例、身份授权、成功／拒绝／恢复、证据地址与未执行项：
 
@@ -2315,22 +2150,22 @@ V1 至少必须证明以下用户结果，并按 9.9 的证据类型记录实际
 12. Agent 可以在授权范围内创建和管理 Profile；
 13. Agent 不能提高自己的权限；
 14. Agent 可以启动、复用和停止 Instance；
-15. App 可以查看多个 Instance；
-16. App 可以在多个 Instance 间切换；
-17. App 画面来自原实例；
+15. 获准用户／上游无需 Desktop App 即可区分并监督多个原 Instance；
+16. 获准用户／上游可以切换当前查看和人工操作目标，不创建替代会话或混淆身份、控制与结果；
+17. 画面来自原 Instance，并绑定可核对的 Page、时间、视窗／缩放和控制状态；
 18. 查看与控制分离；
 19. 人工接管后 Agent 不再输入；
 20. 用户交还后 Agent 重新观察再继续；
 21. Provider 不可用时不静默切换；
 22. 运行中环境变更不会静默热应用；
-23. 实时观看不会默认开启录制；
-24. SKILL、Runtime 和授权三层边界成立；
+23. 实时观看不会默认开启录制，截图读取、保存和向外部模型发送分别授权；
+24. 站点 SKILL、Runtime 和授权三层边界成立，知识内容不冒充正式可执行支持；
 25. 新网站场景主要通过 SKILL 增加；
 26. 写入前能核对 Account 和 BusinessTarget；
 27. 写入后能确认结果或标记 unknown；
 28. unknown outcome 不自动重试；
 29. Connection、Instance、Control、Run 和 ExternalOutcome 状态互不混淆；
-30. App 不承担完整 Agent 对话和任务编排。
+30. WebEnvoy 不承担上游经营策略、完整 Agent 对话和业务编排；任何入口都不建立第二运行真相。
 
 ---
 
@@ -2373,20 +2208,20 @@ V1 至少必须证明以下用户结果，并按 9.9 的证据类型记录实际
 
 # 24. 规范性总结
 
-> **WebEnvoy 是面向矩阵社媒和多店铺运营的 Agent 原生多账号浏览器平台。所有正式可运行 Profile 由 WebEnvoy 统一创建、导入和管理；外部 Profile 只能迁入，不能直接挂载。Provider 程序可以由用户安装或由 WebEnvoy 协助获取，但运行时必须使用 WebEnvoy 管理的 Profile 数据。**
+> **WebEnvoy 是面向第三方 Agent 和上游自动化系统的浏览器基础设施。所有正式可运行 Profile 由 WebEnvoy 统一创建、导入和管理；外部 Profile 只能迁入，不能直接挂载。Provider 程序可以由用户安装或由 WebEnvoy 协助获取，但运行时必须使用 WebEnvoy 管理的 Profile 数据。**
 >
 > **V1 中，每个 Account 只允许归属一个可运行 Profile；每个 Profile 在同一个 AccountSystem 中只允许一个 Account，但可以包含多个不同 AccountSystem 的账号。Account 与店铺、主页、频道等 BusinessTarget 分开管理。权限不根据 Profile 用途或标签推断，有效权限等于 Profile 上限、Principal Grant、任务范围和运行时约束的交集。**
 >
-> **Agent 不仅能够操作网页，也能够在明确 Grant 范围内管理 AccountSystem、Account、Profile、环境、Provider、Instance 和 SKILL。App 是人类资源管理和控制台，负责 Agent 接入、账号、Profile、环境、Provider、SKILL、实例、活动、现场观看和人工接管，不再承担完整 Agent 工作台。**
+> **Agent 不仅能够操作网页，也能够在明确 Grant 范围内管理 AccountSystem、Account、Profile、环境、Provider、Instance 和 SKILL。CLI、API、Plugin 和可信用户入口复用同一事实；Desktop App 专属产品化冻结，但授权、监督、接管、交还、撤权、停止与恢复不冻结。**
 >
-> **App 可以切换和同时展示多个真实浏览器 Instance。画面必须来自原实例，不得通过重新加载 URL 创建第二个会话。观看与控制分离，输入必须持有 ControlLease；复杂交互可以打开同一实例的原生窗口。实时观看默认不等于录制。**
+> **获准用户和上游可以区分、监督并切换多个真实浏览器 Instance，不依赖 Desktop App，也不得通过重新加载 URL 创建第二个会话。观看与控制分离，输入必须持有 ControlLease；复杂交互可以打开同一实例的原生窗口。实时观看默认不等于录制。**
 >
 > **Provider 由用户选择；新增 Provider 增加选择，不替换现有 Provider。产品推荐、用户新建默认和 Profile 实际绑定必须分离，显式选择优先，不可用或未授权时局部拒绝且不静默回退。Camoufox 保留首个工程验证对象及已验证范围，Chrome 保留显式兼容选择；Obscura 在当前愿景完成前明确不采用。Provider 在 Profile 创建时确定，后续变更通过迁移完成。WebEnvoy 只管理和调用供应方正式组合已经具备的浏览器能力，通过正式配置／协议、Driver 转换、权限和环境 bundle 接入，不改写供应方程序、资源、驱动或 bundle，不实现、模拟或长期补偿核心浏览器语义。**
 >
-> **网站知识以 SKILL 为主要载体，AccountSystem 模板等共享知识作为独立资产被多个 SKILL 引用。SKILL 决定 Agent 推荐怎样完成任务，Runtime 决定实际提供哪些操作，授权系统决定当前允许执行什么。没有 SKILL 时，Agent 仍可使用通用浏览器能力；有 SKILL 后，应减少探索、试错和错误，并提高账号、经营对象和结果判断的准确性。**
+> **站点 SKILL 统一承载 references、确定性 scripts、assets、任务分流、输出验证与修复，AccountSystem 等共享定义保持单一来源。Runtime 决定实际提供哪些操作，授权系统决定当前允许执行什么。没有 SKILL 时，Agent 仍可使用通用浏览器能力；纯知识可以使用但不能冒充正式可执行支持。**
 >
 
-> **V1 以一个已安装 Plugin 在真实第三方 Agent 中完成完整消费作为优先检查点。Browser Runtime 先明确主要能力类别，包括页面／窗口、交互、文件、Network、Console／错误、受控执行、画面、控制和恢复；能力是否存在与当前 Agent 是否被展示或授权使用必须分离。完整 App 产品化在该检查点后集中完善，但必要的人类授权、敏感决定和同实例接管不能缺失。**
+> **V1 以无 App 的正式安装、CLI／上游集成和一个已安装 Plugin 在真实第三方 Agent 中消费为入口检查点。Browser Runtime 保留页面／窗口、交互、文件、Network、Console／错误、受控执行、画面、控制和恢复，并补齐主动 Network、受控视觉与可执行站点 SKILL。能力是否存在与当前 Agent 是否被展示或授权使用必须分离。**
 >
 > **ConnectionState、InstanceState、ControlState、RunState 和 ExternalOutcome 必须分离。断线、关闭 App、观看失败、实例退出或用户停止后续操作，都不能自动改写网站侧已经发生或可能发生的结果。无法确认写入结果时，必须保留 unknown outcome，并禁止自动重复写入。**
 
@@ -2416,7 +2251,7 @@ Profile
               └── ExternalOperation / ExternalOutcome
 
 Activity
-  └── 聚合一个或多个 Run，供 App 展示
+  └── 聚合一个或多个 Run，供可信用户入口投影
 
 Lode
   ├── AccountSystem Templates
@@ -2430,7 +2265,7 @@ Lode
 
 | 决策 | 状态 |
 |---|---|
-| WebEnvoy 定位为矩阵社媒和多店铺运营的 Agent 原生多账号浏览器平台 | 已确认原则 |
+| WebEnvoy 定位为第三方 Agent 和上游系统的浏览器基础设施；矩阵社媒、多店铺为优先验证场景 | 已确认原则 |
 | 所有正式 Profile 由 WebEnvoy 管理 | 已确认原则 |
 | 外部 Profile 只能迁入 | 已确认原则 |
 | Provider 程序可以外部安装，Profile 数据必须由 WebEnvoy 管理 | 已确认原则 |
@@ -2439,8 +2274,8 @@ Lode
 | Agent 可以管理环境和 Profile | 已确认原则 |
 | 同一 Profile 内同体系只能一个 Account | 已确认原则 |
 | Account 与 BusinessTarget 分开 | 已确认原则 |
-| App 展示原实例画面 | 已确认原则 |
-| App 支持多实例切换和同时展示 | 已确认原则 |
+| 可信用户入口或原浏览器展示并接管原实例画面 | 已确认原则 |
+| 无 App 的可信用户入口支持多实例监督、目标切换、接管、交还、撤权、停止和恢复 | 已确认原则 |
 | Runtime 独立于 App | 已确认原则 |
 | SKILL 是网站知识主要载体 | 已确认原则 |
 | AccountSystem 是独立共享资产 | 已确认原则 |
@@ -2476,8 +2311,10 @@ Lode
 | 任务页 A 与观看页 B 分离；交还后默认重观察 A，失联只按可信关系或可验证的明确选页恢复 | V1 收敛约束 |
 | 旧私有 patch binding 退役但保留数据、授权、账号、Run／receipt、管理、撤销、查询和恢复 | 已确认原则 |
 | Provider 升级先核对正式组合、来源兼容和核心路径，再经明确选择更新绑定；未知版本拒绝、活动实例不热换、不自动交旧数据 | 已确认原则 |
-| 首个完整消费端优先为一个第三方 Agent 的已安装 Plugin | V1 收敛约束 |
-| 完整 App 产品化在 Plugin 完整体验检查点之后集中推进，必要 owner 控制持续保留 | V1 收敛约束 |
+| CLI 优先；一个第三方 Agent 的已安装 Plugin 仍需独立真实验收 | V1 收敛约束 |
+| Desktop App 专属产品化冻结且无自动重启，必要可信用户控制持续保留 | 已确认原则 |
+| 站点 SKILL 统一承载知识、确定性执行、合同和验证修复；正式支持按任务声明 | 已确认原则 |
+| 页面语义、受控视觉与主动 Network 均为正式能力方向，现有 wire 待对应 Spec 接受后扩展 | V1 收敛约束 |
 
 # 附录 C：实施解释与分级验收
 

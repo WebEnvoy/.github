@@ -16,14 +16,14 @@
 
 | 产品结果 | Milestone | FR |
 |---|---|---|
-| 长期管理账号、经营对象、受管数据与环境 | [账号与 Profile 生命周期 #21](https://github.com/WebEnvoy/WebEnvoy/milestone/21) | [账号体系与归属 #469](https://github.com/WebEnvoy/WebEnvoy/issues/469)、[导入迁移与退出 #470](https://github.com/WebEnvoy/WebEnvoy/issues/470)、[Provider 与环境一致性 #471](https://github.com/WebEnvoy/WebEnvoy/issues/471) |
-| 从资源与活动出发管理，并观察和接管多个原实例 | [人类控制台与多实例监督 #22](https://github.com/WebEnvoy/WebEnvoy/milestone/22) | [人类控制台 #472](https://github.com/WebEnvoy/WebEnvoy/issues/472)、[原实例观看与接管 #473](https://github.com/WebEnvoy/WebEnvoy/issues/473) |
-| App 未启动时也可使用正式 Runtime，并按版本扩展网站知识 | [Agent 正式接入与 SKILL 扩展 #23](https://github.com/WebEnvoy/WebEnvoy/milestone/23) | [单宿主正式入口 #474](https://github.com/WebEnvoy/WebEnvoy/issues/474)、[SKILL 与共享知识 #475](https://github.com/WebEnvoy/WebEnvoy/issues/475)、[不同网站场景验证 #476](https://github.com/WebEnvoy/WebEnvoy/issues/476) |
-| 从安装产物开始长期使用，完整证明 V1 产品能力 | [V1 产品交付与完整验收 #24](https://github.com/WebEnvoy/WebEnvoy/milestone/24) | [安装升级与恢复 #477](https://github.com/WebEnvoy/WebEnvoy/issues/477)、[完整 V1 验收 #482](https://github.com/WebEnvoy/WebEnvoy/issues/482) |
+| 长期管理账号、经营对象、受管环境与隐身质量 | [账号、长期环境与隐身质量 #21](https://github.com/WebEnvoy/WebEnvoy/milestone/21) | [账号体系与归属 #469](https://github.com/WebEnvoy/WebEnvoy/issues/469)、[导入迁移与退出 #470](https://github.com/WebEnvoy/WebEnvoy/issues/470)、[Provider 与环境一致性 #471](https://github.com/WebEnvoy/WebEnvoy/issues/471)、[质量规格 #567](https://github.com/WebEnvoy/WebEnvoy/issues/567) |
+| 不依赖 App 监督、接管、交还和停止多个原实例 | [无 App 的监督与人工控制 #22](https://github.com/WebEnvoy/WebEnvoy/milestone/22) | [App 冻结归口 #472](https://github.com/WebEnvoy/WebEnvoy/issues/472)、[原实例监督与接管 #473](https://github.com/WebEnvoy/WebEnvoy/issues/473)、[实施项 #569](https://github.com/WebEnvoy/WebEnvoy/issues/569) |
+| 通过 CLI／上游入口消费完整 Runtime 和可执行站点 SKILL | [CLI／上游接入、完整 Runtime 与可执行站点 SKILL #23](https://github.com/WebEnvoy/WebEnvoy/milestone/23) | [集成入口 #474](https://github.com/WebEnvoy/WebEnvoy/issues/474)、[站点 SKILL #475](https://github.com/WebEnvoy/WebEnvoy/issues/475)、[跨站验证 #476](https://github.com/WebEnvoy/WebEnvoy/issues/476)、[Runtime #497](https://github.com/WebEnvoy/WebEnvoy/issues/497) |
+| 从无 App 正式安装开始长期使用，完整证明修订后 V1 | [无 App 发行与 V1 完整验收 #24](https://github.com/WebEnvoy/WebEnvoy/milestone/24) | [安装升级与恢复 #477](https://github.com/WebEnvoy/WebEnvoy/issues/477)、[完整 V1 验收 #482](https://github.com/WebEnvoy/WebEnvoy/issues/482)、[S0 #561](https://github.com/WebEnvoy/WebEnvoy/issues/561) |
 
 [#482](https://github.com/WebEnvoy/WebEnvoy/issues/482) 将规范第 22 章的现行验收项映射到成果入口，同时覆盖账号/Profile 生命周期、产品安装、资产和原型决策。它是最终验收 FR，不复制各 FR 的实时状态或以主观百分比计量完成度。
 
-近期先完成实施基线对齐，再核验原 Instance 在 Agent 空闲与人工接管期间的持续工作；身份／经营对象主线并行准备授权材料。真实消费者在目标任务所需 Runtime、正式 Plugin、实际资产和授权齐备时可以提前有界验证，不以整个 Runtime／Plugin／SKILL 目录完成为统一前置；完整 Plugin 检查点仍是 V1 必须完成的独立门。
+当前先审查 [S0 #561](https://github.com/WebEnvoy/WebEnvoy/issues/561) 的产品基线修订。该修订接受前，CLI、受管站点脚本、主动 Network 与受控视觉的新语义仍是规划目标，不表示当前接口已经支持。S1—S6 和 W1—W3 已登记为后续 Backlog，不因登记自动开工。
 
 这些目标可以复用和交叉验证，不要求按 Milestone 编号全串行交付。只在真实技术或验收事实不满足时建立原生 dependency；例如 #454 的 Provider 前置仍由其原生依赖表达。
 
@@ -33,10 +33,10 @@ Provider 策略以用户选择为产品语义：Camoufox 的首个工程验证�
 
 [V1 后续能力的采用评估 #25](https://github.com/WebEnvoy/WebEnvoy/milestone/25) 保留规范已可见的长期方向：
 
-- [多宿主与协作运营 #478](https://github.com/WebEnvoy/WebEnvoy/issues/478)：团队、排期/批次和账号策略的真实需求与采用条件。
+- [更多上游与宿主集成 #478](https://github.com/WebEnvoy/WebEnvoy/issues/478)：必要连接、授权与控制协作的真实需求；不默认扩张经营策略、内容排期或运营审批。
 - [SKILL 修复与贡献 #479](https://github.com/WebEnvoy/WebEnvoy/issues/479)：完整 overlay/fork、更新冲突、贡献与 Library 体验；V1 最低本地覆盖能力仍由 #475 承载。
 - [Provider 自助维护 #480](https://github.com/WebEnvoy/WebEnvoy/issues/480)：自动获取/更新/修复/回滚和 BYOL 价值；V1 检测、诊断和处理入口仍由 #471 承载。
-- [更多实例布局与规模 #481](https://github.com/WebEnvoy/WebEnvoy/issues/481)：更丰富布局、四实例网格或更大规模的价值与成本；V1 概览、切换和接管仍由 #473 承载。
+- [更多实例布局与规模 #481](https://github.com/WebEnvoy/WebEnvoy/issues/481)：Desktop App 专属布局产品化冻结；实际容量、画面和性能需求回到 #497/#473，重启需新的限定产品决定。
 
 这些是有限的采用评估，不是 V1 门槛或已承诺的实现批次。采用后才根据明确产品范围创建执行任务。BOSS 恢复继续由 [#372](https://github.com/WebEnvoy/WebEnvoy/issues/372) 与 [Lode #272](https://github.com/WebEnvoy/Lode/issues/272) 保留原恢复条件，不默认作为第二站点。新媒体形态、自动登记和同账号多 Profile 仍需真实需求或产品决策；明确非目标不会因为建立规划而恢复。
 

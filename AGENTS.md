@@ -1,6 +1,8 @@
 # 组织级规划与文档规则
 
 - 产品方向、V1 约束和决策状态只从 `docs/product-architecture-v1.md` 读取；`VISION.md` 与 `ROADMAP.md` 只作入口和能力阶梯，不复制实时状态。
+- WebEnvoy 是第三方 Agent／上游系统的浏览器基础设施，Core 是主仓库内部模块。Desktop App 专属产品化冻结；任何能力进入产品范围后都必须有不依赖 App 的正式路径，可信用户的授权、监督、接管、交还、撤权、停止和恢复不得一起冻结。
+- CLI、API、Plugin、受管站点脚本和可信用户入口必须复用同一 Profile、Grant、Instance、ControlLease、Run、结果与恢复事实。受管脚本、视觉和主动 Network 的新语义只在对应正式 Spec 接受后实施；现行 wire 不因产品规划自动放宽。
 - 用户或 Agent 的真实路径是交付单元。模型、Schema、合同和模块只在服务当前路径时细化；语义独立不等于独立服务、存储或队列。
 - 已可见的产品目标完整规划到 Milestone 和 FR，明确 V1、待原型验证与条件性后续范围；具体 Work Item 在接近实施时依据真实消费者和缺口滚动创建。普通小工作可直接使用 Work Item；不补空 Phase、预测性任务或依赖树。
 - GitHub Issue、原生 parent/sub-issue/dependency、Milestone、Project、PR、checks、review 与 `main` 是执行真相；不得创建 carrier、影子状态或专用编排 CLI。

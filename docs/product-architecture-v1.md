@@ -2093,6 +2093,12 @@ V1 的十二类 Browser Runtime 最低结果（Instance、Page／Tab／Window、
 
 优先冻结并交付 [S1 #562](https://github.com/WebEnvoy/WebEnvoy/issues/562) 所需的正式 CLI、API／Plugin 映射、首次信任和可信用户控制语义。CLI 既服务人类，也服务脚本和 SKILL；它不能绕过 Core／Harbor owner，也不能成为第二能力注册表。一个真实第三方 Agent 通过已安装 Plugin 的验收继续独立保留。
 
+### 21.1.1 完整 installed Plugin 检查点
+
+完整 installed Plugin 检查点必须由一个明确支持的第三方 Agent 宿主通过实际安装后的 Plugin 独立证明，至少覆盖安装、连接／重连、capability discovery、Grant 与 task scope、所有 V1 允许委托的 Profile／Account／Environment／Provider／SKILL／Run 管理、无站点 SKILL 的通用浏览器、版本化站点 SKILL、同实例人工接管、query／unknown／recovery，以及更新、重启或卸载后长期 Profile 不丢失。
+
+检查点须逐项回读十二类 Runtime 能力的公共语义、当前 Provider 状态、Plugin 暴露／不暴露原因、Grant／ControlLease，以及成功、必要拒绝和恢复证据；只有真实第三方 Agent 实际消费已安装 Plugin 的证据可标记 `plugin_verified`。CLI／API 的新增验收、安装客户端、测试脚本、早期能力切片或单个站点闭环均可提供各自证据，但不得相互拼接或替代完整 installed Plugin 检查点。该检查点证明 Agent-native 正式入口成立，不等于完整 V1 已验收。
+
 ## 21.2 Runtime、页面、视觉与 Network
 
 十二类 Browser Runtime 基线继续保留；在现有页面、文件、诊断和控制能力上，后续由 [S4 #565](https://github.com/WebEnvoy/WebEnvoy/issues/565) 冻结主动 Network，由 [S5 #566](https://github.com/WebEnvoy/WebEnvoy/issues/566) 冻结视觉补充理解与受控操作。现有 wire 在对应 Spec 接受前不放宽；普通 Agent 不获得 raw CDP、Cookie、任意脚本或任意屏幕坐标。

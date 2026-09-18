@@ -15,4 +15,4 @@
 - `WebEnvoy Project Template`：组织级 Project 模板，用于复制仓库级 Project；
 - 后续可加入安全策略、贡献指南和社区健康文件。
 
-产品方向以 [`docs/product-architecture-v1.md`](docs/product-architecture-v1.md) 为准；执行状态只以 GitHub Milestone、Project、Issue、PR、checks、review 和 `main` 回读为准。
+产品方向以 [`docs/product-architecture-v1.md`](docs/product-architecture-v1.md) 为准；WebEnvoy 是供第三方 Agent 和上游系统集成的浏览器基础设施，Desktop App 专属产品化当前冻结。CLI、API、Plugin 与可信用户入口共享同一产品事实。执行状态只以 GitHub Milestone、Project、Issue、PR、checks、review 和 `main` 回读为准。

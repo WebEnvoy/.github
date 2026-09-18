@@ -9,6 +9,10 @@
   color: "fbca04"
   description: "Blocked by a product, architecture, repository, or licensing decision."
 
+- name: "hold: app-frozen"
+  color: "d4c5f9"
+  description: "Desktop App-specific productization is frozen pending a new scoped product decision."
+
 # priority
 - name: "priority: p0"
   color: "b60205"

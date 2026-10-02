@@ -23,7 +23,7 @@
 
 [#482](https://github.com/WebEnvoy/WebEnvoy/issues/482) 将规范第 22 章的现行验收项映射到成果入口，同时覆盖账号/Profile 生命周期、产品安装、资产和原型决策。它是最终验收 FR，不复制各 FR 的实时状态或以主观百分比计量完成度。
 
-当前先审查 [S0 #561](https://github.com/WebEnvoy/WebEnvoy/issues/561) 的产品基线修订。该修订接受前，CLI、受管站点脚本、主动 Network 与受控视觉的新语义仍是规划目标，不表示当前接口已经支持。S1—S6 和 W1—W3 已登记为后续 Backlog，不因登记自动开工。
+无 App 与浏览器基础设施边界沿用已接受的 [canonical v1 规范](docs/product-architecture-v1.md)；[S0 #561](https://github.com/WebEnvoy/WebEnvoy/issues/561) 保留产品基线修订来源，S1—S6 和 W1—W3 提供相应规格与实施验收入口，执行状态由原生 Issue／Project 回读。规范接受、功能实现、正式安装消费和发布分别判断；新增执行面仍须满足适用 Spec／Contract、授权及真实验收，不因规划登记自动开工。
 
 这些目标可以复用和交叉验证，不要求按 Milestone 编号全串行交付。只在真实技术或验收事实不满足时建立原生 dependency；例如 #454 的 Provider 前置仍由其原生依赖表达。
 
